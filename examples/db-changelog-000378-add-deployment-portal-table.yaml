@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000378-add-deployment-portal-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000378
+      tagDatabase:
+        tag: 'pre-000378'
+
+  - changeSet:
+      author: appian
+      comment: Create deployment portal info table
+      changes:
+        - createTable:
+            tableName: deployment_portal
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: deployment_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: portal_uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: full_url
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: portal_deployment_status
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: FunnyFK
+            baseTableName: deployment_portal
+            baseColumnNames: deployment_id
+            referencedTableName: deployment
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: deployment_portal_index
+            tableName: deployment_portal
+            columns:
+              - column:
+                  name: deployment_id
+

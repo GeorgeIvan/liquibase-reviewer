@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000467-record-query-details-table.yaml
+  - changeSet:
+      id: 'tag-pre-000467'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000467'
+  - changeSet:
+      id: '000467.1.0'
+      author: appian
+      changes:
+        comment: Create record_query_details table
+        createTable:
+          tableName: record_query_details
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: query_details
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: query_details_sha256
+                type: varchar(64)
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000467.2.0'
+      author: appian
+      comment: Add index on record_query_details.query_details_sha256
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: query_details_sha256
+          indexName: rqs_query_details_sha256_idx
+          tableName: record_query_details
+          unique: true
+  - changeSet:
+      id: '000467.3.0'
+      author: appian
+      comment: Create a new sequence to generate the primary key values for the record_query_details table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_query_details_sq

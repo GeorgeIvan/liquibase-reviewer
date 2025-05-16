@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000148-related-action-source-enum.xml">
+
+  <changeSet author="appian" id="tag-000147">
+    <tagDatabase tag="000147"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000148.0.0">
+    <comment>Add title_src column</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="title_src" type="${byteType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000148.1.0">
+    <comment>Add description_src column</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="description_src" type="${byteType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000148.2.0">
+    <comment>Populate src columns with the appropriate bytes</comment>
+    <customChange class="com.appiancorp.record.persistence.migration.RelatedActionPropertySourcesChange"/>
+  </changeSet>
+
+  <!-- Could not drop the un-needed columns due to https://liquibase.jira.com/browse/CORE-1141 -->
+
+</databaseChangeLog>

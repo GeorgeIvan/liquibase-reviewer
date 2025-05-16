@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000086-site-page-titles.xml">
+  
+  <changeSet author="appian" id="tag-000085">
+    <tagDatabase tag="000085"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000086.1.0">
+    <comment>Create new column is_static_name</comment>
+    <addColumn tableName="site_page">
+      <column name="is_static_name" type="${booleanType}" valueBoolean="true"/>
+    </addColumn> 
+  </changeSet>
+
+  <changeSet author="appian" id="000086.2.0">
+    <comment>Populate site_page.name with the appropriate static site name</comment>
+    <customChange class="com.appiancorp.tempo.rdbms.PopulateStaticSitePageName"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001032-add-hostname-to-portal-object-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001032
+      tagDatabase:
+        tag: 'pre-001032'
+  - changeSet:
+      author: appian
+      id: '001032.1.0'
+      comment: Add string 'hostname' column to portal table
+      addColumn:
+        tableName: portal
+        columns:
+          - column:
+              name: hostname
+              type: VARCHAR2(4000)
+              defaultValue: "DEFAULT_HOST"
+              constraints:
+                nullable: false

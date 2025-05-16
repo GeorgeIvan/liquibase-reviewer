@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000178-add-saml-sync-columns.xml">
+
+  <changeSet author="appian" id="tag-000177">
+    <tagDatabase tag="000177"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000178.1.0">
+    <comment>Add columns needed for user attribute and group syncing</comment>
+    <addColumn tableName="saml_settings">
+      <column name="auto_update_users" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false"/>
+      <!--
+      Note: using shortStringType rather than 1000 length like the other pre-existing attributes because
+      otherwise the total size of the row was too large for mysql.
+      -->
+      <column name="nickname_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="home_phone_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="mobile_phone_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="office_phone_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="address1_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="address2_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="address3_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="city_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="state_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="zipcode_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="country_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+
+      <column name="customfield1_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield2_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield3_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield4_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield5_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield6_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield7_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield8_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield9_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="customfield10_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+
+      <column name="auto_update_user_groups" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false"/>
+      <column name="grouptype_uuid" type="${uuidType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="appian_group_attribute_name" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+      <column name="groupnames_attr" type="${shortStringType}" defaultValue="" value="">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

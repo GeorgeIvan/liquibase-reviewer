@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000244-remove-relationship-name-unique-constraint.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000244
+      tagDatabase:
+        tag: 'pre-000244'
+  - changeSet:
+      id: '000244.1.0'
+      author: appian
+      comment: remove unique constraint on relationship name and target record type
+      changes:
+        - dropUniqueConstraint:
+            tableName: record_type_relationships
+            constraintName: rel_name_uuid_unique
+  - changeSet:
+      id: '000244.2.0'
+      author: appian
+      comment: add unique constraint for relationship name and source record type
+      changes:
+        - addUniqueConstraint:
+            tableName: record_type_relationships
+            constraintName: rel_name_src_rt_unique
+            columnNames: src_rt_id, relationship_name
+

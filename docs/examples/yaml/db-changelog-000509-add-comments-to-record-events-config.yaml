@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000509-add-comments-to-record-events-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000509
+      tagDatabase:
+        tag: 'pre-000509'
+  - changeSet:
+      author: appian
+      id: '000509.1.0'
+      comment: Add event_comment_field_uuid column to record_events_config table
+      addColumn:
+        tableName: record_events_config
+        columns:
+          - column:
+              name: event_comment_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

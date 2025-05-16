@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001037-add-create-ts-to-categorical-attribute-filter.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001037
+      tagDatabase:
+        tag: pre-001037
+  - changeSet:
+      author: appian
+      id: 001037.1.0
+      comment: Add created_ts timestamp column
+      addColumn:
+        columns:
+          - column:
+              name: created_ts
+              type: ${longType}
+              constraints:
+                nullable: true
+        tableName: mining_categ_attr_fltr
+  - changeSet:
+      author: appian
+      id: 001037.2.0
+      comment: Give the new column a value for existing rows
+      sql: UPDATE mining_categ_attr_fltr SET created_ts = id
+  - changeSet:
+      author: appian
+      id: 001037.3.0
+      comment: Add non-null constraint to the new created_ts column
+      addNotNullConstraint:
+        tableName: mining_categ_attr_fltr
+        columnName: created_ts
+        columnDataType: ${longType}

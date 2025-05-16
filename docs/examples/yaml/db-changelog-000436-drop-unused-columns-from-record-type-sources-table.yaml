@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000436-drop-unused-columns-from-record-type-sources-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000436
+      tagDatabase:
+        tag: 'pre-000436'
+
+  - changeSet:
+      author: appian
+      id: '000436.1.0'
+      comment: Drop foreign key constraint for dependent_source_field_id
+      dropForeignKeyConstraint:
+        baseTableName: record_type_sources
+        constraintName: rts_dependent_src_field_fk
+
+  - changeSet:
+      author: appian
+      id: '000436.2.0'
+      comment: Drop foreign key constraint for rts_precedent_src_field_fk
+      dropForeignKeyConstraint:
+        baseTableName: record_type_sources
+        constraintName: rts_precedent_src_field_fk
+
+  - changeSet:
+      author: appian
+      id: '000436.3.0'
+      comment: Drop existing join_type column
+      dropColumn:
+        tableName: record_type_sources
+        columnName: join_type
+
+  - changeSet:
+      author: appian
+      id: '000436.4.0'
+      comment: Drop existing dependent_source_field_id column
+      dropColumn:
+        tableName: record_type_sources
+        columnName: dependent_source_field_id
+
+  - changeSet:
+      author: appian
+      id: '000436.5.0'
+      comment: Drop existing precedent_source_field_id column
+      dropColumn:
+        tableName: record_type_sources
+        columnName: precedent_source_field_id
+
+  - changeSet:
+      author: appian
+      id: '000436.6.0'
+      comment: Drop existing join_operator column
+      dropColumn:
+        tableName: record_type_sources
+        columnName: join_operator

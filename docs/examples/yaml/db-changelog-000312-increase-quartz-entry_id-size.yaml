@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000312-increase-quartz-entry_id-size.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000312'
+      tagDatabase:
+        tag: 'pre-000312'
+  - changeSet:
+      author: appian
+      id: '000312.1.0'
+      comment: (SQL Server) Drop primary key constraint from QRTZ_FIRED_TRIGGERS
+      dbms: mssql
+      sql: |
+        DECLARE @table varchar(50)
+        DECLARE @command varchar(500)
+        SET @table = 'QRTZ_FIRED_TRIGGERS'
+        SELECT @command = 'ALTER TABLE ' + @table + ' DROP CONSTRAINT ' + k.name FROM sys.key_constraints k INNER JOIN sys.tables t ON k.parent_object_id = t.object_id WHERE k.type = 'PK' AND t.Name = @table
+        EXECUTE (@command)
+        GO
+  - changeSet:
+      author: appian
+      id: '000312.1.1'
+      comment: Increase QRTZ_FIRED_TRIGGERS.ENTRY_ID column size to 213 characters
+      modifyDataType:
+        tableName: QRTZ_FIRED_TRIGGERS
+        columnName: ENTRY_ID
+        newDataType: VARCHAR(213)
+  - changeSet:
+      author: appian
+      id: '000312.1.2'
+      comment: (SQL Server) Add primary key constraint to QRTZ_FIRED_TRIGGERS
+      dbms: mssql
+      addNotNullConstraint:
+        tableName: QRTZ_FIRED_TRIGGERS
+        columnName: SCHED_NAME
+        columnDataType: VARCHAR(120)
+      addNotNullConstraint:
+        tableName: QRTZ_FIRED_TRIGGERS
+        columnName: ENTRY_ID
+        columnDataType: VARCHAR(213)
+      addPrimaryKey:
+        tableName: QRTZ_FIRED_TRIGGERS
+        columnNames: SCHED_NAME, ENTRY_ID
+        constraintName: QRTZ_FIRED_TRIGGERS_PK

@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000527-add-rolemap-to-document-chat.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000527'
+      tagDatabase:
+        tag: 'pre-000527'
+  - changeSet:
+      id: '000527.1.0'
+      author: appian
+      comment: Create document_chat_rm table
+      changes:
+        - createTable:
+            tableName: document_chat_rm
+            columns:
+              - column:
+                  name: knowledge_set_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: rm_entry_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+  - changeSet:
+      id: '000527.1.1'
+      author: appian
+      changes:
+        comment: Add FK from document_chat_rm to rm_entry.id
+        addForeignKeyConstraint:
+          constraintName: document_chat_rm_entry_id_fk
+          baseTableName: document_chat_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+  - changeSet:
+      id: '000527.1.2'
+      author: appian
+      changes:
+      comment: Add FK from document_chat_rm to document_chat_knowledge_set.id
+      addForeignKeyConstraint:
+        constraintName: document_chat_rm_ks_fk
+        baseTableName: document_chat_rm
+        baseColumnNames: knowledge_set_id
+        referencedTableName: document_chat_knowledge_set
+        referencedColumnNames: id
+  - changeSet:
+      id: '000527.1.3'
+      author: appian
+      changes:
+        comment: Add index on document_chat_rm.knowledge_set_id
+        createIndex:
+          columns:
+            - column:
+                name: knowledge_set_id
+          indexName: document_chat_rm_ks_idx
+          tableName: document_chat_rm
+          unique: false
+  - changeSet:
+      id: '000527.1.4'
+      author: appian
+      comment: Add index on document_chat_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: document_chat_rm_entry_id_idx
+          tableName: document_chat_rm
+          unique: false
+  - changeSet:
+      id: '000527.1.5'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Document Chat Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 40
+            - column:
+                name: name
+                value: document_chat_administrator
+  - changeSet:
+      id: '000527.1.6'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Document Chat Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 41
+            - column:
+                name: name
+                value: document_chat_viewer

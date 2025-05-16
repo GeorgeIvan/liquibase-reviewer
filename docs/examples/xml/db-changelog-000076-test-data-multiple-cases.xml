@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000076-test-data-multiple-cases.xml">
+
+  <changeSet author="appian" id="tag-000075">
+    <tagDatabase tag="000075"/>
+  </changeSet>
+
+  <!--
+    There is a unique constraint on the test_data table that cannot be removed with the dropUniqueConstraint
+    tag since it was originally defined without a constraintName. To work around this, we'll create a new
+    table and copy the data over. Then the original test_data table will be deleted and the temporary table
+    will be renamed to test_data.
+   -->
+
+  <changeSet author="appian" id="000076.1.0">
+    <comment>Create table that mirrors the test_data table</comment>
+    <createTable tableName="test_data_temp">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="obj_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="obj_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="obj_version_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="data_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="data" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!--
+    Only copy over the relevant columns. For Oracle, we must also copy the id (primary key) column since
+    Oracle will not automatically populate its values.
+   -->
+
+  <changeSet author="appian" id="000076.1.1">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO test_data_temp (uuid, obj_type, obj_uuid, obj_version_id, data_type, data)
+      SELECT uuid, obj_type, obj_uuid, obj_version_id, data_type, data FROM test_data;
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000076.1.2">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO test_data_temp
+      SELECT * FROM test_data;
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000076.1.3">
+    <comment>Delete the original test_data table</comment>
+    <dropTable tableName="test_data"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000076.1.4">
+    <comment>Rename the temporary table to the original table's name</comment>
+    <renameTable oldTableName="test_data_temp" newTableName="test_data"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000076.2.0">
+    <comment>Add a column to test_data so that the order of cases may be tracked</comment>
+    <addColumn tableName="test_data">
+      <column name="order_idx" type="${integerType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000076.2.1">
+    <comment>Make the order_idx column required and initialize all the values to 1</comment>
+    <addNotNullConstraint tableName="test_data"
+        columnName="order_idx"
+        columnDataType="${integerType}"
+        defaultNullValue="1"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000076.3.0">
+    <comment>Add unique constraint for design object type, version id, uuid, and order_idx</comment>
+    <addUniqueConstraint constraintName="test_data_uc"
+          columnNames="obj_uuid, obj_version_id, obj_type, order_idx"
+          tableName="test_data"/>
+  </changeSet>
+
+</databaseChangeLog>

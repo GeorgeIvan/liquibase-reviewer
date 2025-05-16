@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001043-cpti-is-active.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001043
+      tagDatabase:
+        tag: pre-001043
+  - changeSet:
+      author: appian
+      id: 001043.1.0
+      comment: Add is_active column
+      changes:
+        - addColumn:
+            tableName: control_panel_tier_item
+            column:
+              name: is_active
+              type: ${booleanType}
+              defaultValueBoolean: true
+              valueBoolean: true
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: 001043.1.2
+      comment: Drop the default value
+      changes:
+        - dropDefaultValue:
+            tableName: control_panel_tier_item
+            columnName: is_active
+            columnDataType: ${booleanType}

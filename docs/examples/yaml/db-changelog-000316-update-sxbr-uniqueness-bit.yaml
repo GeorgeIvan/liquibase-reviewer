@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000316-update-sxbr-uniqueness-bit.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000316
+      tagDatabase:
+        tag: 'pre-000316'
+
+  - changeSet:
+      author: appian
+      id: '000316.1.0'
+      comment: Set uniqueness bit for PK SXBR record fields
+      update:
+        tableName: record_source_fields
+        column:
+          name: is_unique
+          value: 1
+        where: is_record_id = '1' AND is_unique = '0' AND source_id IN (SELECT id FROM record_type_sources WHERE source_type = 3)

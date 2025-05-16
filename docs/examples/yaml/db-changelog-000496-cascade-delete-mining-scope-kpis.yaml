@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000496-cascade-delete-mining-scope-kpis.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000496'
+      tagDatabase:
+        tag: 'pre-000496'
+
+  - changeSet:
+      id: '000496.1.0'
+      author: appian
+      comment: drop the mining_scope_kpis_kpi_id_fk foreign key constraint from the mining_scope_kpis
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_scope_kpis
+            constraintName: mining_scope_kpis_kpi_id_fk
+
+  - changeSet:
+      id: '000496.2.0'
+      author: appian
+      comment: recreate foreign key constraints with cascade delete
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_scope_kpis_kpi_id_fk
+            baseTableName: mining_scope_kpis
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE

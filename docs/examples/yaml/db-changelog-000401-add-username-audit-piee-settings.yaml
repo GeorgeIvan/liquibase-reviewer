@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000401-add-username-audit-piee-settings.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000401
+      tagDatabase:
+        tag: 'pre-000401'
+
+  - changeSet:
+      author: appian
+      id: '000401.1.0'
+      comment: Add piee_settings username_attr column
+      addColumn:
+        tableName: piee_settings
+        column:
+          name: username_attr
+          type: ${shortStringType}
+          defaultValue: "user_id"
+          constraints:
+            nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000401.1.1'
+      comment: Remove piee_settings username_attr default value
+      dropDefaultValue:
+        tableName: piee_settings
+        columnName: username_attr
+
+  - changeSet:
+      author: appian
+      id: '000401.2.0'
+      comment: Add piee_settings created_ts column
+      addColumn:
+        tableName: piee_settings
+        column:
+          name: created_ts
+          type: ${longType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000401.2.1'
+      comment: Add piee_settings created_by column
+      addColumn:
+        tableName: piee_settings
+        column:
+          name: created_by
+          type: ${longType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000401.2.2'
+      comment: Add piee_settings updated_ts column
+      addColumn:
+        tableName: piee_settings
+        column:
+          name: updated_ts
+          type: ${longType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000401.2.3'
+      comment: Add piee_settings updated_by column
+      addColumn:
+        tableName: piee_settings
+        column:
+          name: updated_by
+          type: ${longType}
+          constraints:
+            nullable: true

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000185-record-list-auto-refresh.xml">
+
+  <changeSet author="appian" id="tag-0000185">
+    <tagDatabase tag="000184"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000185.1.0">
+    <comment>Create new column list_auto_refresh_interval</comment>
+    <addColumn tableName="record_type">
+      <column name="list_auto_refresh_interval" type="${doubleType}" value="0" defaultValue="0" />
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

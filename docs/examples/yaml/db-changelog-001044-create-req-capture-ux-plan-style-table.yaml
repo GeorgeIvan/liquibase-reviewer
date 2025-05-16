@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001044-create-req-capture-ux-plan-style-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001044
+      tagDatabase:
+        tag: 'pre-001044'
+  - changeSet:
+      author: appian
+      id: '001044.0.0'
+      comment: Create req_capture_ux_plan_style table
+      changes:
+        - createTable:
+            tableName: req_capture_ux_plan_style
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: requirements_capture_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: style_value_json
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001044.0.1'
+      author: appian
+      comment: Create a sequence to provide primary key values for the ux_plan_style table
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      changes:
+        createSequence:
+          sequenceName: req_capture_ux_plan_style_sq
+
+  - changeSet:
+      id: '001044.0.2'
+      author: appian
+      comment: Add foreign key constraint to requirements_capture_id field in ux_plan_style table
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: req_cap_ux_plan_style_rcid_fk
+            baseTableName: req_capture_ux_plan_style
+            baseColumnNames: requirements_capture_id
+            referencedTableName: requirements_capture
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '001044.0.3'
+      comment: Ensures unique requirements_capture_id
+      changes:
+        - addUniqueConstraint:
+            tableName: req_capture_ux_plan_style
+            columnNames: requirements_capture_id
+            constraintName: req_cap_ux_style_req_id_uc

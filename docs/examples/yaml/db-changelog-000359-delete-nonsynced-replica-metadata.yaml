@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000359-delete-nonsynced-replica-metadata.yaml
+
+  - changeSet:
+      id: 'tag-pre-000359'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000359'
+
+  - changeSet:
+      author: appian
+      id: '000359.1.0'
+      comment: Drop is_replica_valid from record_replica_metadata
+      changes:
+        - dropDefaultValue:
+            tableName: record_replica_metadata
+            columnName: is_replica_valid
+        - dropColumn:
+            tableName: record_replica_metadata
+            columnName: is_replica_valid
+
+  - changeSet:
+      id: '000359.2.0'
+      author: appian
+      comment: Delete rows from record_replica_metadata for non-synced record types
+      changes:
+        - sql:
+            dbms: '!mysql, !mariadb'
+            sql: >-
+              DELETE FROM record_replica_metadata
+              WHERE record_type_uuid IN (
+                SELECT record_type_uuid from record_replica_metadata
+                INNER JOIN record_type ON record_type.uuid = record_replica_metadata.record_type_uuid
+                WHERE record_type.src_type != '{http://www.appian.com/ae/types/2009}RecordsReplica'
+              )
+        - sql:
+            dbms: 'mysql, mariadb'
+            sql: >-
+              DELETE rrm.* FROM record_replica_metadata rrm
+              INNER JOIN record_type rt ON rrm.record_type_uuid = rt.uuid
+              WHERE rt.src_type != '{http://www.appian.com/ae/types/2009}RecordsReplica'

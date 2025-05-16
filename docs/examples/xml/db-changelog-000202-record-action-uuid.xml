@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000200-record-action-uuid.xml">
+
+  <changeSet author="appian" id="tag-0000202">
+    <tagDatabase tag="000202"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000202.1.0">
+    <comment>Create new record list action column uuid</comment>
+    <addColumn tableName="record_list_action_cfg">
+      <column name="uuid" type="${uuidType}" />
+    </addColumn>
+  </changeSet>
+
+   <changeSet author="appian" id="000202.2.0">
+    <comment>Create new related list action column uuid</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="uuid" type="${uuidType}" />
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000564-remove-visualization-style-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000564'
+      tagDatabase:
+        tag: 'pre-000564'
+  - changeSet:
+      id: '000564.1.0'
+      author: appian
+      comment: Drop column visualization_style from mining_kpi
+      changes:
+        dropColumn:
+          tableName: mining_kpi
+          columnName: visualization_style

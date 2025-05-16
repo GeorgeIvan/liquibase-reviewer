@@ -1,0 +1,640 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000516-flatten-custom-kpi-inheritance.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000516'
+      tagDatabase:
+        tag: 'pre-000516'
+
+  - changeSet:
+      author: appian
+      id: '000516.1.0'
+      comment: Drop existing count and duration cfg tables
+      changes:
+        - dropTable:
+            tableName: kpi_duration_sequence
+            cascadeConstraints: true
+        - dropTable:
+            tableName: kpi_duration_activity
+            cascadeConstraints: true
+        - dropTable:
+            tableName: kpi_duration_process
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi_duration_cfg
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi_duration_type
+            cascadeConstraints: true
+        - dropTable:
+            tableName: kpi_count_sequence
+            cascadeConstraints: true
+        - dropTable:
+            tableName: kpi_count_activity
+            cascadeConstraints: true
+        - dropTable:
+            tableName: kpi_count_attribute
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi_count_cfg
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi_count_type
+            cascadeConstraints: true
+
+  - changeSet:
+      author: appian
+      id: '000516.1.1'
+      comment: Drop existing mining_kpi, mining_kpi_type, and mining_scope_kpis tables
+      changes:
+        - dropTable:
+            tableName: mining_scope_kpis
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi_type
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_kpi
+            cascadeConstraints: true
+
+  - changeSet:
+      author: appian
+      id: '000516.2.0'
+      comment: Create table for mining_kpi
+      changes:
+        - createTable:
+            tableName: mining_kpi
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_type
+                  type: ${byteType}
+              - column:
+                  name: visualization_style
+                  type: ${byteType}
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000516.2.1'
+      comment: Create indicies for mining_kpi
+      changes:
+        - createIndex:
+            indexName: mining_kpi_process_id_idx
+            tableName: mining_kpi
+            unique: false
+            columns:
+              - column:
+                  name: mining_process_id
+
+  - changeSet:
+      author: appian
+      id: '000516.2.2'
+      comment: Add fk for base table mining_kpi
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_process_id_fk
+            baseTableName: mining_kpi
+            baseColumnNames: mining_process_id
+            referencedTableName: mining_process
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000516.2.3'
+      comment: Remove the default value for the created_ts column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: created_ts
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000516.2.4'
+      comment: Remove the default value for the created_by column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: created_by
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000516.2.5'
+      comment: Remove the default value for the updated_ts column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: updated_ts
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000516.2.6'
+      comment: Remove the default value for the updated_by column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: updated_by
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000516.3.0'
+      comment: Create table for mining_kpi_type
+      changes:
+        - createTable:
+            tableName: mining_kpi_type
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000516.3.1'
+      comment: Create index for mining_kpi_type
+      changes:
+        - createIndex:
+            indexName: mining_kpi_type_kpi_id_idx
+            tableName: mining_kpi_type
+            columns:
+              - column:
+                  name: mining_kpi_id
+
+  - changeSet:
+      author: appian
+      id: '000516.3.2'
+      comment: Add fk for base table mining_kpi_type
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_kpi_type_kpi_id_fk
+            baseTableName: mining_kpi_type
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000516.4.0'
+      comment: Create table for mining_scope_kpis
+      changes:
+        - createTable:
+            tableName: mining_scope_kpis
+            columns:
+              - column:
+                  name: mining_scope_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: pinned
+                  type: ${booleanType}
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000516.4.1'
+      comment: Create indicies for mining_scope_kpis
+      changes:
+        - createIndex:
+            indexName: mining_scope_kpis_kpi_id_idx
+            tableName: mining_scope_kpis
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_id
+        - createIndex:
+            indexName: mining_scope_kpis_scope_id_idx
+            tableName: mining_scope_kpis
+            unique: false
+            columns:
+              - column:
+                  name: mining_scope_id
+
+  - changeSet:
+      author: appian
+      id: '000516.4.2'
+      comment: Add fks for base table mining_scope_kpis
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_scope_kpis_kpi_id_fk
+            baseTableName: mining_scope_kpis
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: mining_scope_kpis_scope_id_fk
+            baseTableName: mining_scope_kpis
+            baseColumnNames: mining_scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000516.5.0'
+      comment: Create mining_kpi_field table
+      changes:
+        - createTable:
+            tableName: mining_kpi_field
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000516.5.1'
+      comment: Create sequence for mining_kpi_field
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_field_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.5.2'
+      comment: Create mining_kpi_field_attribute table
+      changes:
+        - createTable:
+            tableName: mining_kpi_field_attribute
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attribute_category
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: attribute_value
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000516.5.3'
+      comment: Create sequence for mining_kpi_field_attribute
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_field_attribute_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.5.4'
+      comment: Create mining_kpi_field_activity table
+      changes:
+        - createTable:
+            tableName: mining_kpi_field_activity
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000516.5.5'
+      comment: Create sequence for mining_kpi_field_activity
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_field_activity_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.5.6'
+      comment: Create mining_kpi_field_sequence table
+      changes:
+        - createTable:
+            tableName: mining_kpi_field_sequence
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: to_activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: is_direct_follower
+                  type: ${booleanType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000516.5.7'
+      comment: Create sequence for mining_kpi_field_sequence
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_field_sequence_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.5.8'
+      comment: Add foreign keys for KPI field tables
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_kpi_field_kpi_id_fk
+            baseTableName: mining_kpi_field
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: kpi_field_attr_field_id_fk
+            baseTableName: mining_kpi_field_attribute
+            baseColumnNames: mining_kpi_field_id
+            referencedTableName: mining_kpi_field
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: kpi_field_activity_field_id_fk
+            baseTableName: mining_kpi_field_activity
+            baseColumnNames: mining_kpi_field_id
+            referencedTableName: mining_kpi_field
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: kpi_field_sequence_field_id_fk
+            baseTableName: mining_kpi_field_sequence
+            baseColumnNames: mining_kpi_field_id
+            referencedTableName: mining_kpi_field
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000516.6.0'
+      comment: Create mining_kpi_type_count table
+      changes:
+        - createTable:
+            tableName: mining_kpi_type_count
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count_option
+                  type: ${byteType}
+
+  - changeSet:
+      author: appian
+      id: '000516.6.1'
+      comment: Create sequence for mining_kpi_type_count
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_type_count_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.6.2'
+      comment: Create mining_kpi_type_duration table
+      changes:
+        - createTable:
+            tableName: mining_kpi_type_duration
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: measure_option
+                  type: ${byteType}
+              - column:
+                  name: unit_option
+                  type: ${byteType}
+
+  - changeSet:
+      author: appian
+      id: '000516.6.3'
+      comment: Create sequence for mining_kpi_type_duration
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_type_duration_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.6.4'
+      comment: Create mining_kpi_type_sla table
+      changes:
+        - createTable:
+            tableName: mining_kpi_type_sla
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: ${doubleType}
+              - column:
+                  name: time_unit
+                  type: ${byteType}
+              - column:
+                  name: is_violation
+                  type: ${booleanType}
+
+  - changeSet:
+      author: appian
+      id: '000516.6.5'
+      comment: Create sequence for mining_kpi_type_sla
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_type_sla_sq
+
+  - changeSet:
+      author: appian
+      id: '000516.6.6'
+      comment: Add foreign keys for KPI type tables
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_type_count_kpi_type_id_fk
+            baseTableName: mining_kpi_type_count
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: kpi_type_duration_type_id_fk
+            baseTableName: mining_kpi_type_duration
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: kpi_type_sla_kpi_type_id_fk
+            baseTableName: mining_kpi_type_sla
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE

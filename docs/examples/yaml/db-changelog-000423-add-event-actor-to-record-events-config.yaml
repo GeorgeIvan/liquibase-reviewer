@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000423-add-event-actor-to-record-events-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000423
+      tagDatabase:
+        tag: 'pre-000423'
+  - changeSet:
+      author: appian
+      id: '000423.1.0'
+      comment: Create column for event_actor_field_uuid
+      addColumn:
+        tableName: record_events_config
+        columns:
+          - column:
+              name: event_actor_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

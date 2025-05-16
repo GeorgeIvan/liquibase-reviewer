@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000061.xml">
+
+  <changeSet author="appian" id="tag-000060">
+    <tagDatabase tag="000060"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000061.0.0">
+    <createTable tableName="grp_landing_page">
+      <column name="grp_id" type="${longType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="url" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000061.0.1">
+    <comment>Add FK from grp_landing_page.grp_id to grp.id.</comment>
+    <addForeignKeyConstraint constraintName="grp_lp_gi_fk"
+      baseTableName="grp_landing_page" baseColumnNames="grp_id"
+      referencedTableName="grp" referencedColumnNames="id"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000459-record-type-rolling-sync-new-fields.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000459
+      tagDatabase:
+        tag: 'pre-000459'
+  - changeSet:
+      author: appian
+      id: '000459.0.0'
+      comment: Create column uses_rolling_sync_limit in record_type table
+      addColumn:
+        tableName: record_type
+        columns:
+          - column:
+              name: uses_rolling_sync_limit
+              type: ${booleanType}
+              valueBoolean: false
+              defaultValueBoolean: false
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000459.1.0'
+      comment: Create column is_rolling_sync_sort_field in record_source_fields table
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: is_rolling_sync_sort_field
+              type: ${booleanType}
+              valueBoolean: false
+              defaultValueBoolean: false
+              constraints:
+                nullable: false

@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000358-add-is-fixed-to-record-header-cfg.yaml
+  - changeSet:
+      id: 'tag-pre-000358'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000358'
+
+  - changeSet:
+      id: '000358.1.0'
+      author: appian
+      comment: Add is_fixed column to record_header_cfg table
+      addColumn:
+        tableName: record_header_cfg
+        column:
+          name: is_fixed
+          type: ${booleanType}
+          defaultValueBoolean: false
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '000358.2.0'
+      author: appian
+      comment: Drop default value for is_fixed column
+      dropDefaultValue:
+        tableName: record_header_cfg
+        columnName: is_fixed
+        columnDataType: ${booleanType}

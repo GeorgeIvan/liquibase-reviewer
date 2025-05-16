@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000334-add-icf-doc-id-to-dpkg.yaml
+  - changeSet:
+      id: 'tag-pre-000334'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000334'
+
+  - changeSet:
+      id: '000334.1.0'
+      author: appian
+      comment: Create a icf_document_id column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: icf_document_id
+          type: ${longType}
+          constraints:
+            nullable: true

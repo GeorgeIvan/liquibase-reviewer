@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000038.xml">
+
+  <changeSet author="appian" id="tag-000037">
+    <tagDatabase tag="000037"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000038.1.0">
+    <comment>For hazards without authors, make Administrator the author</comment>
+    <sql>
+      update tp_comment
+      set author = 'Administrator'
+      where author is null
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000038.1.1">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Populate the usr table for existing comment authors.</comment>
+    <sql>
+      insert into usr (username) (select distinct cm.author from tp_comment cm
+        where not exists (select u.username from usr u where u.username = cm.author))
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000038.1.2">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Populate the usr table for existing comment authors.</comment>
+    <sql>
+      insert into usr (id, username) select usr_sq.nextval, tmp.author from (
+        select distinct cm.author from tp_comment cm
+        where not exists (select u.username from usr u where u.username = cm.author)) tmp
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000038.1.3">
+    <comment>Create a new column for author_id in tp_comment</comment>
+    <addColumn tableName="tp_comment">
+      <column name="author_id" type="${longType}"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000038.1.4">
+    <comment>Migrate data from author to author_id</comment>
+    <sql>
+      update tp_comment
+      set author_id = (
+        select usr.id
+        from usr
+        where usr.username = tp_comment.author
+      );
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000038.1.5">
+    <comment>Set author_id column to be non-nullable</comment>
+    <addNotNullConstraint tableName="tp_comment" columnName="author_id" columnDataType="${longType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000038.1.6">
+    <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="tp_comment"
+      constraintName="tp_comment_auth_fk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id"
+      referencedTableName="usr" referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <!-- MySQL automatically creates indexes for FK columns, but other DBs don't, so we have to do it ourselves. -->
+  <changeSet author="appian" id="000038.1.7">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="tp_comment_auth_fk" tableName="tp_comment" unique="false">
+      <column name="author_id"/>
+    </createIndex>
+  </changeSet>
+  
+  <changeSet author="appian" id="000038.1.8">
+    <comment>Drop the old author column</comment>
+    <dropColumn tableName="tp_comment" columnName="author"/>
+  </changeSet>
+</databaseChangeLog>

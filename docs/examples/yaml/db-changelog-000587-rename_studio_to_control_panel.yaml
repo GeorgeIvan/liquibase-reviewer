@@ -1,0 +1,268 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000587-rename_studio_to_control_panel.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000587'
+      tagDatabase:
+        tag: 'pre-000587'
+  - changeSet:
+      id: '000587.1.0'
+      author: appian
+      comment: Drop studio_created_by_fk FK
+      changes:
+      - dropForeignKeyConstraint:
+          baseTableName: studio
+          constraintName: studio_created_by_fk
+  - changeSet:
+      id: '000587.1.1'
+      author: appian
+      comment: Drop studio_updated_by_fk FK
+      changes:
+      - dropForeignKeyConstraint:
+          baseTableName: studio
+          constraintName: studio_updated_by_fk
+  - changeSet:
+      id: '000587.1.2'
+      author: appian
+      comment: Drop studio_created_by_idx Index
+      changes:
+      - dropIndex:
+          tableName: studio
+          indexName: studio_created_by_idx
+  - changeSet:
+      id: '000587.1.3'
+      author: appian
+      comment: Drop studio_updated_by_idx Index
+      changes:
+      - dropIndex:
+          tableName: studio
+          indexName: studio_updated_by_idx
+  - changeSet:
+      id: '000587.1.4'
+      author: appian
+      comment: Drop studio_url_stub_uc unique constraint
+      changes:
+      - dropUniqueConstraint:
+         tableName: studio
+         constraintName: studio_url_stub_uc
+  - changeSet:
+      id: '000587.2.0'
+      author: appian
+      comment: Drop studio_rm_id_fk FK
+      changes:
+      - dropForeignKeyConstraint:
+          baseTableName: studio_rm
+          constraintName: studio_rm_id_fk
+  - changeSet:
+      id: '000587.2.1'
+      author: appian
+      comment: Drop studio_rm_entry_id_fk FK
+      changes:
+      - dropForeignKeyConstraint:
+          baseTableName: studio_rm
+          constraintName: studio_rm_entry_id_fk
+  - changeSet:
+      id: '000587.2.2'
+      author: appian
+      comment: Drop studio_rm_id_idx Index
+      changes:
+      - dropIndex:
+          tableName: studio_rm
+          indexName: studio_rm_id_idx
+  - changeSet:
+      id: '000587.2.3'
+      author: appian
+      comment: Drop studio_rm_entry_id_idx Index
+      changes:
+      - dropIndex:
+          tableName: studio_rm
+          indexName: studio_rm_entry_id_idx
+  - changeSet:
+      id: '000587.3.0'
+      author: appian
+      comment: Rename studio table to control_panel
+      changes:
+      - renameTable:
+          newTableName: control_panel
+          oldTableName: studio
+  - changeSet:
+      id: '000587.3.1'
+      author: appian
+      comment: Rename sequence to provide primary key values for the control_panel table
+      dbms: oracle
+      changes:
+      - renameSequence:
+          oldSequenceName: studio_sq
+          newSequenceName: control_panel_sq
+  - changeSet:
+      id: '000587.3.2'
+      author: appian
+      comment: Add FK for control_panel.created_by to usr.id
+      changes:
+      - addForeignKeyConstraint:
+          constraintName: control_panel_created_by_fk
+          baseTableName: control_panel
+          baseColumnNames: created_by
+          referencedTableName: usr
+          referencedColumnNames: id
+  - changeSet:
+      id: '000587.3.3'
+      author: appian
+      comment: Add FK for control_panel.updated_by to usr.id
+      changes:
+      - addForeignKeyConstraint:
+          constraintName: control_panel_updated_by_fk
+          baseTableName: control_panel
+          baseColumnNames: updated_by
+          referencedTableName: usr
+          referencedColumnNames: id
+  - changeSet:
+      id: '000587.3.4'
+      author: appian
+      comment: Add control_panel_created_by_idx Index
+      changes:
+      - createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: control_panel_created_by_idx
+          tableName: control_panel
+          unique: false
+  - changeSet:
+      id: '000587.3.5'
+      author: appian
+      comment: Add control_panel_updated_by_idx Index
+      changes:
+      - createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: control_panel_updated_by_idx
+          tableName: control_panel
+          unique: false
+  - changeSet:
+      id: '000587.3.6'
+      author: appian
+      comment: Add unique constraint to url_stub column
+      changes:
+      - addUniqueConstraint:
+          tableName: control_panel
+          columnNames: url_stub
+          constraintName: control_panel_url_stub_uc
+  - changeSet:
+      id: '000587.4.0'
+      author: appian
+      comment: Rename studio_rm table to control_panel_rm
+      changes:
+      - renameTable:
+          newTableName: control_panel_rm
+          oldTableName: studio_rm
+  - changeSet:
+      id: '000587.4.1'
+      author: appian
+      comment: Drop primary key constraints from control_panel_rm, Rename studio_id column to control_panel_id, and Add primary keys back to control_panel_rm
+      dbms: db2
+      changes:
+      - dropPrimaryKey:
+          tableName: control_panel_rm
+      - renameColumn:
+          columnDataType: ${longType}
+          newColumnName: control_panel_id
+          oldColumnName: studio_id
+          tableName: control_panel_rm
+      - addPrimaryKey:
+          columnNames: control_panel_id, rm_entry_id
+          tableName: control_panel_rm
+  - changeSet:
+        id: '000587.4.2'
+        author: appian
+        comment: Rename studio_id column to control_panel_id
+        dbms: '!db2'
+        changes:
+        - renameColumn:
+            columnDataType: ${longType}
+            newColumnName: control_panel_id
+            oldColumnName: studio_id
+            tableName: control_panel_rm
+  - changeSet:
+      id: '000587.4.3'
+      author: appian
+      comment: Add FK for control_panel_rm.control_panel_id to control_panel.id
+      changes:
+      - addForeignKeyConstraint:
+          constraintName: control_panel_rm_id_fk
+          baseTableName: control_panel_rm
+          baseColumnNames: control_panel_id
+          referencedTableName: control_panel
+          referencedColumnNames: id
+  - changeSet:
+      id: '000587.4.4'
+      author: appian
+      comment: Add FK for control_panel_rm.rm_entry_id to rm_entry.id
+      changes:
+      - addForeignKeyConstraint:
+          constraintName: control_panel_rm_entry_id_fk
+          baseTableName: control_panel_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+  - changeSet:
+      id: '000587.4.5'
+      author: appian
+      comment: Add index on control_panel_rm.control_panel_id
+      changes:
+      - createIndex:
+          columns:
+          - column:
+              name: control_panel_id
+          indexName: control_panel_rm_id_idx
+          tableName: control_panel_rm
+          unique: false
+  - changeSet:
+      id: '000587.4.6'
+      author: appian
+      comment: Add index on control_panel_rm.rm_entry_id
+      changes:
+      - createIndex:
+          columns:
+          - column:
+              name: rm_entry_id
+          indexName: control_panel_rm_entry_id_idx
+          tableName: control_panel_rm
+          unique: false
+  - changeSet:
+      id: '000587.5.0'
+      author: appian
+      comment: Update studio_administrator to control_panel_administrator in rm_role
+      changes:
+      - update:
+          tableName: rm_role
+          columns:
+          - column:
+              name: name
+              value: control_panel_administrator
+          where: id=42
+  - changeSet:
+      id: '000587.5.1'
+      author: appian
+      comment: Update studio_editor to control_panel_editor in rm_role
+      changes:
+      - update:
+          tableName: rm_role
+          columns:
+          - column:
+              name: name
+              value: control_panel_editor
+          where: id=43
+  - changeSet:
+      id: '000587.5.2'
+      author: appian
+      comment: Update studio_viewer to control_panel_viewer in rm_role
+      changes:
+      - update:
+          tableName: rm_role
+          columns:
+          - column:
+              name: name
+              value: control_panel_viewer
+          where: id=44

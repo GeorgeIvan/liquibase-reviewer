@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000140-remove-misnamed-system-web-api.xml">
+
+  <changeSet author="appian" id="tag-000139">
+    <tagDatabase tag="000139"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000140.0.0">
+    <comment>Delete improperly named release lock webapi (Rolemaps)</comment>
+    <delete tableName="web_api_rm">
+      <where>web_api_id IN (SELECT id FROM web_api WHERE uuid = 'SYSTEM_WEBAPI_locking_releaseLock')</where>
+    </delete>
+  </changeSet>
+
+  <changeSet author="appian" id="000140.1.0">
+    <comment>Delete improperly named release lock webapi</comment>
+    <delete tableName="web_api">
+      <where>uuid = 'SYSTEM_WEBAPI_locking_releaseLock'</where>
+    </delete>
+  </changeSet>
+
+  <changeSet author="appian" id="000140.2.0">
+    <comment>Delete improperly named release lock webapi (History)</comment>
+    <delete tableName="web_api_history">
+      <where>uuid = 'SYSTEM_WEBAPI_locking_releaseLock'</where>
+    </delete>
+  </changeSet>
+
+</databaseChangeLog>

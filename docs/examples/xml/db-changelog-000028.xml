@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000028.xml">
+
+  <changeSet author="appian" id="tag-000027">
+    <tagDatabase tag="000027"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000028.1.0">
+    <comment>Make lv_tmpt_expr nullable</comment>
+    <dropNotNullConstraint tableName="record_type" columnName="lv_tmpt_expr" columnDataType="${mediumStringType}"/>
+  </changeSet>
+</databaseChangeLog>
+

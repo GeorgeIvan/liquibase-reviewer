@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000231-add-deployment-status-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000231
+      tagDatabase:
+        tag: 'pre-000231'
+
+  - changeSet:
+      author: appian
+      id: '000231.0.0'
+      comment: Create a new column for deployment status
+      addColumn:
+        tableName: deployment
+        column:
+          name: status
+          type: ${shortStringType}

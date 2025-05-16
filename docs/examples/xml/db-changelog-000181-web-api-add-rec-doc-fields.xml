@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000180-web-api-add-rec-doc-fields.xml">
+
+  <changeSet author="appian" id="tag-000180">
+    <tagDatabase tag="000176"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000181.1.0">
+    <addColumn tableName="web_api">
+      <column name="request_body_type" type="${shortStringType}" defaultValue="NONE" value="NONE">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="web_api">
+      <column name="folder_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000181.2.0">
+    <addColumn tableName="web_api_history">
+      <column name="request_body_type" type="${shortStringType}" defaultValue="NONE" value="NONE">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="web_api_history">
+      <column name="folder_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

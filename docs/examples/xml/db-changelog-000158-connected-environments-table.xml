@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000158-connected-environments-table.xml">
+
+  <changeSet author="appian" id="tag-000157">
+    <tagDatabase tag="000157"/>
+  </changeSet>
+
+  <!-- TABLE Connected Environment -->
+  <changeSet author="appian" id="000158.1.0">
+    <comment>Add Connected Environment table</comment>
+    <createTable tableName="connected_env">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url" type="${urlType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="enabled" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="remote_enabled" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_action_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_action_actor_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_action_actor_username" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_action_date" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_action_ip" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for connected_env.id -->
+  <changeSet author="appian" id="000158.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="connected_env_sq"/>
+  </changeSet>
+
+  <!-- TABLE Connected Environments Request -->
+  <changeSet author="appian" id="000158.2.0">
+    <comment>Add Connected Environment Request table</comment>
+    <createTable tableName="connected_env_req">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${mediumStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="url" type="${urlType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="request_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="initiated_date" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="initiator_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="initiator_username" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="initiator_ip" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="approver_name" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="approver_username" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="approver_ip" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="decision_date" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="nonce" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="expiration_date" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for connected_env_req.id -->
+  <changeSet author="appian" id="000158.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="connected_env_req_sq"/>
+  </changeSet>
+
+  <!-- TABLE ConnectedEnvironment Public Key -->
+  <changeSet author="appian" id="000158.3.0">
+    <comment>Add Connected Environment Public Key table</comment>
+    <createTable tableName="connected_env_public_key">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="public_key" type="${blobType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url" type="${urlType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for connected_env_public_key.id -->
+  <changeSet author="appian" id="000158.3.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="connected_env_public_key_sq"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000134-add-remember-idp-col.xml">
+
+  <changeSet author="appian" id="tag-000133">
+    <tagDatabase tag="000133"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000134.1.0">
+    <comment>Create new column remember_idp for SAML Settings</comment>
+    <addColumn tableName="saml_settings">
+      <column name="remember_idp" type="${booleanType}" defaultValueBoolean="false"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

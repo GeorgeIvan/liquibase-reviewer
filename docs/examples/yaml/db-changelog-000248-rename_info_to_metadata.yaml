@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000248-rename_info_to_metadata.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000248'
+      tagDatabase:
+        tag: 'pre-000248'
+  - changeSet:
+      author: appian
+      id: '000248.1.0'
+      comment: Drop foreign key constraint for record_type
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type_replica_info
+            constraintName: rtri_record_type_id_fk
+  - changeSet:
+      author: appian
+      id: '000248.2.0'
+      comment: Rename table record_type_replica_info to record_replica_metadata
+      changes:
+        - renameTable:
+            newTableName: record_replica_metadata
+            oldTableName: record_type_replica_info
+  - changeSet:
+      author: appian
+      id: '000248.3.0'
+      comment: Add foreign key for record_type
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: record_replica_metadata
+            baseColumnNames: record_type_id
+            constraintName: rrm_record_type_id_fk
+            referencedTableName: record_type
+            referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000248.4.0'
+      comment: Rename column record_replica_metadata.field_to_column_info to attributes_metadata
+      changes:
+        - renameColumn:
+            columnDataType: ${largeStringType}
+            newColumnName: attributes_metadata
+            oldColumnName: field_to_column_info
+            tableName: record_replica_metadata

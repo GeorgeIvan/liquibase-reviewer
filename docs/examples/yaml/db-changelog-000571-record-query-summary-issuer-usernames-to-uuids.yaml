@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000571-record-query-summary-issuer-usernames-to-uuids.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000571
+      tagDatabase:
+        tag: 'pre-000571'
+
+  - changeSet:
+      author: appian
+      id: '000571.1.0'
+      comment: Create index 'record_query_summary_issr_idx' for record_query_summary issuer column
+      changes:
+        - createIndex:
+            indexName: record_query_summary_issr_idx
+            tableName: record_query_summary
+            unique: false
+            columns:
+              - column:
+                  name: issuer
+
+  - changeSet:
+      author: appian
+      id: '000571.2.0'
+      comment: Transform the usernames to uuids
+      changes:
+        - customChange:
+            class: com.appiancorp.rdbms.common.schema.UpdateUsernamesToUuids
+            params:
+              - param:
+                  name: tableName
+                  value: record_query_summary
+              - param:
+                  name: columnName
+                  value: issuer
+              - param:
+                  name: confirmationMessage
+                  value: Done transforming record_query_summary issuer usernames to UUIDs.
+
+  - changeSet:
+      id: '000571.3.0'
+      author: appian
+      comment: Remove the index from the issuer column
+      changes:
+        - dropIndex:
+            tableName: record_query_summary
+            indexName: record_query_summary_issr_idx

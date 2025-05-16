@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000166-external_sys_attr_sys_val-una_val-largeStringType.xml">
+
+  <changeSet author="appian" id="tag-000165">
+    <tagDatabase tag="000165"/>
+  </changeSet>
+
+  <!--
+    The modifyDataType operation can't be used to change the type of the val column for
+    external_sys_attr_sys_val or external_sys_attr_una_val from mediumStringType to largeStringType.
+
+    A solution was attempted mirroring the one in db-changelog-000080-record-type-expressionStringType.xml,
+    which creates a new column, copies the data over, deletes the old column, and renames the new one
+    to that of the old one.
+
+    However, adding a column to an existing table requires a default value, and mysql databases cannot
+    have a default value for BLOBs, which applies for largeStringType.
+
+    To mitigate this, we'll create a new table, copy the old data over, delete the old table and rename
+    the new table. A similar workaround can be found in db-changelog-000076-test-data-multiple-cases.xml
+  -->
+
+  <!-- Reconstructing external_sys_attr_sys_val table -->
+
+  <changeSet author="appian" id="000166.1.0">
+    <comment>Create table that mirrors the external_sys_attr_sys_val table</comment>
+    <createTable tableName="external_sys_attr_sys_val_temp">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="external_sys_attr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="val" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.1.1">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO external_sys_attr_sys_val_temp (external_sys_attr_id, val)
+      SELECT external_sys_attr_id, val FROM external_sys_attr_sys_val;
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000166.1.2">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO external_sys_attr_sys_val_temp
+      SELECT * FROM external_sys_attr_sys_val;
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.1.3">
+    <comment>Delete the original external_sys_attr_sys_val table</comment>
+    <dropTable tableName="external_sys_attr_sys_val"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.1.4">
+    <comment>Rename the temporary table to the original table's name</comment>
+    <renameTable oldTableName="external_sys_attr_sys_val_temp" newTableName="external_sys_attr_sys_val"/>
+  </changeSet>
+
+  <!-- Reconstructing external_sys_attr_una_val table -->
+
+  <changeSet author="appian" id="000166.2.0">
+    <comment>Create table that mirrors the external_sys_attr_una_val table</comment>
+    <createTable tableName="external_sys_attr_una_val_temp">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="external_sys_attr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="val" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="exp" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.2.1">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO external_sys_attr_una_val_temp (usr_id, external_sys_attr_id, val, exp)
+      SELECT usr_id, external_sys_attr_id, val, exp FROM external_sys_attr_una_val;
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000166.2.2">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Copy the data over</comment>
+    <sql>
+      INSERT INTO external_sys_attr_una_val_temp
+      SELECT * FROM external_sys_attr_una_val;
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.2.3">
+    <comment>Delete the original external_sys_attr_una_val table</comment>
+    <dropTable tableName="external_sys_attr_una_val"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000166.2.4">
+    <comment>Rename the temporary table to the original table's name</comment>
+    <renameTable oldTableName="external_sys_attr_una_val_temp" newTableName="external_sys_attr_una_val"/>
+  </changeSet>
+
+</databaseChangeLog>

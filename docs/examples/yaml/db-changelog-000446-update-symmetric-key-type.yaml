@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000446-update-symmetric-key-type.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000446'
+      tagDatabase:
+        tag: 'pre-000446'
+  - changeSet:
+      author: appian
+      id: '000446.01.0'
+      comment: Update all symmetric_keys to have a key_type of "secure_url_context"
+      changes:
+        update:
+           tableName: symmetric_keys
+           column:
+             name: key_type
+             value: secure_url_context

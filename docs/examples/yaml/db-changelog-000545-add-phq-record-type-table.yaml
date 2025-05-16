@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000545-add-phq-record-type-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000545'
+      tagDatabase:
+        tag: 'pre-000545'
+  - changeSet:
+      id: '000545.1.0'
+      author: appian
+      changes:
+        comment: Create phq_record_type table
+        createTable:
+          tableName: phq_record_type
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: phq_record_type_uuid_uc
+            - column:
+                name: root_record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: show_in_data_fabric_override
+                type: ${byteType}
+                defaultValueNumeric: 1
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000545.1.1'
+      author: appian
+      comment: Add sequence to provide primary key values for the phq_record_type table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: phq_record_type_sq

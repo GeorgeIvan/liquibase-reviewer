@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000176-drop-response-time-data-table.xml">
+
+  <changeSet author="appian" id="tag-000175">
+    <tagDatabase tag="000175"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000176.0.0">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="response_time_data"/>
+    </preConditions>
+    <comment>Drop response_time_data table and related constraints</comment>
+    <dropTable tableName="response_time_data" cascadeConstraints="true"/>
+  </changeSet>
+</databaseChangeLog>

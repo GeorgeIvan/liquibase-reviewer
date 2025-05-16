@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000127-design-object-versions-table.xml">
+
+  <changeSet author="appian" id="tag-000126">
+    <tagDatabase tag="000126"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000127.1.0">
+    <comment>Create the design object versions table</comment>
+    <createTable tableName="design_object_version">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="object_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="version_uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="exported_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000127.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="design_object_version_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000127.1.2">
+    <createIndex indexName="design_object_version_oid_idx" tableName="design_object_version" unique="false">
+      <column name="object_uuid"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

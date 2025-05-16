@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001025-ssa-library-object-add-column-is-shared-with-phq.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001025'
+      tagDatabase:
+        tag: 'pre-001025'
+  - changeSet:
+      id: '001025.1.0'
+      author: appian
+      comment: Add is shared with phq column
+      addColumn:
+        tableName: ssa_library_object
+        columns:
+          - column:
+              name: is_shared_with_phq
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false

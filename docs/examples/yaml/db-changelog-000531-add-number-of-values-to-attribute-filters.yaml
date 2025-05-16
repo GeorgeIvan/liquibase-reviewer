@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000531-add-number-of-values-to-attribute-filters.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000531'
+      tagDatabase:
+        tag: 'pre-000531'
+
+  - changeSet:
+      author: appian
+      id: '000531.1.0'
+      comment: Add new column 'number_of_values' to mining_categ_attr_fltr
+      changes:
+        - addColumn:
+            tableName: mining_categ_attr_fltr
+            columns:
+              - column:
+                  name: number_of_values
+                  type: ${longType}
+                  constraints:
+                    nullable: true

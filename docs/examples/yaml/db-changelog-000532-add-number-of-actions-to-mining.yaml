@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000532-add-number-of-actions-to-mining.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000532'
+      tagDatabase:
+        tag: 'pre-000532'
+
+  - changeSet:
+      author: appian
+      id: '000532.1.0'
+      comment: Add new column 'number_of_distinct_actions' to mining_process
+      changes:
+        - addColumn:
+            tableName: mining_process
+            columns:
+              - column:
+                  name: number_of_distinct_actions
+                  type: ${integerType}
+                  constraints:
+                    nullable: true

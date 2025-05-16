@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000122-restructure-site-tempo-link-viewers.xml">
+
+  <changeSet author="appian" id="tag-000121">
+    <tagDatabase tag="000121"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000122.1.0">
+    <comment>Create site_tempo_link_viewers table</comment>
+    <createTable tableName="site_tempo_link_viewers">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="site_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="grp_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000122.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="site_tempo_link_viewers_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000122.1.2">
+    <addForeignKeyConstraint baseColumnNames="site_id"
+                             baseTableName="site_tempo_link_viewers"
+                             constraintName="site_tmpo_lnk_vwrs_sid_fk"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             referencedColumnNames="id"
+                             referencedTableName="site"
+                             referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000122.1.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <createIndex indexName="site_tmpo_lnk_vwrs_sid_idx" tableName="site_tempo_link_viewers" unique="false">
+      <column name="site_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

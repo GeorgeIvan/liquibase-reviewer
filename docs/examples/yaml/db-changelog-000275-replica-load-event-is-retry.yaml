@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000275-replica-load-event-is-retry.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000275'
+      tagDatabase:
+        tag: 'pre-000275'
+  - changeSet:
+      author: appian
+      id: '000275.1.0'
+      comment: Add is_retry column to replica_load_event table, defaulting to false
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: is_retry
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'

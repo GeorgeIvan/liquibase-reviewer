@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001011-update-user-record-recovery-sync-true.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001011
+      tagDatabase:
+        tag: 'pre-001011'
+  - changeSet:
+      id: '001011.1.0'
+      author: appian
+      comment: Update user record types on existing sites to enable recovery sync
+      update:
+        tableName: record_type
+        column:
+          name: uses_recovery_sync
+          valueBoolean: true
+        where: uuid = 'SYSTEM_RECORD_TYPE_USER'

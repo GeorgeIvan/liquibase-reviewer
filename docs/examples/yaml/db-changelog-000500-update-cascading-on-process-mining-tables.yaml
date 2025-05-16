@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000500-update-cascading-on-process-mining-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000500'
+      tagDatabase:
+        tag: 'pre-000500'
+
+  - changeSet:
+      author: appian
+      id: '000500.1.0'
+      comment: add new column to mining_filter_group
+      changes:
+        - addColumn:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: mining_scope_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000500.2.0'
+      comment: update mining_filter_group.mining_scope_id with correct scopeId
+      changes:
+        - update:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: mining_scope_id
+                  valueComputed: (SELECT mining_scope.id FROM mining_scope WHERE mining_filter_group.id = mining_scope.mining_filter_group_id)
+
+  - changeSet:
+      author: appian
+      id: '000500.3.0'
+      comment: make column that will be FK from mining_filter_group to mining_scope non null
+      changes:
+        - addNotNullConstraint:
+            tableName: mining_filter_group
+            columnName: mining_scope_id
+            columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000500.4.0'
+      comment: drop FK constraints; mining_categ_attr_fltr -> mining_process_field | mining_scope -> mining_filter_group
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_categ_attr_fltr
+            constraintName: cat_attr_fltr_proc_field_fk
+        - dropForeignKeyConstraint:
+            baseTableName: mining_scope
+            constraintName: scope_fltr_grp_fk
+
+  - changeSet:
+      author: appian
+      id: '000500.4.1'
+      comment: re add FKs; mining_categ_attr_fltr -> mining_process_field | mining_filter_group -> mining_scope
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_categ_attr_fltr_fld_fk
+            baseTableName: mining_categ_attr_fltr
+            baseColumnNames: mining_process_field_id
+            referencedTableName: mining_process_field
+            referencedColumnNames: id
+            onDelete: NO ACTION
+        - addForeignKeyConstraint:
+            constraintName: mining_filter_group_scope_fk
+            baseTableName: mining_filter_group
+            baseColumnNames: mining_scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000500.4.2'
+      comment: add index to new fk column
+      changes:
+        - createIndex:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: mining_scope_id
+            indexName: mining_filter_group_scp_id_idx
+
+  - changeSet:
+      author: appian
+      id: '000500.5.0'
+      comment: remove mining_fltr_grp_id_idx from mining_scope.mining_filter_group_id
+      changes:
+        - dropIndex:
+            indexName: mining_fltr_grp_id_idx
+            tableName: mining_scope
+
+  - changeSet:
+      author: appian
+      id: '000500.5.1'
+      comment: remove mining_filter_group_id from mining_scope
+      changes:
+        - dropColumn:
+            tableName: mining_scope
+            columnName: mining_filter_group_id

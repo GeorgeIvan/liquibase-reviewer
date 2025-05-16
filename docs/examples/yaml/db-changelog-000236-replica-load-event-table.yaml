@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000236-replica-load-event-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000236'
+      tagDatabase:
+        tag: 'pre-000236'
+  - changeSet:
+      author: appian
+      id: '000236.1.0'
+      comment: Create replica_load_event table
+      createTable:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: record_type_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: start_time_ms
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: end_time_ms
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: source_rows_read
+              type: ${integerType}
+              constraints:
+                nullable: true
+          - column:
+              name: replica_rows_written
+              type: ${integerType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000236.2.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: replica_load_event_sq

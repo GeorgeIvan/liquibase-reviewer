@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000114-design-object-lock.xml">
+
+  <changeSet author="appian" id="tag-000113">
+    <tagDatabase tag="000113"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000114.1.0">
+    <comment>Create design object lock table</comment>
+    <createTable tableName="design_object_lock">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="object_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="locked_version_id" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="latest_version_id_when_locked" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="session_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ui_source_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="acquired_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000114.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="design_object_lock_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000114.1.2">
+    <createIndex indexName="lock_info_object_uuid_idx" tableName="design_object_lock" unique="true">
+      <column name="object_uuid"/>
+    </createIndex>
+    <createIndex indexName="lock_info_usr_id_idx" tableName="design_object_lock" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

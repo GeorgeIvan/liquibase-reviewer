@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000356-separate-replica-metadata-pk-from-fk.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000356'
+      tagDatabase:
+        tag: 'pre-000356'
+  - changeSet:
+      author: appian
+      id: '000356.1.0'
+      comment: Drop foreign key constraint on record_type_id
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_replica_metadata
+            constraintName: rrm_record_type_id_fk
+  - changeSet:
+      author: appian
+      id: '000356.2.0'
+      comment: Drop primary key constraint on record_type_id
+      changes:
+        - dropPrimaryKey:
+            tableName: record_replica_metadata
+  - changeSet:
+      author: appian
+      id: '000356.3.0'
+      comment: Rename record_type_id column
+      changes:
+        - renameColumn:
+            columnDataType: ${longType}
+            newColumnName: id
+            oldColumnName: record_type_id
+            tableName: record_replica_metadata
+  - changeSet:
+      author: appian
+      id: '000356.4.0'
+      comment: Add primary key to id column
+      changes:
+        - addPrimaryKey:
+            columnNames: id
+            tableName: record_replica_metadata
+  - changeSet:
+      author: appian
+      id: '000356.5.0'
+      comment: Add record_type_uuid column
+      addColumn:
+        tableName: record_replica_metadata
+        column:
+          name: record_type_uuid
+          type: ${uuidType}
+  - changeSet:
+      author: appian
+      id: '000356.6.0'
+      comment: Populate record_type_uuid for existing metadata
+      sql: UPDATE record_replica_metadata
+           SET record_type_uuid = (SELECT uuid FROM record_type
+           WHERE record_replica_metadata.id = record_type.id)
+  - changeSet:
+      author: appian
+      id: '000356.7.0'
+      comment: Make record_type_uuid non nullable
+      changes:
+        - addNotNullConstraint:
+            tableName: record_replica_metadata
+            columnName: record_type_uuid
+            columnDataType: ${uuidType}
+  - changeSet:
+      author: appian
+      id: '000356.8.0'
+      comment: Add unique constraint to record_type_uuid column
+      changes:
+        -  addUniqueConstraint:
+             tableName: record_replica_metadata
+             columnNames: record_type_uuid
+             constraintName: rrm_record_type_uuid_uc
+  - changeSet:
+      author: appian
+      id: '000356.9.0'
+      comment: Add foreign key constraint between record_type_uuid and record type
+      addForeignKeyConstraint:
+        constraintName: rrm_record_type_uuid_fk
+        baseTableName: record_replica_metadata
+        baseColumnNames: record_type_uuid
+        referencedTableName: record_type
+        referencedColumnNames: uuid

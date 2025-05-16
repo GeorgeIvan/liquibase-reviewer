@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000321-add-deleted-connected-env.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000321
+      tagDatabase:
+        tag: 'pre-000321'
+  - changeSet:
+      author: appian
+      id: '000321.1.0'
+      comment: Add deleted to connected_env table
+      addColumn:
+        tableName: connected_env
+        column:
+          name: deleted
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          valueBoolean: 'false'
+          constraints:
+            nullable: false

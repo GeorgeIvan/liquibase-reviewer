@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000394-add-scopes-session-logout-columns-to-oidc-settings.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000394'
+      tagDatabase:
+        tag: 'pre-000394'
+
+  - changeSet:
+      id: '000394.1.0'
+      author: appian
+      comment: Add column scopes to oidc_settings table
+      addColumn:
+        tableName: oidc_settings
+        column:
+          name: scopes
+          type: ${shortStringType}
+          defaultValue: 'openid'
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000394.2.0'
+      comment: Add column end_session_endpoint to oidc_settings table
+      addColumn:
+        tableName: oidc_settings
+        column:
+          name: end_session_endpoint
+          type: ${shortStringType}
+          constraints:
+            nullable: true

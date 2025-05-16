@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000254-design-guidance.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000254'
+      tagDatabase:
+        tag: 'pre-000254'
+  - changeSet:
+      author: appian
+      id: '000254.0.0'
+      comment: Create dg_object table
+      createTable:
+        tableName: dg_object
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: object_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: design_guidance_key
+              type: ${mediumStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: object_type_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: meta_data
+              type: ${largeStringType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000254.1.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dg_object_sq

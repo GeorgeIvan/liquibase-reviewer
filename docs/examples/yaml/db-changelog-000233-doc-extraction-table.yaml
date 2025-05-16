@@ -1,0 +1,209 @@
+---
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000233-doc-extraction-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000233'
+      tagDatabase:
+        tag: 'pre-000233'
+  - changeSet:
+      author: appian
+      id: '000233.1.0'
+      comment: Create doc_extract_job table
+      createTable:
+        tableName: doc_extract_job
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: vendor
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: job_status
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: appian_doc_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: cdt_type_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: version
+              type: ${integerType}
+              constraints:
+                nullable: false
+          - column:
+              name: fetch_attempts
+              type: ${integerType}
+              constraints:
+                nullable: false
+          - column:
+              name: interpreted_results_doc_id
+              type: ${longType}
+          - column:
+              name: create_time
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000233.2.0'
+      comment: Create doc_extract_raw_results table
+      createTable:
+        tableName: doc_extract_raw_results
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: job_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: raw_doc_id
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000233.3.0'
+      comment: Create doc_ext_google_vendor_job table
+      createTable:
+        tableName: doc_ext_google_vendor_job
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: job_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: google_job_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: source_bucket
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: destination_bucket
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000233.4.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_extract_job_sq
+  - changeSet:
+      id: '000233.5.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_extract_raw_results_sq
+  - changeSet:
+      id: '000233.6.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_ext_google_vendor_job_sq
+  - changeSet:
+      author: appian
+      id: '000233.7.0'
+      comment: FK from doc_extract_raw_results.job_id to doc_extract_job.id
+      addForeignKeyConstraint:
+        constraintName: doc_extract_raw_job_id_fk
+        baseTableName: doc_extract_raw_results
+        baseColumnNames: job_id
+        referencedTableName: doc_extract_job
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000233.8.0'
+      comment: FK from doc_ext_google_vendor_job.job_id to doc_extract_job.id
+      addForeignKeyConstraint:
+        constraintName: doc_ext_google_job_id_fk
+        baseTableName: doc_ext_google_vendor_job
+        baseColumnNames: job_id
+        referencedTableName: doc_extract_job
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000233.9.0'
+      comment: Add index on doc_extract_raw_results.job_id column for foreign key
+      preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+        onFail: MARK_RAN
+        not:
+          or:
+            - dbms:
+              type: mysql
+            - dbms:
+              type: mariadb
+      createIndex:
+        columns:
+          - column:
+              name: job_id
+        indexName: doc_extract_raw_job_id_ix
+        tableName: doc_extract_raw_results
+  - changeSet:
+      author: appian
+      id: '000233.10.0'
+      comment: Add index on doc_ext_google_vendor_job.job_id column for foreign key
+      preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+        onFail: MARK_RAN
+        not:
+            or:
+              - dbms:
+                type: mysql
+              - dbms:
+                type: mariadb
+      createIndex:
+        columns:
+          - column:
+              name: job_id
+        indexName: doc_ext_google_job_id_ix
+        tableName: doc_ext_google_vendor_job

@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000352-create-dkim-configuration-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000352'
+      tagDatabase:
+        tag: 'pre-000352'
+
+  - changeSet:
+      author: appian
+      id: '000352.1.0'
+      comment: Create dkim_configuration table
+      changes:
+        - createTable:
+            tableName: dkim_configuration
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: domain
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: dkim_configuration_domain_uc
+              - column:
+                  name: selector
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key_size
+                  type: ${integerType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: public_key
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: private_key
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: signing_algorithm
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_canonicalization
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_verified
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_verification_time
+                  type: ${longType}
+  - changeSet:
+      id: '000352.1.1'
+      comment: A sequence to provide primary key values for the dkim_configuration table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dkim_configuration_sq

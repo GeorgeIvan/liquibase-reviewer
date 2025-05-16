@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000089-record-type-layout.xml">
+
+  <changeSet author="appian" id="tag-000088">
+    <tagDatabase tag="000088"/>
+  </changeSet>
+
+  <!-- =================================================================================================== -->
+  <!-- Drop the now un-needed record_list table created in 83 but never released. Table contains no data   -->
+  <!-- =================================================================================================== -->
+
+  <changeSet author="appian" id="000089.0.0">
+    <comment>Drop as-yet-unused record_list table</comment>
+    <dropTable tableName="record_list"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000089.0.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <comment>Drop record_list_sq sequence</comment>
+    <dropSequence sequenceName="record_list_sq"/>
+  </changeSet>
+
+  <!-- =================================================================================================== -->
+  <!-- Add new expression columns to the record type and field config tables                               -->
+  <!-- ================================================================================================== -->
+
+  <changeSet author="appian" id="000089.1.0">
+    <comment>
+      Create a "layout_config" column in record_type to indicate the type of layout to display. (GRID, FEED, etc)
+    </comment>
+    <addColumn tableName="record_type">
+      <column name="layout_cfg" type="${byteType}" defaultValueNumeric="2" value="1">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000089.1.1">
+    <comment>
+      Create a "instance_title_expr" column in record_type that evals to the dashboard title
+    </comment>
+    <addColumn tableName="record_type">
+      <column name="instance_title_expr" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000089.1.2">
+    <comment>
+      Create a "visibility_expr" column in record_fld_cfg that determines at run time if the user filter displays
+    </comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="visibility_expr" type="${expressionStringType}" value="fn!true()"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000089.1.3">
+    <comment>
+      Create a "default_opt_expr" column in record_fld_cfg to indicate the label of the facetOption selected by default
+    </comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="default_opt_expr" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

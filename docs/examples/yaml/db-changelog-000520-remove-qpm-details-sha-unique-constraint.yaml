@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000520-remove-qpm-details-sha-unique-constraint.yaml
+  - changeSet:
+      id: 'tag-pre-000520'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000520'
+  - changeSet:
+      id: '000520.1.0'
+      author: appian
+      comment: Remove uniqueness constraint on record_query_detail.query_details_sha256
+      changes:
+        - dropIndex:
+            tableName: record_query_details
+            indexName: rqs_query_details_sha256_idx

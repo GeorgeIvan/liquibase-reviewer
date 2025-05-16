@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000301-record-type-hideNewsAndRelatedActions.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000301'
+      tagDatabase:
+        tag: 'pre-000301'
+  - changeSet:
+      author: appian
+      id: '000301.1.0'
+      comment: Create new column hide_news_view
+      addColumn:
+        tableName: record_type
+        column:
+          name: hide_news_view
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          valueBoolean: 'false'
+          constraints:
+            nullable: 'false'
+  - changeSet:
+      author: appian
+      id: '000301.1.1'
+      comment: Create new column hide_related_actions_view
+      addColumn:
+        tableName: record_type
+        column:
+          name: hide_related_actions_view
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          valueBoolean: 'false'
+          constraints:
+            nullable: 'false'

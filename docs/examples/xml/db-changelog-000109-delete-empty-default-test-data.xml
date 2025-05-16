@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000109-delete-empty-default-test-data.xml">
+
+    <changeSet author="appian" id="tag-000108">
+        <tagDatabase tag="000108"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000109.0.0">
+        <comment>Delete Test Data that represent a null test value</comment>
+        <customChange class="com.appiancorp.object.test.migration.DeleteEmptyDefaultTestData" />
+    </changeSet>
+
+</databaseChangeLog>

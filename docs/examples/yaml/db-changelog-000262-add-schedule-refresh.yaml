@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000262-add-schedule-refresh.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000262'
+      tagDatabase:
+        tag: 'pre-000262'
+  - changeSet:
+      author: appian
+      id: '000262.1.0'
+      validCheckSum:
+        - ANY
+      comment: Add schedule refresh table
+      createTable:
+        tableName: record_source_rf_schedule
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: frequency
+              type: ${byteType}
+              constraints:
+                nullable: false
+          - column:
+              name: value
+              type: ${largeStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: activated
+              type: ${booleanType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000262.2.0'
+      validCheckSum:
+        - ANY
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_source_rf_schedule_sq
+  - changeSet:
+      author: appian
+      id: '000262.3.0'
+      comment: Create refresh_schedule_id column on record_type_sources
+      addColumn:
+        tableName: record_type_sources
+        column:
+         name: refresh_schedule_id
+         type: ${longType}
+         constraints:
+           nullable: true
+  - changeSet:
+      author: appian
+      id: '000262.4.0'
+      validCheckSum:
+        - ANY
+      comment: FK from record_type_sources.refresh_schedule_id to record_source_rf_schedule.id
+      addForeignKeyConstraint:
+        constraintName: record_type_sources_rs_id_fk
+        baseTableName: record_type_sources
+        baseColumnNames: refresh_schedule_id
+        referencedTableName: record_source_rf_schedule
+        referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000262.5.0'
+      comment: Add index on record_type_sources.refresh_schedule_id
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494
+      createIndex:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: refresh_schedule_id
+        indexName: record_type_sources_rs_id_idx

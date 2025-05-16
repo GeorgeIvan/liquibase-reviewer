@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="resources/appian/db/changelog/db-changelog-000001.xml">
+  
+  <!-- For Oracle, we need to set the semantics for text types so that a column type such
+  as varchar2(255) will be interpreted as varchar2(255 char), not varchar2(255 byte). -->
+  <changeSet author="appian" id="000001.0.0" dbms="oracle" runAlways="true">
+    <sql>ALTER SESSION SET NLS_LENGTH_SEMANTICS=CHAR;</sql>
+  </changeSet>
+  
+  <!-- First check if the DT_MODEL table already exists. For sites upgrading from 6.1 and using
+  MySQL, we need to fix the type of the NAMESPACE_URI column which was created with the type
+  "longtext", but should have been "varchar(1024)". -->
+  <changeSet author="appian" id="000001.1.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <and><tableExists tableName="DT_MODEL"/><or><dbms type="mysql"/><dbms type="mariadb"/></or></and>
+    </preConditions>
+    <modifyDataType tableName="DT_MODEL" columnName="NAMESPACE_URI" newDataType="${stringType}(1024)"/>
+  </changeSet>
+
+  <!-- For sites that are not upgrading, we need to create the dt_model table. -->
+  <changeSet author="appian" id="000001.1.1">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <not><tableExists tableName="DT_MODEL"/></not>
+        <changeLogPropertyDefined property="createSequence" value="true"/>
+      </and>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="DT_MODEL_sq"/>
+  </changeSet>
+  <changeSet author="appian" id="000001.1.2">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="DT_MODEL"/></not>
+    </preConditions>
+    <createTable tableName="DT_MODEL">
+      <column name="ID" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="NAME" type="${stringType}(255)">
+        <constraints nullable="false" unique="true" uniqueConstraintName="dt_model_name_uc"/>
+      </column>
+      <column name="NAMESPACE_URI" type="${stringType}(1024)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="XMODEL" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+   
+</databaseChangeLog>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000018.xml">
+
+  <changeSet author="appian" id="tag-000017">
+    <tagDatabase tag="000017"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000018.1.0">
+    <comment>Create Index for type, recipient, and id columns</comment>
+    <createIndex indexName="tp_feed_entry_tri_idx" tableName="tp_feed_entry" unique="false">
+      <column name="type"/>
+      <column name="recipient"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000018.2.0">
+    <modifyDataType tableName="tp_feed_entry" columnName="body" newDataType="${mediumStringType}"/>
+  </changeSet>
+</databaseChangeLog>

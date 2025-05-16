@@ -1,0 +1,218 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000519-add-document-chat-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000519'
+      tagDatabase:
+        tag: 'pre-000519'
+  - changeSet:
+      id: '000519.1.0'
+      author: appian
+      comment: Create document_chat_knowledge_set table
+      changes:
+        - createTable:
+            tableName: document_chat_knowledge_set
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: folder_id
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: modified_on
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: total_file_size
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000519.1.1'
+      author: appian
+      comment: Create document_chat_conversation table
+      changes:
+        - createTable:
+            tableName: document_chat_conversation
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: knowledge_set_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: modified_on
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            constraintName: dc_chat_knowledge_set_id_fk
+            baseTableName: document_chat_conversation
+            baseColumnNames: knowledge_set_id
+            referencedTableName: document_chat_knowledge_set
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000519.1.2'
+      author: appian
+      comment: Create document_chat_message table
+      changes:
+        - createTable:
+            tableName: document_chat_message
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: conversation_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_text
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: score
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feedback
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: role_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: dc_message_conversation_id_fk
+            baseTableName: document_chat_message
+            baseColumnNames: conversation_id
+            referencedTableName: document_chat_conversation
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000519.1.3'
+      author: appian
+      comment: Create document_chat_document table
+      changes:
+        - createTable:
+            tableName: document_chat_document
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: document_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: knowledge_set_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uploaded_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uploaded_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: dc_doc_knowledge_set_id_fk
+            baseTableName: document_chat_document
+            baseColumnNames: knowledge_set_id
+            referencedTableName: document_chat_knowledge_set
+            referencedColumnNames: id
+            onDelete: CASCADE

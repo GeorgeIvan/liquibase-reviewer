@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000511-widen-field-name-columns-for-mining.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000511'
+      tagDatabase:
+        tag: 'pre-000511'
+  - changeSet:
+      author: appian
+      id: '000511.1.0'
+      comment: Update display_name data type
+      modifyDataType:
+        tableName: dataset_field
+        columnName: display_name
+        newDataType: ${mediumStringType}
+  - changeSet:
+      author: appian
+      id: '000511.2.0'
+      comment: Update name_in_mining data type
+      modifyDataType:
+        tableName: mining_process_field
+        columnName: name_in_mining
+        newDataType: ${mediumStringType}

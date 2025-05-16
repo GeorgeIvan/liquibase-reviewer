@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000576-make-insight-investigation-optional.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000576'
+      tagDatabase:
+        tag: 'pre-000576'
+  - changeSet:
+      id: '000576.1.0'
+      author: appian
+      comment: Create mining_analysis_timeframe table
+      changes:
+        - createTable:
+            tableName: mining_analysis_timeframe
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: analysis_tf_insight_id_uc
+              - column:
+                  name: time_period
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000576.2.0'
+      comment: Add fk for base table mining_analysis_timeframe
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_analysis_tf_miid_fk
+            baseTableName: mining_analysis_timeframe
+            baseColumnNames: mining_insight_id
+            referencedTableName: mining_insight
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000576.3.0'
+      comment: Create sequence to provide primary key value for mining analysis timeframe
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_analysis_timeframe_sq
+  - changeSet:
+      id: '000576.4.0'
+      author: appian
+      comment: Make mining_investigation pointer nullable.
+      changes:
+        - dropNotNullConstraint:
+            tableName: mining_insight
+            columnName: mining_investigation_id
+            columnDataType: ${longType}

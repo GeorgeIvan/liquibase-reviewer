@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000363-add-record-id-generator-uuid-to-record-type-sources.yaml
+  - changeSet:
+      id: 'tag-pre-000363'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000363'
+  - changeSet:
+      author: appian
+      id: '000363.1.0'
+      comment: Add record-id-generator-uuid column
+      addColumn:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: record_id_generator_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: true

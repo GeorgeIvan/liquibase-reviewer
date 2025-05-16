@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000230-deployment-submission-date.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000230
+      tagDatabase:
+        tag: pre-000230
+  - changeSet:
+      author: appian
+      id: 000230.1.0
+      comment: Add created timestamp column
+      addColumn:
+        columns:
+            - column:
+                name: created_ts
+                type: ${longtype}
+                constraints:
+                  nullable: true
+                defaultValue: 0
+        tableName: deployment
+  - changeSet:
+      author: appian
+      id: 000230.2.0
+      comment: Copy requested timestamps from deployment_events table
+      dbms: mariadb,mysql
+      sql: UPDATE deployment d, (SELECT deployment_id, time_stamp
+           FROM deployment_event WHERE name='REQUESTED') e
+           SET d.created_ts = e.time_stamp
+           WHERE d.id = e.deployment_id;
+  - changeSet:
+      author: appian
+      id: 000230.3.0
+      comment: Copy requested timestamps from deployment_events table
+      dbms: oracle,db2,postgresql,mssql
+      sql: UPDATE deployment
+           SET created_ts = (SELECT time_stamp FROM deployment_event
+           WHERE name = 'REQUESTED' AND deployment_event.deployment_id = deployment.id);
+  - changeSet:
+      author: appian
+      id: 000230.4.0
+      comment: Fix any null timestamps created by the conversion above
+      sql: UPDATE deployment SET created_ts = 0 WHERE created_ts IS NULL;
+  - changeSet:
+      author: appian
+      id: 000230.5.0
+      comment: Make the timestamp column non-nullable, now that migration to it is finished
+      addNotNullConstraint:
+        tableName: deployment
+        columnName: created_ts
+        columnDataType: ${longtype}
+  - changeSet:
+      author: appian
+      id: 000230.6.0
+      comment: Add index on timestamp column
+      createIndex:
+        columns:
+          - column:
+              name: created_ts
+        indexName: dpl_created_ts_idx
+        tableName: deployment
+  - changeSet:
+      author: appian
+      id: 000230.7.0
+      comment: Add index on name column
+      createIndex:
+        columns:
+          - column:
+              name: name
+        indexName: dpl_name_idx
+        tableName: deployment

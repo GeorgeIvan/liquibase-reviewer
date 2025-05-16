@@ -1,0 +1,299 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000440-rename-mining-log-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000440'
+      tagDatabase:
+        tag: 'pre-000440'
+
+  - changeSet:
+      author: appian
+      id: '000440.01.0'
+      comment: Remove all pre-existing mining_log constraints
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_log_provider
+            constraintName: mining_log_provider_log_id_fk
+        - dropForeignKeyConstraint:
+            baseTableName: mining_log_field
+            constraintName: mining_log_field_provi_id_fk
+        - dropIndex:
+            indexName: mining_log_provider_log_id_idx
+            tableName: mining_log_provider
+        - dropIndex:
+            indexName: mining_log_field_provi_id_idx
+            tableName: mining_log_field
+        - dropUniqueConstraint:
+            columnNames: name
+            tableName: mining_log
+            constraintName: mining_log_name_uc
+        - dropUniqueConstraint:
+            columnNames: uuid
+            tableName: mining_log
+            constraintName: mining_process_uuid_uc
+        - dropUniqueConstraint:
+            constraintName: mining_log_provider_log_prv_uc
+            tableName: mining_log_provider
+            columnNames: mining_log_id, provider_uuid
+
+  - changeSet:
+      author: appian
+      id: '000440.02.0'
+      comment: Recreate the mining_log table as mining_process
+      changes:
+        - createTable:
+            tableName: mining_process
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: log_id
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: average_case_duration_ms
+                  type: ${doubleType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: median_case_duration_ms
+                  type: ${doubleType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: number_of_cases
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: sync_status
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_successful_update_ms
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: last_successful_update_by
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: failed_update_ms
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: failed_update_by
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            columnNames: name
+            tableName: mining_process
+            constraintName: mining_process_name_uc
+        - addUniqueConstraint:
+            columnNames: uuid
+            tableName: mining_process
+            constraintName: mining_process_uuid_uc
+
+  - changeSet:
+      id: '000440.03.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_process_sq
+
+  - changeSet:
+      author: appian
+      id: '000440.04.0'
+      comment: Create mining_process_provider table
+      changes:
+        - createTable:
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_type
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: mining_prcss_prv_prcss_id_idx
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: mining_process_id
+        - addUniqueConstraint:
+            constraintName: mining_prcss_prv_prcss_prv_uc
+            tableName: mining_process_provider
+            columnNames: mining_process_id, provider_uuid
+
+  - changeSet:
+      id: '000440.05.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_process_provider_sq
+
+  - changeSet:
+      id: '000440.06.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_process_provider to mining_process.id
+        addForeignKeyConstraint:
+          constraintName: mining_prcss_prv_prcss_id_fk
+          baseTableName: mining_process_provider
+          baseColumnNames: mining_process_id
+          referencedTableName: mining_process
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000440.07.0'
+      comment: Create mining_process_field table
+      changes:
+        - createTable:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_provider_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: field_path
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: semantic
+                  type: ${byteType}
+        - createIndex:
+            indexName: mining_prcss_field_prv_id_idx
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: mining_process_provider_id
+
+  - changeSet:
+      id: '000440.08.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_process_field_sq
+
+  - changeSet:
+      id: '000440.09.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_process_field.mining_process_provider_id to mining_process_provider.id
+        addForeignKeyConstraint:
+          constraintName: mining_prcss_field_prv_id_fk
+          baseTableName: mining_process_field
+          baseColumnNames: mining_process_provider_id
+          referencedTableName: mining_process_provider
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000440.10.0'
+      comment: Drop all the mining_log* tables (easier to recreate and drop due to db2)
+      changes:
+        - dropTable:
+            tableName: mining_log
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_log_provider
+            cascadeConstraints: true
+        - dropTable:
+            tableName: mining_log_field
+            cascadeConstraints: true
+  - changeSet:
+      id: '000440.10.1'
+      author: appian
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: dropSequence
+          value: true
+      dropSequence:
+        sequenceName: mining_log_sq
+  - changeSet:
+      id: '000440.10.2'
+      author: appian
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: dropSequence
+          value: true
+      dropSequence:
+        sequenceName: mining_log_provider_sq
+  - changeSet:
+      id: '000440.10.3'
+      author: appian
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: dropSequence
+          value: true
+      dropSequence:
+        sequenceName: mining_log_field_sq

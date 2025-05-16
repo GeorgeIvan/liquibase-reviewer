@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001026-update-duration-insights-as-legacy.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001026'
+      tagDatabase:
+        tag: 'pre-001026'
+  - changeSet:
+      author: appian
+      id: '001026.1.0'
+      comment: (MariaDB Only) Mark all existing Duration type Insights as Legacy
+      dbms: 'mariadb'
+      sql: UPDATE mining_insight ins
+        INNER JOIN mining_kpi kpi ON ins.mining_kpi_id = kpi.id
+        INNER JOIN mining_kpi_type kpi_type ON kpi_type.mining_kpi_id = kpi.id
+        INNER JOIN mining_kpi_type_duration dur ON dur.kpi_type_id = kpi_type.id
+        SET ins.warn_option = 5, ins.warn_ts = UNIX_TIMESTAMP(CURRENT_TIMESTAMP) * 1000;
+  - changeSet:
+      author: appian
+      id: 'tag-post-001026'
+      tagDatabase:
+        tag: 'post-001026'

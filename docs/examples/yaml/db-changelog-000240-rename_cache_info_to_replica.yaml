@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000240-rename_cache_info_to_replica.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000240'
+      tagDatabase:
+        tag: 'pre-000240'
+  - changeSet:
+      author: appian
+      id: '000240.1.0'
+      comment: Drop foreign key constraint for record_type
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type_cache_info
+            constraintName: rtci_record_type_id_fk
+  - changeSet:
+      author: appian
+      id: '000240.2.0'
+      comment: Rename table record_type_cache_info to record_type_replica_info
+      changes:
+        - renameTable:
+            newTableName: record_type_replica_info
+            oldTableName: record_type_cache_info
+  - changeSet:
+      author: appian
+      id: '000240.3.0'
+      comment: Add foreign key for record_type
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: record_type_replica_info
+            baseColumnNames: record_type_id
+            constraintName: rtri_record_type_id_fk
+            referencedTableName: record_type
+            referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000240.4.0'
+      comment: Rename column record_type_cache_info.is_cache_valid to is_replica_valid
+      changes:
+        - renameColumn:
+            columnDataType: ${booleanType}
+            newColumnName: is_replica_valid
+            oldColumnName: is_cache_valid
+            tableName: record_type_replica_info
+  - changeSet:
+      author: appian
+      id: '000240.5.0'
+      comment: Rename column record_type_cache_info.cache_last_updated_ms to replica_last_updated_ms
+      changes:
+        - renameColumn:
+            columnDataType: ${longType}
+            newColumnName: replica_last_updated_ms
+            oldColumnName: cache_last_updated_ms
+            tableName: record_type_replica_info
+  - changeSet:
+      author: appian
+      id: '000240.6.0'
+      comment: Drop default value on record_type.is_cache_valid
+      dropDefaultValue:
+        tableName: record_type
+        columnName: is_cache_valid
+        columnDataType: ${booleanType}
+  - changeSet:
+      author: appian
+      id: '000240.7.0'
+      comment: Drop unused record_type.is_cache_valid column
+      changes:
+        - dropColumn:
+            columnName: is_cache_valid
+            tableName: record_type
+  - changeSet:
+      author: appian
+      id: '000240.8.0'
+      comment: Rename "RecordsCache" values in column record_type.src_type to "RecordsReplica"
+      changes:
+        - update:
+            columns:
+              - column:
+                  name: src_type
+                  value: '{http://www.appian.com/ae/types/2009}RecordsReplica'
+                  type: ${shortStringType}
+            tableName: record_type
+            where: src_type='{http://www.appian.com/ae/types/2009}RecordsCache'

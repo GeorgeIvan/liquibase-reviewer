@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000103-sites-branding-expressionable.xml">
+
+  <changeSet author="appian" id="tag-000102">
+    <tagDatabase tag="000102"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000103.1.0">
+    <comment>Create new column header_bkgd_color_expr</comment>
+    <addColumn tableName="site">
+      <column name="header_bkgd_color_expr" type="${expressionStringType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000103.2.0">
+    <comment>Create new column selected_tab_color_expr</comment>
+    <addColumn tableName="site">
+      <column name="selected_tab_color_expr" type="${expressionStringType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000103.3.0">
+    <comment>Drop derived color unhighlighted_tab_fg_color</comment>
+    <dropColumn tableName="site" columnName="unhighlighted_tab_fg_color"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000103.4.0">
+    <comment>Drop derived color highlighted_tab_fg_color</comment>
+    <dropColumn tableName="site" columnName="highlighted_tab_fg_color"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000103.5.0">
+    <comment>Drop derived color tab_hover_color</comment>
+    <dropColumn tableName="site" columnName="tab_hover_color"/>
+  </changeSet>
+
+</databaseChangeLog>

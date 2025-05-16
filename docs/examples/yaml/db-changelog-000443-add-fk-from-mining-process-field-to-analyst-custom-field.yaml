@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000443-add-fk-from-mining-process-field-to-analyst-custom-field.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000443'
+      tagDatabase:
+        tag: 'pre-000443'
+  - changeSet:
+      author: appian
+      id: '000443.01.0'
+      comment: Add custom field id column to mining_process_field
+      addColumn:
+        tableName: mining_process_field
+        column:
+          name: custom_field_id
+          type: ${longType}
+          constraints:
+            nullable: true
+  - changeSet:
+      author: appian
+      id: '000443.02.0'
+      comment: Create FK relationship from custom_field_id to analyst_custom_field
+      addForeignKeyConstraint:
+        constraintName: mining_process_field_cfid_fk
+        baseTableName: mining_process_field
+        baseColumnNames: custom_field_id
+        referencedTableName: analyst_custom_field
+        referencedColumnNames: id
+        onDelete: CASCADE

@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000573-create-rs-field-metadata-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000573'
+      tagDatabase:
+        tag: 'pre-000573'
+  - changeSet:
+      id: '000573.1.0'
+      author: appian
+      comment: Create rs_field_metadata table.
+      changes:
+        - createTable:
+            tableName: rs_field_metadata
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: rs_field_metadata_uuid_uc
+              - column:
+                  name: field_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: meta_data_type
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: meta_data_expression
+                  type: ${expressionStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: meta_data_object_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: '000573.2.0'
+      author: appian
+      comment: Create a sequence to provide primary key values for the rs_field_metadata table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: rs_field_metadata_sq
+
+  - changeSet:
+      author: appian
+      id: '000573.3.0'
+      comment: Add fk for base table rs_field_metadata
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rs_field_metadata_field_fk
+            baseTableName: rs_field_metadata
+            baseColumnNames: field_id
+            referencedTableName: record_source_fields
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000573.4.0'
+      comment: Add unique constraint to field_id & meta_data_type
+      changes:
+        - addUniqueConstraint:
+            tableName: rs_field_metadata
+            columnNames: field_id, meta_data_type
+            constraintName: rs_field_metadata_fid_mdt_uc
+
+  - changeSet:
+      id: '000573.5.0'
+      author: appian
+      comment: Add field_format to record_source_fields
+      addColumn:
+        tableName: record_source_fields
+        column:
+          name: field_format
+          type: ${shortStringType}
+          constraints:
+            nullable: true

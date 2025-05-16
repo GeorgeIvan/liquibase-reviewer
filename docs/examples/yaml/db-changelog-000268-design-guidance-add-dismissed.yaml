@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000268-design-guidance-add-dismissed.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000268'
+      tagDatabase:
+        tag: 'pre-000268'
+  - changeSet:
+      author: appian
+      id: '000268.1.0'
+      comment: Create new column for dismissed
+      addColumn:
+        tableName: dg_object
+        columns:
+          - column:
+              name: dismissed
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'

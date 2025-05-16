@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000121-cfg-largeStringType.xml">
+
+  <changeSet author="appian" id="tag-000120">
+    <tagDatabase tag="000120"/>
+  </changeSet>
+  
+  <!-- We have to create a new column because conversion of a column from
+       text to largeStringType is not supported for all of our databases. -->
+
+  <changeSet author="appian" id="000121.1.0">
+    <comment>Add new cfg column called prop_value_copy of type largeStringType</comment>
+    <addColumn tableName="cfg">
+      <column name="prop_value_copy" type="${largeStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000121.1.1">
+    <comment>Copy over original cfg prop_value column into prop_value_copy</comment>
+    <sql>update cfg set prop_value_copy = prop_value</sql>
+  </changeSet>
+  <changeSet author="appian" id="000121.1.2">
+    <comment>Drop original cfg prop_value column</comment>
+    <dropColumn tableName="cfg" columnName="prop_value"/>
+  </changeSet>
+  <changeSet author="appian" id="000121.1.3">
+    <comment>Rename cfg prop_value_copy column to prop_value</comment>
+    <renameColumn tableName="cfg" oldColumnName="prop_value_copy" newColumnName="prop_value" columnDataType="${largeStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

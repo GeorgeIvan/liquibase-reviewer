@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000412-add-export-request-to-deployment.yaml
+  - changeSet:
+      id: 'tag-pre-000412'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000412'
+
+  - changeSet:
+      id: '000412.1.0'
+      author: appian
+      comment: Add is_backup_saved, is_fail_fast, and import_rollback_type columns to deployment table
+      addColumn:
+        tableName: deployment
+        columns:
+          - column:
+              name: is_backup_saved
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: is_fail_fast
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: import_rollback_type
+              type: ${shortStringType}
+              defaultValue: DISABLED
+              value: DISABLED
+              constraints:
+                nullable: true
+          - column:
+              name: backup_zip_doc
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: secondary_backup_zip_doc
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: backup_icf_doc
+              type: ${longType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      id: '000412.1.1'
+      author: appian
+      # No data migration is needed because the feature using this field was not released yet; also
+      # the document id references a JSON for intiating an async export which must be done at the time
+      # when this database change is running.
+      comment: Remove export_request_doc_id column
+      changes:
+        - dropColumn:
+            tableName: deployment
+            columns:
+              - column:
+                  name: export_request_doc_id
+  - changeSet:
+      author: appian
+      id: '000412.2.0'
+      comment: Rename the import_details to the event_info and the event_info_version_id column
+      changes:
+        - renameColumn:
+            columnDataType: ${blobType}
+            newColumnName: event_info
+            oldColumnName: import_details
+            tableName: deployment_event
+        - addColumn:
+            tableName: deployment_event
+            columns:
+              - column:
+                  name: event_info_version_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000412.3.0'
+      comment: Set the event_info_version_id to 1 if event_info is not null
+      changes:
+        - update:
+            columns:
+              - column:
+                  name: event_info_version_id
+                  value: 1
+            tableName: deployment_event
+            where: event_info is not null

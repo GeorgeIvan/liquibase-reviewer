@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000526-remove-unused-fields-document-chat-message.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000526'
+      tagDatabase:
+        tag: 'pre-000526'
+  - changeSet:
+      id: '000526.1.0'
+      author: appian
+      comment: Remove unused fields of document_chat_message
+      changes:
+        dropColumn:
+          columns:
+            - column:
+                name: score
+            - column:
+                name: feedback
+          tableName: document_chat_message

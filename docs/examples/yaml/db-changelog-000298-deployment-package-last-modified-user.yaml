@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000298-deployment-package-last-modified-user.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000298'
+      tagDatabase:
+        tag: 'pre-000298'
+
+  - changeSet:
+      author: appian
+      id: '000298.1.0'
+      comment: Add modified_by_user_uuid column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: modified_by_user_uuid
+          type: ${uuidType}
+
+  #Set the value of modified by user uuid as the user who created the package
+  - changeSet:
+      author: appian
+      id: '000298.1.1'
+      comment: Set modified_by_user_uuid to created_by_user_uuid value
+      sql: UPDATE dpkg SET modified_by_user_uuid = created_by_user_uuid;
+
+  #Make the modified by user column not null
+  - changeSet:
+      author: appian
+      id: '000298.1.2'
+      comment: Make the modified by user column not null, now that migration to it is finished
+      addNotNullConstraint:
+        tableName: dpkg
+        columnName: modified_by_user_uuid
+        columnDataType: ${uuidType}

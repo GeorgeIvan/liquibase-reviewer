@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001040-make-parent-fk-to-uuid-on-cpti.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001040
+      tagDatabase:
+        tag: pre-001040
+  - changeSet:
+      author: appian
+      id: 001040.1.0
+      comment: Add parent_uuid column
+      changes:
+        - addColumn:
+            tableName: control_panel_tier_item
+            column:
+              name: parent_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: 001040.1.1
+      comment: Backfill parent_uuid and url_stub_unique column
+      changes:
+        - update:
+            tableName: control_panel_tier_item
+            columns:
+              - column:
+                  name: parent_uuid
+                  valueComputed: "(SELECT parent.uuid FROM (SELECT id, uuid FROM control_panel_tier_item) parent WHERE parent.id = control_panel_tier_item.parent_id)"
+        - update:
+            tableName: control_panel_tier_item
+            columns:
+              - column:
+                  name: url_stub_unique
+                  valueComputed: "CONCAT(control_panel_id, CONCAT('/', CONCAT(COALESCE(parent_uuid, ''), CONCAT('/', url_stub))))"
+  - changeSet:
+      author: appian
+      id: 001040.1.2
+      comment: Drop control_panel_ti_parent_id_fk constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: control_panel_tier_item
+            constraintName: control_panel_ti_parent_id_fk
+  - changeSet:
+      author: appian
+      id: 001040.1.3
+      comment: Drop parent_id column
+      changes:
+        - dropColumn:
+            tableName: control_panel_tier_item
+            columnName: parent_id
+  - changeSet:
+      author: appian
+      id: 001040.1.4
+      comment: Add FK for control_panel_tier_item.parent_uuid to control_panel_tier_item.uuid
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: cpti_parent_uuid_fk
+            baseTableName: control_panel_tier_item
+            baseColumnNames: parent_uuid
+            referencedTableName: control_panel_tier_item
+            referencedColumnNames: uuid

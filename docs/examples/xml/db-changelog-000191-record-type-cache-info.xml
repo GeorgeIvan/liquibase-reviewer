@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000191-record-type-cache-info.xml">
+
+  <changeSet author="appian" id="tag-000190">
+    <tagDatabase tag="000190"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000191.1.0">
+    <comment>Create record_type_cache_info table</comment>
+    <createTable tableName="record_type_cache_info">
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="is_cache_valid" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="field_to_column_info" type="${largeStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="cache_last_updated_ms" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000191.1.1">
+    <comment>Add relevant foreign keys</comment>
+    <addForeignKeyConstraint constraintName="rtci_record_type_id_fk"
+      baseTableName="record_type_cache_info" baseColumnNames="record_type_id"
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000191.1.2">
+    <comment>Remove ads_mapping column from record_type table.</comment>
+    <dropColumn tableName="record_type" columnName="ads_mapping"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000191.1.3">
+    <comment>Populate record_type_cache_info</comment>
+    <customChange class="com.appiancorp.record.persistence.migration.PopulateRecordTypeCacheInfoChange"/>
+  </changeSet>
+</databaseChangeLog>

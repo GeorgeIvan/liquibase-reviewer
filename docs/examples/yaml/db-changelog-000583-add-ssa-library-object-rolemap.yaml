@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000583-add-ssa-library-object-rolemap.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000583
+      tagDatabase:
+        tag: 'pre-000583'
+  - changeSet:
+      author: appian
+      id: '000583.1.0'
+      changes:
+        comment: Create ssa library object role map table
+        createTable:
+          tableName: ssa_library_object_rm
+          columns:
+            - column:
+                name: ssa_library_object_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: rm_entry_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+  - changeSet:
+      id: '000583.1.1'
+      author: appian
+      changes:
+        comment: Add FK from ssa_library_object_rm to rm_entry.id
+        addForeignKeyConstraint:
+          constraintName: ssa_lib_rm_entry_id_fk
+          baseTableName: ssa_library_object_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+  - changeSet:
+      id: '000583.1.2'
+      author: appian
+      changes:
+      comment: Add FK from ssa_library_object_rm to ssa_library_object.id
+      addForeignKeyConstraint:
+        constraintName: ssa_lib_rm_ssa_lib_id_fk
+        baseTableName: ssa_library_object_rm
+        baseColumnNames: ssa_library_object_id
+        referencedTableName: ssa_library_object
+        referencedColumnNames: id
+  - changeSet:
+      id: '000583.2.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for ssa_library_object_editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 45
+            - column:
+                name: name
+                value: ssa_library_object_editor
+  - changeSet:
+      id: '000583.2.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for ssa_library_object_viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 46
+            - column:
+                name: name
+                value: ssa_library_object_viewer

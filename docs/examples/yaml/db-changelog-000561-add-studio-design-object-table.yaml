@@ -1,0 +1,233 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000561-add-studio-design-object-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000561'
+      tagDatabase:
+        tag: 'pre-000561'
+  - changeSet:
+      id: '000561.1.0'
+      author: appian
+      comment: Create studio table
+      changes:
+        - createTable:
+            tableName: studio
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: studio_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: studio_version_uuid_uc
+              - column:
+                  name: settings
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000561.1.1'
+      comment: A sequence to provide primary key values for the studio table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: studio_sq
+  - changeSet:
+      id: '000561.1.2'
+      author: appian
+      comment: Add FK for studio.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: studio_created_by_fk
+        baseTableName: studio
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000561.1.3'
+      author: appian
+      comment: Add FK for studio.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: studio_updated_by_fk
+        baseTableName: studio
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000561.1.4'
+      author: appian
+      comment: Add index on studio.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: studio_created_by_idx
+          tableName: studio
+          unique: false
+  - changeSet:
+      id: '000561.1.5'
+      author: appian
+      changes:
+        comment: Add index on studio.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: studio_updated_by_idx
+          tableName: studio
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000561.2.0'
+      comment: Create studio_rm table
+      changes:
+        - createTable:
+            tableName: studio_rm
+            columns:
+              - column:
+                  name: studio_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: rm_entry_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+  - changeSet:
+      id: '000561.2.1'
+      author: appian
+      comment: Add FK for studio_rm.studio_id to studio.id
+      addForeignKeyConstraint:
+        constraintName: studio_rm_id_fk
+        baseTableName: studio_rm
+        baseColumnNames: studio_id
+        referencedTableName: studio
+        referencedColumnNames: id
+  - changeSet:
+      id: '000561.2.2'
+      author: appian
+      comment: Add FK for studio_rm.rm_entry_id to rm_entry.id
+      addForeignKeyConstraint:
+        constraintName: studio_rm_entry_id_fk
+        baseTableName: studio_rm
+        baseColumnNames: rm_entry_id
+        referencedTableName: rm_entry
+        referencedColumnNames: id
+  - changeSet:
+      id: '000561.2.3'
+      author: appian
+      comment: Add index on studio_rm.studio_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: studio_id
+          indexName: studio_rm_id_idx
+          tableName: studio_rm
+          unique: false
+  - changeSet:
+      id: '000561.2.4'
+      author: appian
+      comment: Add index on studio_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: studio_rm_entry_id_idx
+          tableName: studio_rm
+          unique: false
+  - changeSet:
+      id: '000561.3.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Studio Design Object Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 42
+            - column:
+                name: name
+                value: studio_administrator
+  - changeSet:
+      id: '000561.3.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Studio Design Object Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 43
+            - column:
+                name: name
+                value: studio_editor
+  - changeSet:
+      id: '000561.3.2'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Studio Design Object Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 44
+            - column:
+                name: name
+                value: studio_viewer

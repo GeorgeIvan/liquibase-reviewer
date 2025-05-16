@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000455-add-automation-field-id.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000455'
+      tagDatabase:
+        tag: 'pre-000455'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000455.1.0'
+      comment: Add automation_field_id to hold the mining process field id of the automation field
+      changes:
+       - addColumn:
+          tableName: mining_process
+          columns:
+            - column:
+                name: automation_field_id
+                type: ${longType}
+       - createIndex:
+          indexName: mining_process_atm_fld_id_idx
+          tableName: mining_process
+          columns:
+            - column:
+                name: automation_field_id
+  - changeSet:
+      author: appian
+      id: '000455.1.1'
+      comment: FK from mining_process.automation_field_id to mining_process_field.id
+      addForeignKeyConstraint:
+        constraintName: mining_process_atm_fld_id_fk
+        baseTableName: mining_process
+        baseColumnNames: automation_field_id
+        referencedTableName: mining_process_field
+        referencedColumnNames: id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION

@@ -1,0 +1,611 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001010-add-message-executor-design-object-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001010'
+      tagDatabase:
+        tag: 'pre-001010'
+
+  - changeSet:
+      id: '001010.1.0'
+      author: appian
+      comment: Create msg_executor table
+      changes:
+        - createTable:
+            tableName: msg_executor
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: msg_exec_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: msg_exec_name_uc
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: msg_exec_ver_uuid_uc
+              - column:
+                  name: conn_sys_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: conn_sys_version_no
+                  type: ${integerType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: consumer_group_id
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: msg_exec_cons_grp_id_uc
+              - column:
+                  name: offset_reset_strategy
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: msg_key_format
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: msg_value_format
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filter_exp
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: preserve_order
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: batching_enabled
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_batch_size
+                  type: ${integerType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: msg_handler_exp
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: publish_status
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: running_status
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: svc_acc_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001010.1.1'
+      comment: A sequence to provide primary key values for the msg_executor table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: msg_executor_sq
+  - changeSet:
+      id: '001010.1.2'
+      author: appian
+      comment: Add FK for msg_executor.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_created_by_fk
+        baseTableName: msg_executor
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.1.3'
+      author: appian
+      comment: Add FK for msg_executor.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_updated_by_fk
+        baseTableName: msg_executor
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.1.4'
+      author: appian
+      comment: Add FK for msg_executor.svc_acc_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_svc_acc_id_fk
+        baseTableName: msg_executor
+        baseColumnNames: svc_acc_id
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.1.5'
+      author: appian
+      comment: Add index on msg_executor.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: msg_exec_created_by_idx
+          tableName: msg_executor
+          unique: false
+  - changeSet:
+      id: '001010.1.6'
+      author: appian
+      changes:
+        comment: Add index on msg_executor.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: msg_exec_updated_by_idx
+          tableName: msg_executor
+          unique: false
+  - changeSet:
+      id: '001010.1.7'
+      author: appian
+      changes:
+        comment: Add index on msg_executor.svc_acc_id
+        createIndex:
+          columns:
+            - column:
+                name: svc_acc_id
+          indexName: msg_exec_svc_acc_id_idx
+          tableName: msg_executor
+          unique: false
+  - changeSet:
+      id: '001010.1.8'
+      author: appian
+      changes:
+        comment: Add index on msg_executor.conn_sys_uuid
+        createIndex:
+          columns:
+            - column:
+                name: conn_sys_uuid
+          indexName: msg_exec_con_sys_uuid_idx
+          tableName: msg_executor
+          unique: false
+
+  - changeSet:
+      id: '001010.2.0'
+      author: appian
+      comment: Create msg_executor_history table
+      changes:
+        - createTable:
+            tableName: msg_executor_history
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: msg_executor_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conn_sys_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: conn_sys_version_no
+                  type: ${integerType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: topic_names
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: consumer_group_id
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: offset_reset_strategy
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: msg_key_format
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: msg_value_format
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filter_exp
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: preserve_order
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: batching_enabled
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_batch_size
+                  type: ${integerType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: msg_handler_exp
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: publish_status
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: svc_acc_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001010.2.1'
+      comment: A sequence to provide primary key values for the msg_executor_history table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: msg_executor_history_sq
+  - changeSet:
+      id: '001010.2.2'
+      author: appian
+      comment: Add FK for msg_executor_history.msg_executor_id to msg_executor.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_hist_msg_exec_id_fk
+        baseTableName: msg_executor_history
+        baseColumnNames: msg_executor_id
+        referencedTableName: msg_executor
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.2.3'
+      author: appian
+      comment: Add FK for msg_executor_history.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_hist_created_by_fk
+        baseTableName: msg_executor_history
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.2.4'
+      author: appian
+      comment: Add index on msg_executor_history.msg_executor_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: msg_executor_id
+          indexName: msg_exec_hist_msg_exec_id_idx
+          tableName: msg_executor_history
+          unique: false
+  - changeSet:
+      id: '001010.2.5'
+      author: appian
+      comment: Add index on msg_executor_history.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: msg_exec_hist_created_by_idx
+          tableName: msg_executor_history
+          unique: false
+
+
+  - changeSet:
+      author: appian
+      id: '001010.3.0'
+      comment: Create msg_executor_rm table
+      changes:
+        - createTable:
+            tableName: msg_executor_rm
+            columns:
+              - column:
+                  name: msg_executor_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: rm_entry_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+  - changeSet:
+      id: '001010.3.1'
+      author: appian
+      comment: Add FK for msg_executor_rm.msg_executor_id to msg_executor.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_rm_id_fk
+        baseTableName: msg_executor_rm
+        baseColumnNames: msg_executor_id
+        referencedTableName: msg_executor
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.3.2'
+      author: appian
+      comment: Add FK for msg_executor_rm.rm_entry_id to rm_entry.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_rm_entry_id_fk
+        baseTableName: msg_executor_rm
+        baseColumnNames: rm_entry_id
+        referencedTableName: rm_entry
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.3.3'
+      author: appian
+      comment: Add index on msg_executor_rm.msg_executor_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: msg_executor_id
+          indexName: msg_exec_rm_id_idx
+          tableName: msg_executor_rm
+          unique: false
+  - changeSet:
+      id: '001010.3.4'
+      author: appian
+      comment: Add index on msg_executor_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: msg_exec_rm_entry_id_idx
+          tableName: msg_executor_rm
+          unique: false
+
+
+  - changeSet:
+      id: '001010.4.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Message executor Design Object Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 47
+            - column:
+                name: name
+                value: msg_executor_administrator
+  - changeSet:
+      id: '001010.4.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Message executor  Design Object Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 48
+            - column:
+                name: name
+                value: msg_executor_editor
+  - changeSet:
+      id: '001010.4.2'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Message executor  Design Object Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 49
+            - column:
+                name: name
+                value: msg_executor_viewer
+
+  - changeSet:
+      author: appian
+      id: '001010.5.0'
+      comment: Create msg_executor_topic table
+      changes:
+        - createTable:
+            tableName: msg_executor_topic
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: msg_executor_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: topic_name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '001010.5.1'
+      comment: A sequence to provide primary key values for the msg_executor_topic table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: msg_executor_topic_sq
+  - changeSet:
+      id: '001010.5.2'
+      author: appian
+      comment: Add unique constraint on msg_executor_id and topic_name
+      addUniqueConstraint:
+        tableName: msg_executor_topic
+        columnNames: msg_executor_id, topic_name
+        constraintName: msg_executor_topic_uc
+  - changeSet:
+      id: '001010.5.3'
+      author: appian
+      comment: Add FK for msg_executor_topic.msg_executor_id to msg_executor.id
+      addForeignKeyConstraint:
+        constraintName: msg_exec_topic_msg_exec_id_fk
+        baseTableName: msg_executor_topic
+        baseColumnNames: msg_executor_id
+        referencedTableName: msg_executor
+        referencedColumnNames: id
+  - changeSet:
+      id: '001010.5.4'
+      author: appian
+      comment: Add index on msg_executor_topic.msg_executor_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: msg_executor_id
+          indexName: msg_exec_topic_msg_exec_id_idx
+          tableName: msg_executor_topic
+          unique: false
+  - changeSet:
+      id: '001010.5.5'
+      author: appian
+      comment: Add index on msg_executor_topic.topic_name
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: topic_name
+          indexName: msg_exec_topic_name_idx
+          tableName: msg_executor_topic
+          unique: false
+

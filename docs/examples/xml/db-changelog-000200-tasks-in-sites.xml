@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000197-tasks-in-sites.xml">
+
+  <changeSet author="appian" id="tag-000199">
+    <tagDatabase tag="000199"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000200.1.0">
+    <comment>Create new column tasks_in_sites_visibility</comment>
+    <addColumn tableName="site">
+      <column name="tasks_in_sites_visibility" type="${byteType}" valueNumeric="1" defaultValueNumeric="1"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000200.2.0">
+    <comment>Create tasks_in_sites_viewers table</comment>
+    <createTable tableName="tasks_in_sites_viewers">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="site_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="grp_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000200.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="tasks_in_sites_viewers_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000200.2.2">
+    <comment>FK from tasks_in_sites_viewers.site_id to site.id</comment>
+    <addForeignKeyConstraint baseColumnNames="site_id"
+                             baseTableName="tasks_in_sites_viewers"
+                             constraintName="tasks_in_sites_vwrs_sid_fk"
+                             deferrable="false"
+                             initiallyDeferred="false"
+                             referencedColumnNames="id"
+                             referencedTableName="site"
+                             referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000200.2.3">
+    <preConditions onFail="MARK_RAN">
+      <not><dbms type="mysql"/></not>
+    </preConditions>
+    <createIndex indexName="tasks_in_sites_vwrs_sid_idx" tableName="tasks_in_sites_viewers" unique="false">
+      <column name="site_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

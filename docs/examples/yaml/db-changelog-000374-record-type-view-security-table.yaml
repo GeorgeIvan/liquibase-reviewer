@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000374-record-type-view-security-table.yaml
+  - changeSet:
+      id: 'tag-pre-000374'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000374'
+  - changeSet:
+      id: '000374.1.0'
+      author: appian
+      changes:
+        comment: Create record_type_view_security table
+        createTable:
+          tableName: record_type_view_security
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: view_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: membership_filter
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: data_filter
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000374.2.0'
+      author: appian
+      changes:
+        comment: Add relevant foreign keys
+        addForeignKeyConstraint:
+          constraintName: rt_view_security_view_id_fk
+          baseTableName: record_type_view_security
+          baseColumnNames: view_id
+          referencedTableName: record_detail_view_cfg
+          referencedColumnNames: id
+  - changeSet:
+      id: '000374.3.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_type_view_security_sq
+
+  - changeSet:
+      id: '000374.4.0'
+      author: appian
+      comment: Add security_type column to record_detail_view_cfg table
+      addColumn:
+        tableName: record_detail_view_cfg
+        columns:
+          - column:
+              name: security_type
+              type: ${byteType}
+              valueNumeric: 0
+              defaultValueNumeric: 0
+              constraints:
+                nullable: false

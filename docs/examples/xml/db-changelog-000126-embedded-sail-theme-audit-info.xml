@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000126-config-audit-info.xml">
+
+    <changeSet author="appian" id="tag-000125">
+        <tagDatabase tag="000125"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000126.0.0">
+        <comment>Add Audit Info to embedded_sail_theme table</comment>
+        <addColumn tableName="embedded_sail_theme">
+            <column name="updated_by" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="embedded_sail_theme">
+            <column name="updated_ts" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="embedded_sail_theme">
+            <column name="created_by" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="embedded_sail_theme">
+            <column name="created_ts" type="${longType}"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

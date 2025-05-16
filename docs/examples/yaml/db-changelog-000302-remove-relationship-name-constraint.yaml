@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000302-remove-relationship-name-constraint.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000302
+      tagDatabase:
+        tag: 'pre-000302'
+  - changeSet:
+      id: '000302.1.0'
+      author: appian
+      comment: drop src_rt_id FK
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type_relationships
+            constraintName: rt_relationships_src_rt_id_fk
+  - changeSet:
+      id: '000302.2.0'
+      author: appian
+      comment: remove unique constraint on relationship name and source record type
+      changes:
+        - dropUniqueConstraint:
+            tableName: record_type_relationships
+            constraintName: rel_name_src_rt_unique
+  - changeSet:
+      id: '000302.3.0'
+      author: appian
+      comment: add FK back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rt_relationships_src_rt_id_fk
+            baseTableName: record_type_relationships
+            baseColumnNames: src_rt_id
+            referencedTableName: record_type
+            referencedColumnNames: id

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000508-add-pinned-column-to-mining-scope-kpis.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000508'
+      tagDatabase:
+        tag: 'pre-000508'
+
+  - changeSet:
+      author: appian
+      id: '000508.1.0'
+      comment: Add a pinned column to the mining_scope_kpis table
+      changes:
+        - addColumn:
+            tableName: mining_scope_kpis
+            columns:
+              - column:
+                  name: pinned
+                  type: ${booleanType}
+                  defaultValueBoolean: 'false'
+                  constraints:
+                    nullable: false

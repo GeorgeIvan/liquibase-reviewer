@@ -1,0 +1,102 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001014-update-ssa-mining-dep-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001014'
+      tagDatabase:
+        tag: 'pre-001014'
+
+  - changeSet:
+      id: '001014.1.0'
+      author: appian
+      comment: Drop unused column ssa_object_type
+      changes:
+        dropColumn:
+          tableName: ssa_mining_dep
+          columnName: ssa_object_type
+
+  - changeSet:
+      id: '001014.1.1'
+      author: appian
+      comment: Drop unused column config_json
+      changes:
+        dropColumn:
+          tableName: ssa_mining_dep
+          columnName: config_json
+
+  - changeSet:
+      author: appian
+      id: '001014.2.0'
+      comment: Add time period column
+      changes:
+        - addColumn:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: time_period
+                  type: ${byteType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '001014.2.1'
+      comment: Add showThreshold column
+      changes:
+        - addColumn:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: show_threshold
+                  type: ${booleanType}
+                  defaultValueBoolean: 'false'
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '001014.2.2'
+      comment: Remove the default value for show threshold
+      dropDefaultValue:
+        tableName: ssa_mining_dep
+        columnName: time_period
+        columnDataType: ${byteType}
+
+  - changeSet:
+      author: appian
+      id: '001014.2.3'
+      comment: Remove the default value for show threshold
+      dropDefaultValue:
+        tableName: ssa_mining_dep
+        columnName: show_threshold
+        columnDataType: ${booleanType}
+
+  - changeSet:
+      author: appian
+      id: '001014.3.0'
+      comment: Remove fk on mining_process and index so we can drop the mining_process_id column
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: ssa_mining_dep
+            constraintName: ssa_mining_dep_mp_id_fk
+        - dropIndex:
+            indexName: ssa_mining_dep_mp_id_idx
+            tableName: ssa_mining_dep
+        - dropColumn:
+            tableName: ssa_mining_dep
+            columnName: mining_process_id
+
+  - changeSet:
+      author: appian
+      id: '001014.4.0'
+      comment: Add mining kpi foreign key constraint
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: ssa_mining_dep_mk_id_fk
+            baseTableName: ssa_mining_dep
+            baseColumnNames: mining_dep_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+  

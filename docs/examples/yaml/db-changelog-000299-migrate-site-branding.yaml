@@ -1,0 +1,205 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000299-migrate-site-branding.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000299'
+      tagDatabase:
+        tag: 'pre-000299'
+  - changeSet:
+      author: appian
+      id: '000299.1.0'
+      createTable:
+        tableName: site_branding_cfg
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: site_id
+              type: ${longType}
+          - column:
+              name: branding_key
+              type: ${shortStringType}
+          - column:
+              name: branding_source
+              type: ${byteType}
+          - column:
+              name: branding_value
+              type: ${expressionStringType}
+  - changeSet:
+      author: appian
+      id: '000299.1.1'
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      createSequence:
+        sequenceName: site_branding_cfg_sq
+  - changeSet:
+      author: appian
+      id: '000299.2.0'
+      addForeignKeyConstraint:
+        constraintName: site_branding_cfg_site_id_fk
+        baseTableName: site_branding_cfg
+        baseColumnNames: site_id
+        referencedTableName: site
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      id: '000299.3.0'
+      author: appian
+      comment: Migrate existing color branding properties from site table to site_branding_cfg table
+      customChange:
+        class: com.appiancorp.tempo.rdbms.RefactorSiteColorBranding
+  - changeSet:
+      author: appian
+      id: '000299.4.0'
+      comment: Remove loading bar color column
+      dropColumn:
+        tableName: site
+        columnName: loading_bar_color
+  - changeSet:
+      author: appian
+      id: '000299.4.1'
+      comment: Remove loading bar color expression column
+      dropColumn:
+        tableName: site
+        columnName: loading_bar_color_expr
+  - changeSet:
+      author: appian
+      id: '000299.4.2'
+      comment: Remove accent color column
+      dropColumn:
+        tableName: site
+        columnName: accent_color
+  - changeSet:
+      author: appian
+      id: '000299.4.3'
+      comment: Remove accent color expression column
+      dropColumn:
+        tableName: site
+        columnName: accent_color_expr
+  - changeSet:
+      author: appian
+      id: '000299.4.4'
+      comment: Remove selected tab color column
+      dropColumn:
+        tableName: site
+        columnName: selected_tab_color
+  - changeSet:
+      author: appian
+      id: '000299.4.5'
+      comment: Remove selected tab color expression column
+      dropColumn:
+        tableName: site
+        columnName: selected_tab_color_expr
+  - changeSet:
+      author: appian
+      id: '000299.4.6'
+      comment: Remove header background color column
+      dropColumn:
+        tableName: site
+        columnName: header_bkgd_color
+  - changeSet:
+      author: appian
+      id: '000299.4.7'
+      comment: Remove header background color expression column
+      dropColumn:
+        tableName: site
+        columnName: header_bkgd_color_expr
+  - changeSet:
+      id: '000299.5.0'
+      author: appian
+      comment: Migrate existing logo branding properties from site table to site_branding_cfg table
+      customChange:
+        class: com.appiancorp.tempo.rdbms.RefactorSiteLogoBranding
+  - changeSet:
+      author: appian
+      id: '000299.6.0'
+      comment: Remove favicon uuid column
+      dropColumn:
+        tableName: site
+        columnName: favicon_uuid
+  - changeSet:
+      author: appian
+      id: '000299.6.1'
+      comment: Remove favicon href column
+      dropColumn:
+        tableName: site
+        columnName: favicon_href
+  - changeSet:
+      author: appian
+      id: '000299.6.2'
+      comment: Remove favicon expr column
+      dropColumn:
+        tableName: site
+        columnName: favicon_expr
+  - changeSet:
+      author: appian
+      id: '000299.6.3'
+      comment: Remove logo uuid column
+      dropColumn:
+        tableName: site
+        columnName: logo_uuid
+  - changeSet:
+      author: appian
+      id: '000299.6.4'
+      comment: Remove logo href column
+      dropColumn:
+        tableName: site
+        columnName: logo_href
+  - changeSet:
+      author: appian
+      id: '000299.6.5'
+      comment: Remove logo expr column
+      dropColumn:
+        tableName: site
+        columnName: logo_expr
+  - changeSet:
+      author: appian
+      id: '000299.6.6'
+      comment: Remove logo alt text column
+      dropColumn:
+        tableName: site
+        columnName: logo_alt_text
+  - changeSet:
+      author: appian
+      id: '000299.6.7'
+      comment: Drop default value on logo_alt_text_src
+      dropDefaultValue:
+        tableName: site
+        columnName: logo_alt_text_src
+        columnDataType: ${byteType}
+  - changeSet:
+      author: appian
+      id: '000299.6.8'
+      comment: Remove logo alt text source column
+      dropColumn:
+        tableName: site
+        columnName: logo_alt_text_src
+  - changeSet:
+      id: '000299.7.0'
+      author: appian
+      comment: Migrate existing miscellaneous branding properties from site table to site_branding_cfg table
+      customChange:
+        class: com.appiancorp.tempo.rdbms.RefactorSiteMiscBranding
+  - changeSet:
+      author: appian
+      id: '000299.8.0'
+      comment: Drop default value on button_shape
+      dropDefaultValue:
+        tableName: site
+        columnName: button_shape
+        columnDataType: ${byteType}
+  - changeSet:
+      author: appian
+      id: '000299.8.1'
+      comment: Remove button shape column
+      dropColumn:
+        tableName: site
+        columnName: button_shape

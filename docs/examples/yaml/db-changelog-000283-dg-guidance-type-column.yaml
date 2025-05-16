@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000283-dg-guidance-type-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000283'
+      tagDatabase:
+        tag: 'pre-000283'
+  - changeSet:
+      author: appian
+      id: '000283.1.0'
+      comment: Add guidance_type column to dg_object
+      addColumn:
+        tableName: dg_object
+        column:
+          name: guidance_type
+          type: ${shortStringType}
+          defaultValue: GUIDANCE
+          value: GUIDANCE
+          constraints:
+            nullable: false

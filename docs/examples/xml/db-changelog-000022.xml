@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000022.xml">
+  
+  <changeSet author="appian" id="tag-000021">
+    <tagDatabase tag="000021"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000022.1.0">
+    <comment>Add ui_container table</comment>
+    <createTable tableName="ui_container">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="ui_container_uuid_uc"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>      
+      <column name="description" type="${mediumStringType}" />
+      <column name="ui_expr" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url_stub" type="${shortStringType}" >
+        <constraints nullable="false" unique="true" uniqueConstraintName="ui_container_urlstub_uc"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000022.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="ui_container_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000022.1.2">
+    <comment>FK from ui_container.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="ui_container_cby_uid_fk"
+      baseTableName="ui_container" baseColumnNames="created_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000022.1.3">
+    <comment>FK from ui_container.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="ui_container_uby_uid_fk"
+      baseTableName="ui_container" baseColumnNames="updated_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000022.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="ui_container_cby_uid_fk_idx" tableName="ui_container" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000022.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="ui_container_uby_uid_fk_idx" tableName="ui_container" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+  
+</databaseChangeLog>

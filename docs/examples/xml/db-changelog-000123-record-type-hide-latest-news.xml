@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000123-record-type-hide-latest-news.xml">
+
+  <changeSet author="appian" id="tag-000122">
+    <tagDatabase tag="000122"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000123.1.0">
+    <comment>Create new column hide_latest_news</comment>
+    <addColumn tableName="record_type">
+      <column name="hide_latest_news" type="${booleanType}" defaultValueBoolean="false"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

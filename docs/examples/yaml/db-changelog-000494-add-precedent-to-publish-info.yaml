@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000494-add-precedent-to-publish-info.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000494'
+      tagDatabase:
+        tag: 'pre-000494'
+
+  - changeSet:
+      author: appian
+      id: '000494.1.0'
+      comment: Add information on affected portal precedent that caused a portal publish
+      changes:
+        - addColumn:
+            tableName: portal_publish_info
+            columns:
+              - column:
+                  name: affected_precedent_uuid
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: affected_precedent_type
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: publish_reason
+                  type: ${byteType}
+                  defaultValue: 1
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000494.1.1'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: portal_publish_info
+        columnName: publish_reason
+        columnDataType: ${byteType}

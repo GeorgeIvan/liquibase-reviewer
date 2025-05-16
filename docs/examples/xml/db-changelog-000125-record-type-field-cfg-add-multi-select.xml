@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000125-record-type-field-cfg-add-multi-select.xml">
+
+  <changeSet author="appian" id="tag-000124">
+    <tagDatabase tag="000124"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000125.1.0">
+    <comment>Add the facet_multi_select column</comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_multi_select" type="${booleanType}" valueBoolean="false" defaultValueBoolean="true">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

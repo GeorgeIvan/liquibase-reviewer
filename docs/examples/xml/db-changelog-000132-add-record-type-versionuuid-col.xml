@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000132-add-record-type-versionuuid-col.xml">
+
+  <changeSet author="appian" id="tag-000131">
+    <tagDatabase tag="000131"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000132.1.0">
+    <comment>Create new column version_uuid</comment>
+    <addColumn tableName="record_type">
+      <column name="version_uuid" type="${uuidType}"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

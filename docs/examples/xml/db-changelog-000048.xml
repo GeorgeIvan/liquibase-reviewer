@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000048.xml">
+
+  <changeSet author="appian" id="tag-000047">
+    <tagDatabase tag="000047"/>
+  </changeSet>
+
+  <!-- Add new columns to external_sys -->
+
+  <changeSet author="appian" id="000048.0.0">
+    <comment>Create a "show_per_user" column in external_sys to indicate if users are able to provide
+    credentials for this external system.</comment>
+    <addColumn tableName="external_sys">
+      <column name="show_per_user" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000048.0.1">
+    <comment>Create a "test_expr" column in external_sys to hold the expression that will be used to test the
+    connection to an external system.</comment>
+    <addColumn tableName="external_sys">
+      <column name="test_expr" type="${mediumStringType}"/>
+    </addColumn>
+  </changeSet>
+
+  <!-- Add new table external_sys_plugins -->
+
+  <changeSet author="appian" id="000048.1.0">
+    <comment>Create table to hold the plugins that are allowed to access each external system</comment>
+    <createTable tableName="external_sys_plugins">
+      <column name="external_sys_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="unique_key" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- Add constraints on external_sys_plugins -->
+
+  <changeSet author="appian" id="000048.2.0">
+    <addUniqueConstraint columnNames="external_sys_id, unique_key" tableName="external_sys_plugins"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000048.2.1">
+    <comment>FK from external_sys_plugins.external_sys_id to external_sys.id.</comment>
+    <addForeignKeyConstraint constraintName="esp_esid_fk" baseTableName="external_sys_plugins"
+      baseColumnNames="external_sys_id" referencedTableName="external_sys" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000048.2.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Index for external_sys_plugins.external_sys_id.</comment>
+    <createIndex indexName="esp_esid_idx" tableName="external_sys_plugins" unique="false">
+      <column name="external_sys_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

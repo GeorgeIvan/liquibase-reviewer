@@ -1,0 +1,92 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000396-record-events-cfg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000396'
+      tagDatabase:
+        tag: 'pre-000396'
+
+  - changeSet:
+      author: appian
+      id: '000396.1.0'
+      comment: Adding a record events table
+      changes:
+        - createTable:
+            tableName: record_events_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: base_record_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_record_type_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_relationship_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type_record_type_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type_relationship_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp_field_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_field_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type_field_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: rec_events_base_rec_id_fk
+            baseTableName: record_events_cfg
+            baseColumnNames: base_record_type_id
+            referencedTableName: record_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: rec_events_event_rel_id_fk
+            baseTableName: record_events_cfg
+            baseColumnNames: event_relationship_id
+            referencedTableName: record_type_relationships
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            constraintName: rec_events_evnt_typ_rel_id_fk
+            baseTableName: record_events_cfg
+            baseColumnNames: event_type_relationship_id
+            referencedTableName: record_type_relationships
+            referencedColumnNames: id
+
+        - createIndex:
+            indexName: rec_events_base_record_id_idx
+            tableName: record_events_cfg
+            columns:
+              - column:
+                  name: base_record_type_id

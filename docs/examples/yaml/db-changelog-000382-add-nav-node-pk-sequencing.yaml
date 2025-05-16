@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000382-add-nav-node-pk-sequencing.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000382
+      tagDatabase:
+        tag: 'pre-000382'
+  - changeSet:
+      author: appian
+      id: '000382.1.0'
+      comment: A sequence to provide primary key values for the navigation_node table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: navigation_node_sq

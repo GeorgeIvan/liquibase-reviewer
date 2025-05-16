@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000475-remove-unique-constraint-for-uuid-ts-string-variable-history.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000475
+      tagDatabase:
+        tag: 'pre-000475'
+  - changeSet:
+      id: '000475.1.0'
+      author: appian
+      changes:
+        - dropUniqueConstraint:
+            constraintName: ts_str_var_history_uuid_uc
+            tableName: ts_string_variable_history
+

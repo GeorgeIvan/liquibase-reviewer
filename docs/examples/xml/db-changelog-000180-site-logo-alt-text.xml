@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000180-site-logo-alt-text.xml">
+
+  <changeSet author="appian" id="tag-000179">
+    <tagDatabase tag="000179"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000180.0.0">
+    <comment>Add logo_alt_text_src column</comment>
+    <addColumn tableName="site">
+      <column name="logo_alt_text_src" type="${byteType}" value="1" defaultValueNumeric="1"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000180.1.0">
+    <comment>Add logo_alt_text column</comment>
+    <addColumn tableName="site">
+      <column name="logo_alt_text" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

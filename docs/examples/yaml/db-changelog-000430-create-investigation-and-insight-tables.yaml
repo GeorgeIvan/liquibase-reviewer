@@ -1,0 +1,160 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000430-create-investigation-and-insight-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000430'
+      tagDatabase:
+        tag: 'pre-000430'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000430.1.0'
+      comment: Create investigation table
+      changes:
+        - createTable:
+            tableName: investigation
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: process_id
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: goal
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_cases
+                  type: ${longType}
+              - column:
+                  name: measure
+                  type: ${longType}
+              - column:
+                  name: analysis_time_period
+                  type: ${integerType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: custom_start_ts
+                  type: ${longType}
+              - column:
+                  name: custom_end_ts
+                  type: ${longType}
+              - column:
+                  name: compare_to_function
+                  type: ${integerType}
+              - column:
+                  name: min_duration
+                  type: ${longType}
+              - column:
+                  name: max_duration
+                  type: ${longType}
+              - column:
+                  name: duration_unit
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creator_uuid
+                  type: ${uuidType}
+              - column:
+                  name: creation_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: investigation_process_id_idx
+            tableName: investigation
+            columns:
+              - column:
+                  name: process_id
+  - changeSet:
+      id: '000430.1.1'
+      comment: Create sequence for investigation
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: investigation_sq
+  - changeSet:
+      author: appian
+      id: '000430.2.0'
+      comment: Create insight table
+      changes:
+        - createTable:
+            tableName: insight
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: investigation_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: ${largeStringType}
+              - column:
+                  name: creator_uuid
+                  type: ${uuidType}
+              - column:
+                  name: creation_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: insight_investigation_id_idx
+            tableName: insight
+            columns:
+              - column:
+                  name: investigation_id
+  - changeSet:
+      id: '000430.2.1'
+      comment: Create sequence for insight
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: insight_sq
+  - changeSet:
+      author: appian
+      id: '000430.2.2'
+      comment: FK from insight.investigation_id to investigation.id
+      addForeignKeyConstraint:
+        constraintName: insight_investigation_fk
+        baseTableName: insight
+        baseColumnNames: investigation_id
+        referencedTableName: investigation
+        referencedColumnNames: id
+        onDelete: CASCADE

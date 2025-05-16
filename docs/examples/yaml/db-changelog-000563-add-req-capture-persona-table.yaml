@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000563-add-req-capture-persona-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000563
+      tagDatabase:
+        tag: 'pre-000563'
+  - changeSet:
+      author: appian
+      id: '000563.0.0'
+      comment: Create req_capture_persona table
+      createTable:
+        tableName: req_capture_persona
+        columns:
+          - column:
+              name: id
+              type: ${longtype}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: requirements_capture_id
+              type: ${longtype}
+              constraints:
+                nullable: false
+          - column:
+              name: persona
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000563.0.1'
+      author: appian
+      comment: Add FK constraint on requirements_capture_id to point to requirements_capture.id
+      addForeignKeyConstraint:
+        constraintName: req_capture_persona_rcid_fk
+        baseTableName: req_capture_persona
+        baseColumnNames: requirements_capture_id
+        referencedTableName: requirements_capture
+        referencedColumnNames: id
+        onDelete: CASCADE
+
+  - changeSet:
+      id: '000563.0.2'
+      author: appian
+      comment: Unique key constraint on requirements_capture_id, persona
+      addUniqueConstraint:
+        tableName: req_capture_persona
+        columnNames: requirements_capture_id, persona
+        constraintName: req_capture_persona_uc
+
+  - changeSet:
+      id: '000563.0.3'
+      author: appian
+      comment: Create a sequence to provide primary key values for the req_capture_persona table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: req_capture_persona_sq

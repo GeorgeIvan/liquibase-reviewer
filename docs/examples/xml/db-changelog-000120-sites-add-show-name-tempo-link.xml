@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000120-sites-add-show-name-tempo-link.xml">
+
+  <changeSet author="appian" id="tag-000119">
+    <tagDatabase tag="000119"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000120.1.0">
+    <comment>Create new column show_name</comment>
+    <addColumn tableName="site">
+      <column name="show_name" type="${booleanType}" defaultValueBoolean="false"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000120.2.0">
+    <comment>Create new column tempo_link_visibility</comment>
+    <addColumn tableName="site">
+      <column name="tempo_link_visibility" type="${byteType}" defaultValueNumeric="1"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

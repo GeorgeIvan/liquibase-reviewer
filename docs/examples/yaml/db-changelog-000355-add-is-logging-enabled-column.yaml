@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000355-add-is-logging-enabled-column.yaml
+  - changeSet:
+      id: 'tag-pre-000355'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000355'
+
+  - changeSet:
+      id: '000355.1.0'
+      author: appian
+      comment: Add is_logging_enabled column to web_api table
+      addColumn:
+        tableName: web_api
+        column:
+          name: is_logging_enabled
+          type: ${booleanType}
+          valueBoolean: false
+          defaultValueBoolean: false
+  - changeSet:
+      author: appian
+      id: '000355.2.0'
+      comment: Add is_logging_enabled column to web_api_history table
+      addColumn:
+        tableName: web_api_history
+        column:
+          name: is_logging_enabled
+          type: ${booleanType}
+          valueBoolean: false
+          defaultValueBoolean: false

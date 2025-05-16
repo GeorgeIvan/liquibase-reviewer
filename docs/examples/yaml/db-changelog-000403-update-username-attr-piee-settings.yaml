@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000403-update-username-attr-piee-settings.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000403
+      tagDatabase:
+        tag: 'pre-000403'
+
+  - changeSet:
+      author: appian
+      id: '000403.1.0'
+      comment: Update existing username_attr value
+      changes:
+        - update:
+            columns:
+              - column:
+                  name: username_attr
+                  value: 'userId'
+            tableName: piee_settings
+            where: username_attr = 'user_id'

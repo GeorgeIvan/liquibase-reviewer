@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000385-add-user-obj-edit.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000385'
+      tagDatabase:
+        tag: 'pre-000385'
+
+  - changeSet:
+      author: appian
+      id: '000385.1.0'
+      comment: Create user object edit table
+      changes:
+        - createTable:
+            tableName: user_obj_edit
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: usr_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_uuid
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_uuid_sha256
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: edit_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        # Note that Appian has historically used special MySQL- and MariaDB-specific logic to try to
+        # avoid making indexes on FK columns like the one below. However, those historical attempts
+        # were all flawed by YAML typos and actually had no DB-specific effects! So we'll simply be
+        # unconditional and take advantage of the fact that MariaDB/MySQL will automatically use an
+        # existing index OR drop their own auto-created index if we explicitly make an equivalent
+        # one on the same column.
+        - createIndex:
+            indexName: user_obj_edit_usr_id_idx
+            tableName: user_obj_edit
+            columns:
+              - column:
+                  name: usr_id
+        - addForeignKeyConstraint:
+            constraintName: usr_obj_edit_usr_id_fk
+            baseTableName: user_obj_edit
+            baseColumnNames: usr_id
+            referencedTableName: usr
+            referencedColumnNames: id
+        - createIndex:
+            indexName: user_obj_edit_obj_uuid_sha_idx
+            tableName: user_obj_edit
+            columns:
+              - column:
+                  name: object_uuid_sha256
+        - createIndex:
+            indexName: user_obj_edit_edit_ts_idx
+            tableName: user_obj_edit
+            columns:
+              - column:
+                  name: edit_ts
+  - changeSet:
+      id: '000385.1.1'
+      comment: A sequence to provide primary key values for the user_obj_edit table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: user_obj_edit_sq

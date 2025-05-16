@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000260-add-target-plugin-metadata.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000260
+      tagDatabase:
+        tag: 'pre-000260'
+  - changeSet:
+      author: appian
+      id: '000260.1.0'
+      comment: Add target version and change status metadata to the existing table
+      addColumn:
+        tableName: deployment_plugin
+        columns:
+          - column:
+              name: target_version
+              type: ${shortStringType}
+          - column:
+              name: change_status
+              type: ${shortStringType}
+              defaultValue: NEW
+              constraints:
+                nullable: false

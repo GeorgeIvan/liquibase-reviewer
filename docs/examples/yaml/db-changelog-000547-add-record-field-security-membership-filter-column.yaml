@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000547-add-record-field-security-membership-filter-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000547'
+      tagDatabase:
+        tag: 'pre-000547'
+  - changeSet:
+      id: '000547.1.0'
+      author: appian
+      comment: Create column for rfs_membership_filter
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: rfs_membership_filter
+              type: ${largeStringType}
+              constraints:
+                nullable: true

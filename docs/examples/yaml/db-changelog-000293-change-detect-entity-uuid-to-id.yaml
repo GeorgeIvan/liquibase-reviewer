@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000293-change-detect-entity-uuid-to-id.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000293'
+      tagDatabase:
+        tag: 'pre-000293'
+#----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000293.1.0'
+      comment: Remove detectLoadRunning entity uuid column
+      dropColumn:
+        tableName: record_replica_metadata
+        columnName: detect_load_running_row_uuid
+#----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000293.2.0'
+      comment: Add detectLoadRunning entity id column
+      addColumn:
+        tableName: record_replica_metadata
+        columns:
+          - column:
+              name: detect_load_running_entity_id
+              type: ${longType}
+              remarks: The id of an ADS entity. Each replicated record type will have one once a sync has occurred.

@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000469-create-record-query-summary-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000469
+      tagDatabase:
+        tag: 'pre-000469'
+  - changeSet:
+      author: appian
+      id: '000469.1.0'
+      changes:
+        comment: Create record query summary table
+        createTable:
+          tableName: record_query_summary
+          columns:
+            - column:
+                name: query_uuid
+                type: ${uuidType}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: start_time
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: execution_time
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: wait_time
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: error_code
+                type: ${shortStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: issuer
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: trace_id
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: top_design_object_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: current_design_object_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: query_source
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: query_details_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+
+

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000226-nullable-deployment-patch-doc-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000226
+      tagDatabase:
+        tag: 'pre-000226'
+  - changeSet:
+      author: appian
+      id: '000226.1.0'
+      comment: Change patch_file_doc to be a nullable column
+      changes:
+        dropNotNullConstraint:
+          tableName: deployment
+          columnName: patch_file_doc
+          columnDataType: ${longType}

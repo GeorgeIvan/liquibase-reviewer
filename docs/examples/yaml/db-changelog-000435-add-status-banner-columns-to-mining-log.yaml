@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000435-add-status-banner-columns-to-mining-log.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000435'
+      tagDatabase:
+        tag: 'pre-000435'
+  - changeSet:
+      author: appian
+      id: '000435.1.0'
+      comment: Add columns needed for mining sync status banner to mining_log table
+      addColumn:
+        tableName: mining_log
+        columns:
+          - column:
+              name: sync_status
+              type: ${byteType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+          - column:
+              name: last_successful_update_ms
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: last_successful_update_by
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: failed_update_ms
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: failed_update_by
+              type: ${uuidType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '000435.2.0'
+      comment: Remove default value
+      dropDefaultValue:
+        tableName: mining_log
+        columnName: sync_status
+        columnDataType: ${byteType}

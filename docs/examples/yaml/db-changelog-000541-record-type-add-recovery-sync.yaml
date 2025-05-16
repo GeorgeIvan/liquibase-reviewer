@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000541-record-type-add-recovery-sync.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000541
+      tagDatabase:
+        tag: 'pre-000541'
+  - changeSet:
+      author: appian
+      id: '000541.0.0'
+      validCheckSum:
+        - ANY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          columnExists:
+            tableName: record_type
+            columnName: uses_recovery_sync
+      comment: Create column uses_recovery_sync in record_type table
+      addColumn:
+        tableName: record_type
+        columns:
+          - column:
+              name: uses_recovery_sync
+              type: ${booleanType}
+              valueBoolean: false
+              defaultValueBoolean: false
+              constraints:
+                nullable: false

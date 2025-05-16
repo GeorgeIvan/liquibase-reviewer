@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000068-site.xml">
+
+  <changeSet author="appian" id="tag-000067">
+    <tagDatabase tag="000067"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.0">
+    <comment>Add site table</comment>
+    <createTable tableName="site">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="site_uuid_uc"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+      <column name="url_stub" type="${shortStringType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="site_urlstub_uc"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="site_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.2">
+    <comment>FK from site.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="site_cby_uid_fk" baseTableName="site"
+      baseColumnNames="created_by" referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.3">
+    <comment>FK from site.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="site_uby_uid_fk" baseTableName="site"
+      baseColumnNames="updated_by" referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="site_cby_uid_fk_idx" tableName="site" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="site_uby_uid_fk_idx" tableName="site" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.2.0">
+    <comment>Create role map table for site.</comment>
+    <createTable tableName="site_rm">
+      <column name="site_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.2.1">
+    <comment>Add PK for site_rm.</comment>
+    <addPrimaryKey columnNames="site_id, rm_entry_id" tableName="site_rm"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.2.2">
+    <comment>Add FK from site_rm to rm_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="site_rm_rmeid_fk" baseTableName="site_rm"
+      baseColumnNames="rm_entry_id" referencedTableName="rm_entry" referencedColumnNames="id" deferrable="false"
+      initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.2.3">
+    <comment>Add FK from site_rm to site.id.</comment>
+    <addForeignKeyConstraint constraintName="site_rm_uicid_fk" baseTableName="site_rm"
+      baseColumnNames="site_id" referencedColumnNames="id" referencedTableName="site" deferrable="false"
+      initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Create an index for the FK column site.rm_entry_id</comment>
+    <createIndex indexName="site_rm_rmei_idx" tableName="site_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.3.0">
+    <comment>Add site_page table</comment>
+    <createTable tableName="site_page">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="site_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rule_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url_stub" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.3.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="site_page_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.3.2">
+    <comment>FK from site_page.site_id to site.id</comment>
+    <addForeignKeyConstraint constraintName="site_page_siteid_fk" baseTableName="site_page"
+      baseColumnNames="site_id" referencedTableName="site" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.3.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="site_page_sid_id_fk_idx" tableName="site_page" unique="false">
+      <column name="site_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.4.0">
+    <comment>Add a system role (in rm_role) for Site Administrator.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="22"/>
+      <column name="name" value="site_administrator"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.4.1">
+    <comment>Add a system role (in rm_role) for Site Editor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="23"/>
+      <column name="name" value="site_editor"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.4.2">
+    <comment>Add a system role (in rm_role) for Site Auditor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="24"/>
+      <column name="name" value="site_auditor"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="appian" id="000068.4.3">
+    <comment>Add a system role (in rm_role) for Site Viewer.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="25"/>
+      <column name="name" value="site_viewer"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

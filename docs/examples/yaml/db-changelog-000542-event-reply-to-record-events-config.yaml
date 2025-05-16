@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000542-event-reply-to-record-events-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000542
+      tagDatabase:
+        tag: 'pre-000542'
+  - changeSet:
+      author: appian
+      id: '000542.1.0'
+      comment: Add event reply uuids column to record_events_config table
+      addColumn:
+        tableName: record_events_config
+        columns:
+          - column:
+              name: reply_record_type_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: reply_relationship_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: reply_user_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: reply_comment_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: reply_timestamp_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

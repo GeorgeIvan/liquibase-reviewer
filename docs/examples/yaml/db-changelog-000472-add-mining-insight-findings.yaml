@@ -1,0 +1,188 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000472-add-mining-insight-findings.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000472'
+      tagDatabase:
+        tag: 'pre-000472'
+
+  - changeSet:
+      author: appian
+      id: '000472.1.0'
+      comment: Remove mining insight's filter group
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_insight
+            constraintName: insight_filter_group_fk
+        - dropIndex:
+            tableName: mining_insight
+            indexName: insight_fltr_grp_id_idx
+        - dropColumn:
+            tableName: mining_insight
+            columnName: mining_filter_group_id
+
+  - changeSet:
+      author: appian
+      id: '000472.2.0'
+      comment: Add tables to support insight findings
+      changes:
+        - createTable:
+            tableName: mining_insight_finding
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_index
+                  type: ${integerType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: snapshot_impact
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: mining_categ_attr_finding
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_finding_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attribute_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attribute_value
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: mining_activity_finding
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_finding_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: mining_direct_seq_finding
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_finding_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000472.3.0'
+      comment: Add foreign keys to support insight findings
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: insight_findings_insight_id_fk
+            baseTableName: mining_insight_finding
+            baseColumnNames: mining_insight_id
+            referencedTableName: mining_insight
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: categ_attr_finding_id_fk
+            baseTableName: mining_categ_attr_finding
+            baseColumnNames: mining_insight_finding_id
+            referencedTableName: mining_insight_finding
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: activity_finding_id_fk
+            baseTableName: mining_activity_finding
+            baseColumnNames: mining_insight_finding_id
+            referencedTableName: mining_insight_finding
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: direct_sequence_finding_id_fk
+            baseTableName: mining_direct_seq_finding
+            baseColumnNames: mining_insight_finding_id
+            referencedTableName: mining_insight_finding
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000472.4.0'
+      comment: Add indices to support insight findings
+      changes:
+        - createIndex:
+            indexName: insight_fndng_insight_id_idx
+            tableName: mining_insight_finding
+            columns:
+              - column:
+                  name: mining_insight_id
+
+  - changeSet:
+      author: appian
+      id: '000472.5.0'
+      comment: Create sequences to provide primary key values for insight findings
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_insight_finding_sq

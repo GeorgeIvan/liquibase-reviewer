@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000182-record-type-icon.xml">
+
+  <changeSet author="appian" id="tag-0000181">
+    <tagDatabase tag="000181"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000182.1.0">
+    <comment>Create new column icon_id_src</comment>
+    <addColumn tableName="record_type">
+      <column name="icon_id_src" type="${byteType}" value="4" defaultValueNumeric="4">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000182.2.0">
+    <comment>Create new column icon_id</comment>
+    <addColumn tableName="record_type">
+      <column name="icon_id" type="${shortStringType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000182.3.0">
+    <comment>Create new column icon_color_src</comment>
+    <addColumn tableName="record_type">
+      <column name="icon_color_src" type="${byteType}" value="4" defaultValueNumeric="4">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000182.4.0">
+    <comment>Create new column icon_color</comment>
+    <addColumn tableName="record_type">
+      <column name="icon_color" type="${expressionStringType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000182.5.0">
+    <comment>Set the icon_id_src to CUSTOM and the icon_id to the person for the user record</comment>
+    <update tableName="record_type">
+      <column name="icon_id_src" value="2" />
+      <column name="icon_id" value="f007" />
+      <where>uuid = 'SYSTEM_RECORD_TYPE_USER'</where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

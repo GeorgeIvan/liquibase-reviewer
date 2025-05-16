@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000346-update-default-summary-view-name.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000346
+      tagDatabase:
+        tag: 'pre-000346'
+
+  - changeSet:
+      author: appian
+      id: '000346.1.0'
+      comment: If the summary view name is the previous static value, update it to be the new default expression
+      update:
+        tableName: record_detail_view_cfg
+        column:
+          name: name_expr
+          value: 'a!rtd_getDefaultSummaryViewName()'
+        where: name_expr LIKE '="Summary"' AND url_stub LIKE 'summary'

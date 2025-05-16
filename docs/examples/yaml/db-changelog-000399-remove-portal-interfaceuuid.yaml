@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000399-remove-portal-interfaceuuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000399
+      tagDatabase:
+        tag: 'pre-000399'
+
+  - changeSet:
+      author: appian
+      id: '000399.1.0'
+      comment: Delete interface_uuid from portal table
+      dropColumn:
+        tableName: portal
+        column:
+          name: interface_uuid

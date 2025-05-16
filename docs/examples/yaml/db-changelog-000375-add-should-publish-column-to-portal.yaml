@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000375-add-should-publish-column-to-portal.yaml
+  - changeSet:
+      id: 'tag-pre-000375'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000375'
+  - changeSet:
+      author: appian
+      id: '000375.1.0'
+      comment: Add should_publish column to portal
+      addColumn:
+        tableName: portal
+        columns:
+          - column:
+              name: should_publish
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000375.2.0'
+      comment: Drop default value for should_publish column
+      dropDefaultValue:
+        tableName: portal
+        columnName: should_publish
+        columnDataType: ${booleanType}

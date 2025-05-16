@@ -1,0 +1,177 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000464-add-ts-string-variable.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000464'
+      tagDatabase:
+        tag: 'pre-000464'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000464.1.0'
+      comment: Create ts_string_variable table
+      changes:
+        - createTable:
+            tableName: ts_string_variable
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    uniqueConstraintName: ts_string_variable_uuid_uc
+                    unique: true
+              - column:
+                  name: ts_string_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000464.1.1'
+      comment: A sequence to provide primary key values for the translation string variable table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_variable_sq
+  - changeSet:
+      id: '000464.1.2'
+      author: appian
+      comment: Add FK for ts_string_variable.ts_string_id to ts_string.id
+      addForeignKeyConstraint:
+        constraintName: ts_str_variable_string_id_fk
+        baseTableName: ts_string_variable
+        baseColumnNames: ts_string_id
+        referencedTableName: ts_string
+        referencedColumnNames: id
+  - changeSet:
+      id: '000464.1.3'
+      author: appian
+      comment: Add index on ts_string_variable.ts_string_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_id
+          indexName: ts_str_variable_string_id_idx
+          tableName: ts_string_variable
+          unique: false
+  - changeSet:
+      id: '000464.2.0'
+      author: appian
+      comment: Create ts_string_variable_history table
+      changes:
+        - createTable:
+            tableName: ts_string_variable_history
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    uniqueConstraintName: ts_str_var_history_uuid_uc
+                    unique: true
+              - column:
+                  name: name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000464.2.1'
+      comment: A sequence to provide primary key values for the translation string variable history table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_variable_history_sq
+  - changeSet:
+      author: appian
+      id: '000464.3.0'
+      comment: Create ts_str_his_to_var_his table
+      changes:
+        - createTable:
+            tableName: ts_str_his_to_var_his
+            columns:
+              - column:
+                  name: ts_string_history_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: ts_string_variable_history_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+  - changeSet:
+      id: '000464.3.2'
+      author: appian
+      comment: Add FK for ts_str_his_to_var_his.ts_string_history_id to ts_string_history.id
+      addForeignKeyConstraint:
+        constraintName: ts_str_his_to_var_his_key_fk
+        baseTableName: ts_str_his_to_var_his
+        baseColumnNames: ts_string_history_id
+        referencedTableName: ts_string_history
+        referencedColumnNames: id
+  - changeSet:
+      id: '000464.3.3'
+      author: appian
+      comment: Add FK for ts_str_his_to_var_his.ts_string_variable_history_id to ts_string_variable_history.id
+      addForeignKeyConstraint:
+        constraintName: ts_str_his_to_var_his_id_fk
+        baseTableName: ts_str_his_to_var_his
+        baseColumnNames: ts_string_variable_history_id
+        referencedTableName: ts_string_variable_history
+        referencedColumnNames: id
+  - changeSet:
+      id: '000464.3.4'
+      author: appian
+      comment: Add index on ts_str_his_to_var_his.ts_string_history_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_history_id
+          indexName: ts_str_to_var_his_id_idx
+          tableName: ts_str_his_to_var_his
+          unique: false
+  - changeSet:
+      id: '000464.3.5'
+      author: appian
+      comment: Add index on ts_str_his_to_var_his.ts_string_variable_history_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_variable_history_id
+          indexName: ts_str_var_his_id_idx
+          tableName: ts_str_his_to_var_his
+          unique: false

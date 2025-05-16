@@ -1,0 +1,261 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000361-add-portals.yaml
+  - changeSet:
+      id: 'tag-pre-000361'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000361'
+  - changeSet:
+      id: '000361.1.0'
+      author: appian
+      changes:
+        comment: Create portal table
+        createTable:
+          tableName: portal
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: portal_uuid_uc
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: portal_name_uc
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: url_stub
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: portal_url_stub_uc
+            - column:
+                name: visibility
+                type: ${integerType}
+                defaultValueNumeric: 268435456
+                constraints:
+                  nullable: false
+            - column:
+                name: interface_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: true
+            - column:
+                name: version_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000361.1.1'
+      comment: A sequence to provide primary key values for the portal table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: portal_sq
+  - changeSet:
+      id: '000361.1.2'
+      author: appian
+      comment: Add FK for portal.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: portal_created_by_fk
+        baseTableName: portal
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000361.1.3'
+      author: appian
+      comment: Add FK for portal.updated_by to usr.id
+      addForeignKeyConstraint:
+          constraintName: portal_updated_by_fk
+          baseTableName: portal
+          baseColumnNames: updated_by
+          referencedTableName: usr
+          referencedColumnNames: id
+  - changeSet:
+      id: '000361.1.4'
+      author: appian
+      comment: Add index on portal.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: portal_created_by_idx
+          tableName: portal
+          unique: false
+  - changeSet:
+      id: '000361.1.5'
+      author: appian
+      changes:
+        comment: Add index on portal.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: portal_updated_by_idx
+          tableName: portal
+          unique: false
+  - changeSet:
+      id: '000361.2.0'
+      author: appian
+      changes:
+        comment: Create portal role map table
+        createTable:
+          tableName: portal_rm
+          columns:
+            - column:
+                name: portal_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: rm_entry_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000361.2.1'
+      author: appian
+      changes:
+        comment: Add PK for portal_rm
+        addPrimaryKey:
+          columnNames: portal_id, rm_entry_id
+          tableName: portal_rm
+  - changeSet:
+      id: '000361.2.2'
+      author: appian
+      changes:
+        comment: Add FK from portal_rm to rm_entry.id
+        addForeignKeyConstraint:
+          constraintName: portal_rm_entry_id_fk
+          baseTableName: portal_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+          deferrable: false
+          initiallyDeferred: false
+          referencesUniqueColumn: false
+  - changeSet:
+      id: '000361.2.3'
+      author: appian
+      changes:
+      comment: Add FK from portal_rm to portal.id
+      addForeignKeyConstraint:
+          constraintName: portal_rm_portal_id_fk
+          baseTableName: portal_rm
+          baseColumnNames: portal_id
+          referencedTableName: portal
+          referencedColumnNames: id
+          deferrable: false
+          initiallyDeferred: false
+          referencesUniqueColumn: false
+  - changeSet:
+      id: '000361.2.4'
+      author: appian
+      comment: Add index on portal_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: portal_rm_entry_id_idx
+          tableName: portal_rm
+          unique: false
+  - changeSet:
+      id: '000361.2.5'
+      author: appian
+      changes:
+        comment: Add index on portal_rm.portal_id
+        createIndex:
+          columns:
+            - column:
+                name: portal_id
+          indexName: portal_rm_portal_id_idx
+          tableName: portal_rm
+          unique: false
+  - changeSet:
+      id: '000361.3.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Portal Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 29
+            - column:
+                name: name
+                value: portal_administrator
+  - changeSet:
+      id: '000361.3.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Portal Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 30
+            - column:
+                name: name
+                value: portal_editor
+  - changeSet:
+      id: '000361.3.2'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Portal Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 31
+            - column:
+                name: name
+                value: portal_viewer
+

@@ -1,0 +1,179 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000506-change-ssa-report-to-ssa-library-object.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000506'
+      tagDatabase:
+        tag: 'pre-000506'
+  - changeSet:
+      id: '000506.1.0'
+      author: appian
+      changes:
+        comment: Create ssa_library_object table to replace the existing ssa_report table
+        # Due to db2 and oracle issues with renaming, easier to create new and drop old
+        createTable:
+          tableName: ssa_library_object
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: ssa_library_object_uuid_uc
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  # Make record_type_uuid nullable in new table
+                  nullable: true
+            - column:
+                name: selected_component
+                type: ${byteType}
+                constraints:
+                  # Make selected_component nullable in new table
+                  nullable: true
+            - column:
+                name: config_json
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: is_published
+                type: ${booleanType}
+                defaultValueBoolean: false
+                constraints:
+                  nullable: false
+            - column:
+                name: created_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000506.1.1'
+      author: appian
+      comment: Add sequence to provide primary key values for the ssa_library_object table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ssa_library_object_sq
+  - changeSet:
+      id: '000506.1.2'
+      author: appian
+      comment: Add FK for ssa_library_object.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ssa_lib_obj_created_by_fk
+        baseTableName: ssa_library_object
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000506.1.3'
+      author: appian
+      comment: Add FK for ssa_library_object.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ssa_lib_obj_updated_by_fk
+        baseTableName: ssa_library_object
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000506.1.4'
+      author: appian
+      comment: Add indexes on ssa_library_object.created_by, ssa_library_object.updated_ts
+      changes:
+        - createIndex:
+            tableName: ssa_library_object
+            columns:
+              - column:
+                  name: created_by
+            indexName: ssa_lib_obj_created_by_idx
+        - createIndex:
+            tableName: ssa_library_object
+            columns:
+              - column:
+                  name: updated_ts
+            indexName: ssa_lib_obj_updated_ts_idx
+  - changeSet:
+      author: appian
+      id: '000506.2.0'
+      comment: Copy original contents from ssa_report into ssa_library_object
+      changes:
+        - sql:
+            dbms: 'mssql'
+            sql:
+              SET IDENTITY_INSERT ssa_library_object ON;
+              INSERT INTO ssa_library_object (id, uuid, name, description, record_type_uuid, selected_component, config_json, is_published, created_by, created_ts, updated_by, updated_ts) 
+              SELECT id, uuid, name, description, record_type_uuid, selected_component, config_json, is_published, created_by, created_ts, updated_by, updated_ts 
+              FROM ssa_report;
+              SET IDENTITY_INSERT ssa_library_object OFF;
+        - sql:
+            dbms: '!mssql'
+            sql:
+              INSERT INTO ssa_library_object (id, uuid, name, description, record_type_uuid, selected_component, config_json, is_published, created_by, created_ts, updated_by, updated_ts)
+              SELECT id, uuid, name, description, record_type_uuid, selected_component, config_json, is_published, created_by, created_ts, updated_by, updated_ts
+              FROM ssa_report;
+  - changeSet:
+      id: '000506.3.0'
+      author: appian
+      comment: Add object_type column to ssa_library_object and default all existing rows to Report byte
+      addColumn:
+        tableName: ssa_library_object
+        columns:
+          - column:
+              name: object_type
+              type: ${byteType}
+              defaultValue: 1
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000506.3.1'
+      author: appian
+      comment: Drop default value constraint for object_type column
+      dropDefaultValue:
+        tableName: ssa_library_object
+        columnName: object_type
+        columnDataType: ${byteType}
+  - changeSet:
+      id: '000506.4.0'
+      author: appian
+      comment: Drop ssa_report table
+      dropTable:
+        tableName: ssa_report
+        cascadeConstraints: true

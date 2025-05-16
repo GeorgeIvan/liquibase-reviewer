@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000534-add-count-to-replica-metadata.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000534'
+      tagDatabase:
+        tag: 'pre-000534'
+
+  - changeSet:
+      author: appian
+      id: '000534.1.0'
+      comment: Add new column 'row_count' to record_replica_metadata
+      changes:
+        - addColumn:
+            tableName: record_replica_metadata
+            columns:
+              - column:
+                  name: row_count
+                  type: ${integerType}
+                  constraints:
+                    nullable: true

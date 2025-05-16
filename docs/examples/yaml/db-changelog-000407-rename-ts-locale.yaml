@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000407-rename-ts-locale.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000407'
+      tagDatabase:
+        tag: 'pre-000407'
+  - changeSet:
+      author: appian
+      id: '000407.1.0'
+      comment: Rename ts_locale.locale column as it was causing issues in DB2 by conflicting with a reserved word
+      changes:
+        - dropUniqueConstraint:
+            constraintName: ts_locale_name_uc
+            tableName: ts_locale
+            uniqueColumns: locale
+        - renameColumn:
+            columnDataType: ${shortStringType}
+            newColumnName: locale_language_tag
+            oldColumnName: locale
+            tableName: ts_locale
+        - addUniqueConstraint:
+            columnNames: locale_language_tag
+            constraintName: ts_locale_name_uc
+            tableName: ts_locale

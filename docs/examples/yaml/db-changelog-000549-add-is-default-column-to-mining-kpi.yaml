@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000549-add-is-default-column-to-mining-kpi.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000549
+      tagDatabase:
+        tag: 'pre-000549'
+  - changeSet:
+      id: '000549.0.0'
+      author: appian
+      comment: Add is_default_kpi column to mining_kpi table
+      addColumn:
+        tableName: mining_kpi
+        column:
+            name: is_default_kpi
+            type: ${booleanType} 
+            defaultValueBoolean: false
+            valueBoolean: false
+            constraints:
+              nullable: false
+         

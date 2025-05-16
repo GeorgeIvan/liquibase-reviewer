@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000229-deployment-app-table-sequence.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000229'
+      tagDatabase:
+        tag: 'pre-000229'
+  - changeSet:
+      id: '000229.1.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: deployment_app_sq

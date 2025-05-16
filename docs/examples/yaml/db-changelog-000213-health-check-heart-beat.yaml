@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000213-health-check-heart-beat.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000213'
+      tagDatabase:
+        tag: 'pre-000213'
+  - changeSet:
+      author: appian
+      id: '000213.1.0'
+      comment: Create new column for registering health check heart beat
+      addColumn:
+        tableName: healthcheck
+        column:
+          name: heart_beat
+          type: ${longType}
+          constraints:
+            nullable: 'true'
+  - changeSet:
+      author: appian
+      id: '000213.1.1'
+      comment: Create new column for tracking assigned schedule start time
+      addColumn:
+        tableName: healthcheck
+        column:
+          name: scheduled_start
+          type: ${longType}
+          constraints:
+            nullable: 'true'
+  - changeSet:
+      author: appian
+      id: '000213.1.2'
+      comment: Create new column for tracking assigned schedule frequency
+      addColumn:
+        tableName: healthcheck
+        column:
+          name: scheduled_frequency
+          type: ${longType}
+          constraints:
+            nullable: 'true'

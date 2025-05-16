@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000402-add-nested-site-pages.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000402
+      tagDatabase:
+        tag: 'pre-000402'
+
+  - changeSet:
+      author: appian
+      id: '000402.1.0'
+      comment: Add parent_site_page_id column to site_page
+      addColumn:
+        tableName: site_page
+        columns:
+          - column:
+              name: parent_site_page_id
+              type: ${longType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000402.2.0'
+      comment: Make site_id and order_idx columns nullable
+      changes:
+        - dropNotNullConstraint:
+            tableName: site_page
+            columnName: site_id
+            columnDataType: ${longType}
+        - dropNotNullConstraint:
+            tableName: site_page
+            columnName: order_idx
+            columnDataType: ${integerType}
+
+  - changeSet:
+      author: appian
+      id: '000402.3.0'
+      comment: Create foreign keys
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: site_page_parent_id_fk
+            baseTableName: site_page
+            baseColumnNames: parent_site_page_id
+            referencedTableName: site_page
+            referencedColumnNames: id
+        - createIndex:
+            indexName: site_page_parent_id_idx
+            tableName: site_page
+            columns:
+              - column:
+                  name: parent_site_page_id

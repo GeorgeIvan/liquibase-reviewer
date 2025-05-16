@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000347-modify-site-displayname-datatype.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000347
+      tagDatabase:
+        tag: 'pre-000347'
+
+#  We have to create a new column because conversion of a column from text to
+#  expressionStringType is not supported for all of our databases.
+
+  - changeSet:
+      author: appian
+      id: '000347.1.1'
+      comment: Add new column display_name_copy of type expressionStringType
+      addColumn:
+        tableName: site
+        column:
+          name: display_name_copy
+          type: ${expressionStringType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000347.1.2'
+      comment: Copy original display_name column into display_name_copy
+      sql: update site set display_name_copy = display_name
+
+  - changeSet:
+      author: appian
+      id: '000347.1.3'
+      comment: Drop original display_name column
+      dropDefaultValue:
+        tableName: site
+        columnName: display_name
+      dropColumn:
+        tableName: site
+        columnName: display_name
+
+  - changeSet:
+      author: appian
+      id: '000347.1.4'
+      comment: Rename display_name_copy to display_name
+      changes:
+        - renameColumn:
+            columnDataType: ${expressionStringType}
+            newColumnName: display_name
+            oldColumnName: display_name_copy
+            tableName: site

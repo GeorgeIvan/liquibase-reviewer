@@ -1,0 +1,92 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000513-add-mining-process-fld-alert-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000513'
+      tagDatabase:
+        tag: 'pre-000513'
+  - changeSet:
+      id: '000513.1.0'
+      author: appian
+      comment: Create mining_process_fld_alert table
+      changes:
+        - createTable:
+            tableName: mining_process_fld_alert
+            columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: mining_process_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: mining_process_field_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: alert_type
+                type: ${byteType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000513.1.1'
+      author: appian
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_process_fld_alert_sq
+  - changeSet:
+      id: '000513.1.2'
+      author: appian
+      comment: Add FK for mining_process_fld_alert.mining_process_id to mining_process.id
+      addForeignKeyConstraint:
+        constraintName: process_fld_alert_proc_id_fk
+        baseTableName: mining_process_fld_alert
+        baseColumnNames: mining_process_id
+        referencedTableName: mining_process
+        referencedColumnNames: id
+  - changeSet:
+      id: '000513.1.3'
+      author: appian
+      comment: Add FK for mining_process_fld_alert.mining_process_field_id to mining_process_field.id
+      addForeignKeyConstraint:
+        constraintName: process_fld_warns_alert_id_fk
+        baseTableName: mining_process_fld_alert
+        baseColumnNames: mining_process_field_id
+        referencedTableName: mining_process_field
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      id: '000513.1.4'
+      author: appian
+      comment: Add index on mining_process_fld_alert.mining_process_id
+      changes:
+        - createIndex:
+            tableName: mining_process_fld_alert
+            columns:
+              - column:
+                  name: mining_process_id
+            indexName: process_fld_alert_proc_id_idx
+  - changeSet:
+      id: '000513.1.5'
+      author: appian
+      comment: Add index on mining_process_fld_alert.mining_process_field_id
+      changes:
+        - createIndex:
+            tableName: mining_process_fld_alert
+            columns:
+              - column:
+                  name: mining_process_field_id
+            indexName: process_fld_alert_field_id_idx

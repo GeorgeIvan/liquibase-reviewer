@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000580-drop-uc-rs-field-metadata-uuid.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000580'
+      tagDatabase:
+        tag: 'pre-000580'
+  - changeSet:
+      id: '000580.1.0'
+      author: appian
+      comment: drop unique constraint on uuid column in rs_field_metadata
+      changes:
+        - dropUniqueConstraint:
+            tableName: rs_field_metadata
+            constraintName: rs_field_metadata_uuid_uc
+            uniqueColumns: uuid

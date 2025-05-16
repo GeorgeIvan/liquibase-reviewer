@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001042-update-replica-load-event-table-for-inc-sync.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001042'
+      tagDatabase:
+        tag: 'pre-001042'
+  - changeSet:
+      author: appian
+      id: '001042.1.0'
+      comment: Rename column replica_rows_written to rows_synced
+      changes:
+        - renameColumn:
+            columnDataType: ${integerType}
+            newColumnName: rows_synced
+            oldColumnName: replica_rows_written
+            tableName: replica_load_event
+  - changeSet:
+      author: appian
+      id: '001042.1.1'
+      comment: Add total_synced_rows column to replica_load_event table
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: total_synced_rows
+              type: ${integerType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '001042.1.2'
+      comment: Default total_synced_rows values from rows_synced
+      changes:
+        - update:
+            tableName: replica_load_event
+            columns:
+              name: total_synced_rows
+              valueComputed: rows_synced

@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000577-create-mining-kpi-alert-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000577
+      tagDatabase:
+        tag: 'pre-000577'
+  - changeSet:
+      id: '000577.1.0'
+      author: appian
+      comment: Create mining_kpi_alert table
+      changes:
+        - createTable:
+            tableName: mining_kpi_alert
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_threshold_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: ${booleanType}
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000577.2.0'
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_kpi_alert_sq
+  - changeSet:
+      author: appian
+      id: '000577.3.0'
+      comment: Add FK for mining_kpi_alert.kpi_threshold_id to mining_kpi_threshold.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_kpi_alert_mktid_fk
+            baseTableName: mining_kpi_alert
+            baseColumnNames: kpi_threshold_id
+            referencedTableName: mining_kpi_threshold
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000577.4.0'
+      comment: Create index for mining_kpi_alert.kpi_threshold_id
+      changes:
+        - createIndex:
+            indexName: mining_kpi_alert_mktid_idx
+            tableName: mining_kpi_alert
+            columns:
+              - column:
+                  name: kpi_threshold_id

@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000282-add-shadow-attributes-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000282'
+      tagDatabase:
+        tag: 'pre-000282'
+  - changeSet:
+      author: appian
+      id: '000282.1.0'
+      comment: Add shadow_attributes_metadata column to record_replica_metadata
+      addColumn:
+        tableName: record_replica_metadata
+        column:
+          name: shadow_attributes_metadata
+          type: ${largeStringType}
+          constraints:
+            nullable: true

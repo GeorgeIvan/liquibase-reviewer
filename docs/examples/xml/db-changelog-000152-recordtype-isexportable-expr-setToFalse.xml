@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000152-recordtype-isexportable-expr-setToFalse.xml">
+
+  <changeSet author="appian" id="tag-000151">
+    <tagDatabase tag="000151"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000152.0.0">
+    <comment>Update is_exportable on expression-backed record types to be false</comment>
+    <update tableName="record_type">
+      <column name="is_exportable" type="${booleanType}" valueBoolean="false"/>
+      <where>src_type = '{http://www.appian.com/ae/types/2009}Datatype'</where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

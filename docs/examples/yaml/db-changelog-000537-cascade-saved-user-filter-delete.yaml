@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000537-cascade-saved-user-filter-delete.yaml
+  - changeSet:
+      id: 'tag-pre-000537'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000537'
+  - changeSet:
+      id: '000537.1.0'
+      author: appian
+      comment: drop saved_user_filter_to_set_id_fk FK
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: saved_user_filter
+            constraintName: saved_user_filter_to_set_id_fk
+  - changeSet:
+      id: '000537.1.1'
+      author: appian
+      comment: add FK back with cascade deletion
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: saved_user_filter_to_set_id_fk
+            baseTableName: saved_user_filter
+            baseColumnNames: parent_set_id
+            referencedTableName: saved_user_filter_set
+            referencedColumnNames: id
+            onDelete: CASCADE

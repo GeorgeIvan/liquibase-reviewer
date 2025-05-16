@@ -1,0 +1,58 @@
+---
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000227-deployment-app-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000227'
+      tagDatabase:
+        tag: 'pre-000227'
+  - changeSet:
+      author: appian
+      id: '000227.1.0'
+      comment: Create deployment_app table
+      createTable:
+        tableName: deployment_app
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: deployment_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: app_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: app_name
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000227.2.0'
+      comment: FK from deployment_app.deployment_id to deployment.id
+      addForeignKeyConstraint:
+        constraintName: dpl_app_dpl_id_fk
+        baseTableName: deployment_app
+        baseColumnNames: deployment_id
+        referencedTableName: deployment
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000227.3.0'
+      comment: Add index on app_uuid column since users can filter deployments based on application UUID
+      createIndex:
+        columns:
+          - column:
+              name: app_uuid
+        indexName: idx_app_uuid
+        tableName: deployment_app

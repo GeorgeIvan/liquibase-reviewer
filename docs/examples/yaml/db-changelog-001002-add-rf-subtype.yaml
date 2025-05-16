@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001002-add-rf-subtype.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001002'
+      tagDatabase:
+        tag: 'pre-001002'
+  - changeSet:
+      id: '001002.1.0'
+      author: appian
+      comment: Add subtype column
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: sub_type
+              type: ${byteType}
+              defaultValueNumeric: 0
+              valueNumeric: 0
+              constraints:
+                nullable: false

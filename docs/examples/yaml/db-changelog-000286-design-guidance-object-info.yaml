@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000286-design-guidance-object-info.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000286'
+      tagDatabase:
+        tag: 'pre-000286'
+  - changeSet:
+      author: appian
+      id: '000286.1.0'
+      comment: Create dg_object_info table
+      createTable:
+        tableName: dg_object_info
+        columns:
+          - column:
+              name: object_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: object_type_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: object_name
+              type: ${stringType}(512)  #some design objects (such as interface and rule)'s names can be as long as 500 characters
+              constraints:
+                nullable: false
+          - column:
+              name: modifier
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: modified_at
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000286.1.1'
+      author: appian
+      comment: FK from dg_object_info.modifier to usr.id
+      addForeignKeyConstraint:
+        constraintName: dg_object_info_modifier_fk
+        baseTableName: dg_object_info
+        baseColumnNames: modifier
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000286.1.2'
+      author: appian
+      changes:
+        comment: Add composite PK for dg_object_info
+        addPrimaryKey:
+          columnNames: object_uuid, object_type_id
+          tableName: dg_object_info

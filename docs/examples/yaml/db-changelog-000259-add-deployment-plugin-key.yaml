@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000259-add-deployment-plugin-key.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000259
+      tagDatabase:
+        tag: 'pre-000259'
+
+  - changeSet:
+      author: appian
+      id: '000259.1.0'
+      comment: Add the plugin_key and jar_file_name columns
+      addColumn:
+        tableName: deployment_plugin
+        columns:
+          - column:
+              name: plugin_key
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+              defaultValue: "###unknown-key###"
+          - column:
+              name: jar_file_name
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '000259.2.0'
+      comment: Make the plugin_key column non-nullable, now that we've added it with a default value
+      addNotNullConstraint:
+        tableName: deployment_plugin
+        columnName: plugin_key
+        columnDataType: ${shortStringType}
+

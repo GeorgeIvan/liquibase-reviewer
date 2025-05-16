@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000536-add-index-record-query-details.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000536'
+      tagDatabase:
+        tag: 'pre-000536'
+
+  - changeSet:
+      author: appian
+      id: '000536.1.0'
+      comment: Create index 'query_details_sha_idx' for record_query_details
+      changes:
+        - createIndex:
+            indexName: query_details_sha_idx
+            tableName: record_query_details
+            unique: false
+            columns:
+              - column:
+                  name: query_details_sha256

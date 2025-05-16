@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000465-auto-context-update-enabled-column-for-site-page-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000465
+      tagDatabase:
+        tag: 'pre-000465'
+  - changeSet:
+      author: appian
+      id: '000465.1.0'
+      comment: Add boolean 'auto context update enabled' column to site_page table
+      addColumn:
+        tableName: site_page
+        columns:
+          - column:
+              name: auto_context_update_enabled
+              type: ${booleanType}
+              valueBoolean: false
+              constraints:
+                nullable: false

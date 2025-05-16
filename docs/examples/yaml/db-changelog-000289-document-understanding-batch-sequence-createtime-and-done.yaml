@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000289-document-understanding-batch-sequence-createtime-and-done.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000289'
+      tagDatabase:
+        tag: 'pre-000289'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      id: '000289.1.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_ext_google_input_docs_sq
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      id: '000289.2.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_ext_google_batch_sq
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000289.3.0'
+      comment: Add create_time to doc_ext_google_batch table
+      addColumn:
+        tableName: doc_ext_google_batch
+        column:
+          name: create_time
+          type: ${longType}
+          defaultValue: 0
+          value: 0
+          constraints:
+            nullable: false
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000289.4.0'
+      comment: Add done to doc_ext_google_batch table
+      addColumn:
+        tableName: doc_ext_google_batch
+        column:
+          name: done
+          type: ${booleanType}
+          defaultValueBoolean: false
+          valueBoolean: false
+          constraints:
+            nullable: false

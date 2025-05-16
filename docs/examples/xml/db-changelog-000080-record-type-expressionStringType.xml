@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000080-record-type-expressionStringType.xml">
+
+  <!-- For all expression fields, we have to create a new column because conversion of a column from
+       text to largeStringType is not supported for all of our databases. -->
+  
+  <changeSet author="appian" id="tag-000079">
+    <tagDatabase tag="000079"/>
+  </changeSet>
+
+  <!-- Migrate record_type expressions -->
+
+  <changeSet author="appian" id="000080.1.0.0">
+    <comment>Add new record_type lv_tmpt_expr column called lv_tmpt_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_type">
+      <column name="lv_tmpt_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.0.1">
+    <comment>Copy over original record_type lv_tmpt_expr column into lv_tmpt_expr_copy</comment>
+    <sql>update record_type set lv_tmpt_expr_copy = lv_tmpt_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.0.2">
+    <comment>Drop original record_type lv_tmpt_expr column</comment>
+    <dropColumn tableName="record_type" columnName="lv_tmpt_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.0.3">
+    <comment>Rename record_type lv_tmpt_expr_copy column to lv_tmpt_expr</comment>
+    <renameColumn tableName="record_type" oldColumnName="lv_tmpt_expr_copy" newColumnName="lv_tmpt_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.1.1.0">
+    <comment>Add new record_type data_src_expr column called data_src_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_type">
+      <column name="data_src_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.1.1">
+    <comment>Copy over original record_type data_src_expr column into data_src_expr_copy</comment>
+    <sql>update record_type set data_src_expr_copy = data_src_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.1.2">
+    <comment>Drop original record_type data_src_expr column</comment>
+    <dropColumn tableName="record_type" columnName="data_src_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.1.3">
+    <comment>Rename record_type data_src_expr_copy column to data_src_expr</comment>
+    <renameColumn tableName="record_type" oldColumnName="data_src_expr_copy" newColumnName="data_src_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.1.2.0">
+    <comment>Add new record_type facets_list_expr column called facets_list_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_type">
+      <column name="facets_list_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.2.1">
+    <comment>Copy over original record_type facets_list_expr column into facets_list_expr_copy</comment>
+    <sql>update record_type set facets_list_expr_copy = facets_list_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.2.2">
+    <comment>Drop original record_type facets_list_expr column</comment>
+    <dropColumn tableName="record_type" columnName="facets_list_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.2.3">
+    <comment>Rename record_type facets_list_expr_copy column to facets_list_expr</comment>
+    <renameColumn tableName="record_type" oldColumnName="facets_list_expr_copy" newColumnName="facets_list_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.1.3.0">
+    <comment>Add new record_type default_filters_expr column called default_filters_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_type">
+      <column name="default_filters_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.3.1">
+    <comment>Copy over original record_type default_filters_expr column into default_filters_expr_copy</comment>
+    <sql>update record_type set default_filters_expr_copy = default_filters_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.3.2">
+    <comment>Drop original record_type default_filters_expr column</comment>
+    <dropColumn tableName="record_type" columnName="default_filters_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.1.3.3">
+    <comment>Rename record_type default_filters_expr_copy column to default_filters_expr</comment>
+    <renameColumn tableName="record_type" oldColumnName="default_filters_expr_copy" newColumnName="default_filters_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+   <!-- Migrate record_fld_cfg expressions -->
+
+  <changeSet author="appian" id="000080.2.0.0">
+    <comment>Add new record_fld_cfg facet_label_expr column called facet_label_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_label_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.0.1">
+    <comment>Copy over original record_fld_cfg facet_label_expr column into facet_label_expr_copy</comment>
+    <sql>update record_fld_cfg set facet_label_expr_copy = facet_label_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.0.2">
+    <comment>Drop original record_fld_cfg facet_label_expr column</comment>
+    <dropColumn tableName="record_fld_cfg" columnName="facet_label_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.0.3">
+    <comment>Rename record_fld_cfg facet_label_expr_copy column to facet_label_expr</comment>
+    <renameColumn tableName="record_fld_cfg" oldColumnName="facet_label_expr_copy" newColumnName="facet_label_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.2.1.0">
+    <comment>Add new record_fld_cfg facet_expr column called facet_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.1.1">
+    <comment>Copy over original record_fld_cfg facet_expr column into facet_expr_copy</comment>
+    <sql>update record_fld_cfg set facet_expr_copy = facet_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.1.2">
+    <comment>Drop original record_fld_cfg facet_expr column</comment>
+    <dropColumn tableName="record_fld_cfg" columnName="facet_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.2.1.3">
+    <comment>Rename record_fld_cfg facet_expr_copy column to facet_expr</comment>
+    <renameColumn tableName="record_fld_cfg" oldColumnName="facet_expr_copy" newColumnName="facet_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <!-- Migrate record_facet_opt_cfg expressions -->
+
+  <changeSet author="appian" id="000080.3.0.0">
+    <comment>Add new record_facet_opt_cfg label_expr column called label_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_facet_opt_cfg">
+      <column name="label_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.0.1">
+    <comment>Copy over original record_facet_opt_cfg label_expr column into label_expr_copy</comment>
+    <sql>update record_facet_opt_cfg set label_expr_copy = label_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.0.2">
+    <comment>Drop original record_facet_opt_cfg label_expr column</comment>
+    <dropColumn tableName="record_facet_opt_cfg" columnName="label_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.0.3">
+    <comment>Rename record_facet_opt_cfg label_expr_copy column to label_expr</comment>
+    <renameColumn tableName="record_facet_opt_cfg" oldColumnName="label_expr_copy" newColumnName="label_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.0.4">
+    <comment>Make record_facet_opt_cfg label_expr column non-nullable</comment>
+    <addNotNullConstraint tableName="record_facet_opt_cfg" columnName="label_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.3.1.0">
+    <comment>Add new record_facet_opt_cfg value_list column called value_list_copy of type expressionStringType</comment>
+    <addColumn tableName="record_facet_opt_cfg">
+      <column name="value_list_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.1.1">
+    <comment>Copy over original record_facet_opt_cfg value_list column into value_list_copy</comment>
+    <sql>update record_facet_opt_cfg set value_list_copy = value_list</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.1.2">
+    <comment>Drop original record_facet_opt_cfg value_list column</comment>
+    <dropColumn tableName="record_facet_opt_cfg" columnName="value_list"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.1.3">
+    <comment>Rename record_facet_opt_cfg value_list_copy column to value_list</comment>
+    <renameColumn tableName="record_facet_opt_cfg" oldColumnName="value_list_copy" newColumnName="value_list" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.3.2.0">
+  <comment>Add new record_facet_opt_cfg low_lim_expr column called low_lim_expr_copy of type expressionStringType</comment>
+  <addColumn tableName="record_facet_opt_cfg">
+    <column name="low_lim_expr_copy" type="${expressionStringType}"/>
+  </addColumn>
+</changeSet>
+  <changeSet author="appian" id="000080.3.2.1">
+    <comment>Copy over original record_facet_opt_cfg low_lim_expr column into low_lim_expr_copy</comment>
+    <sql>update record_facet_opt_cfg set low_lim_expr_copy = low_lim_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.2.2">
+    <comment>Drop original record_facet_opt_cfg low_lim_expr column</comment>
+    <dropColumn tableName="record_facet_opt_cfg" columnName="low_lim_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.2.3">
+    <comment>Rename record_facet_opt_cfg low_lim_expr_copy column to low_lim_expr</comment>
+    <renameColumn tableName="record_facet_opt_cfg" oldColumnName="low_lim_expr_copy" newColumnName="low_lim_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.3.3.0">
+    <comment>Add new record_facet_opt_cfg top_lim_expr column called top_lim_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_facet_opt_cfg">
+      <column name="top_lim_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.3.1">
+    <comment>Copy over original record_facet_opt_cfg top_lim_expr column into top_lim_expr_copy</comment>
+    <sql>update record_facet_opt_cfg set top_lim_expr_copy = top_lim_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.3.2">
+    <comment>Drop original record_facet_opt_cfg top_lim_expr column</comment>
+    <dropColumn tableName="record_facet_opt_cfg" columnName="top_lim_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.3.3.3">
+    <comment>Rename record_facet_opt_cfg top_lim_expr_copy column to top_lim_expr</comment>
+    <renameColumn tableName="record_facet_opt_cfg" oldColumnName="top_lim_expr_copy" newColumnName="top_lim_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <!-- Migrate filter expressions -->
+
+  <changeSet author="appian" id="000080.4.0.0">
+    <comment>Add new filter value_expr column called value_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="filter">
+      <column name="value_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.4.0.1">
+    <comment>Copy over original filter value_expr column into value_expr_copy</comment>
+    <sql>update filter set value_expr_copy = value_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.4.0.2">
+    <comment>Drop original filter value_expr column</comment>
+    <dropColumn tableName="filter" columnName="value_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.4.0.3">
+    <comment>Rename filter value_expr_copy column to value_expr</comment>
+    <renameColumn tableName="filter" oldColumnName="value_expr_copy" newColumnName="value_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <!-- Migrate record_detail_view_cfg expressions -->
+
+  <!-- ui_expr column does not need to be migrated because it is already largeStringType -->
+
+  <changeSet author="appian" id="000080.5.0.0">
+    <comment>Add new record_detail_view_cfg name_expr column called name_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_detail_view_cfg">
+      <column name="name_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.0.1">
+    <comment>Copy over original record_detail_view_cfg name_expr column into name_expr_copy</comment>
+    <sql>update record_detail_view_cfg set name_expr_copy = name_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.0.2">
+    <comment>Drop original record_detail_view_cfg name_expr column</comment>
+    <dropColumn tableName="record_detail_view_cfg" columnName="name_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.0.3">
+    <comment>Rename record_detail_view_cfg name_expr_copy column to name_expr</comment>
+    <renameColumn tableName="record_detail_view_cfg" oldColumnName="name_expr_copy" newColumnName="name_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+  <!-- Due to a bug in a past migration, all supported RDBMS except MySql have a non-null constraint on name_expr. -->
+  <!-- We supply a default empty expression value just in case there is null data in this column in MySql. -->
+  <changeSet author="appian" id="000080.5.0.4">
+    <comment>Make record_detail_view_cfg name_expr column non-nullable</comment>
+    <addNotNullConstraint tableName="record_detail_view_cfg" columnName="name_expr" columnDataType="${expressionStringType}" defaultNullValue='=""'/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.5.1.0">
+    <comment>Add new record_detail_view_cfg visibility_expr column called visibility_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_detail_view_cfg">
+      <column name="visibility_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.1.1">
+    <comment>Copy over original record_detail_view_cfg visibility_expr column into visibility_expr_copy</comment>
+    <sql>update record_detail_view_cfg set visibility_expr_copy = visibility_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.1.2">
+    <comment>Drop original record_detail_view_cfg visibility_expr column</comment>
+    <dropColumn tableName="record_detail_view_cfg" columnName="visibility_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.1.3">
+    <comment>Rename record_detail_view_cfg visibility_expr_copy column to visibility_expr</comment>
+    <renameColumn tableName="record_detail_view_cfg" oldColumnName="visibility_expr_copy" newColumnName="visibility_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.5.2.0">
+    <comment>Add new record_detail_view_cfg header_expr column called header_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_detail_view_cfg">
+      <column name="header_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.2.1">
+    <comment>Copy over original record_detail_view_cfg header_expr column into header_expr_copy</comment>
+    <sql>update record_detail_view_cfg set header_expr_copy = header_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.2.2">
+    <comment>Drop original record_detail_view_cfg header_expr column</comment>
+    <dropColumn tableName="record_detail_view_cfg" columnName="header_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.5.2.3">
+    <comment>Rename record_detail_view_cfg header_expr_copy column to header_expr</comment>
+    <renameColumn tableName="record_detail_view_cfg" oldColumnName="header_expr_copy" newColumnName="header_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <!-- Migrate record_related_action_cfg expressions -->
+
+  <changeSet author="appian" id="000080.6.0.0">
+    <comment>Add new record_related_action_cfg context_expr column called context_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="context_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.0.1">
+    <comment>Copy over original record_related_action_cfg context_expr column into context_expr_copy</comment>
+    <sql>update record_related_action_cfg set context_expr_copy = context_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.0.2">
+    <comment>Drop original record_related_action_cfg context_expr column</comment>
+    <dropColumn tableName="record_related_action_cfg" columnName="context_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.0.3">
+    <comment>Rename record_related_action_cfg context_expr_copy column to context_expr</comment>
+    <renameColumn tableName="record_related_action_cfg" oldColumnName="context_expr_copy" newColumnName="context_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000080.6.1.0">
+    <comment>Add new record_related_action_cfg visibility_expr column called visibility_expr_copy of type expressionStringType</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="visibility_expr_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.1.1">
+    <comment>Copy over original record_related_action_cfg visibility_expr column into visibility_expr_copy</comment>
+    <sql>update record_related_action_cfg set visibility_expr_copy = visibility_expr</sql>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.1.2">
+    <comment>Drop original record_related_action_cfg visibility_expr column</comment>
+    <dropColumn tableName="record_related_action_cfg" columnName="visibility_expr"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.1.3">
+    <comment>Rename record_related_action_cfg visibility_expr_copy column to visibility_expr</comment>
+    <renameColumn tableName="record_related_action_cfg" oldColumnName="visibility_expr_copy" newColumnName="visibility_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+  <changeSet author="appian" id="000080.6.1.4">
+    <comment>Make record_related_action_cfg visibility_expr column non-nullable</comment>
+    <addNotNullConstraint tableName="record_related_action_cfg" columnName="visibility_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

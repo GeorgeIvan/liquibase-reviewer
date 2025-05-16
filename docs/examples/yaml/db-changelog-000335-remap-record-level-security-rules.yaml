@@ -1,0 +1,102 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000335-remap-record-level-security-rules.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000335'
+      tagDatabase:
+        tag: 'pre-000335'
+  - changeSet:
+      author: appian
+      id: '000335.1.0'
+      comment: create new table
+      createTable:
+        tableName: record_type_rls_rules
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: rt_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+                unique: true
+          - column:
+              name: membership_filter
+              type: ${largeStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: data_filter
+              type: ${largeStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: order_idx
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000335.1.1'
+      comment: Add foreign key constraint to record_type_rls_rules
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rtrlsr_rt_id_fk
+            baseTableName: record_type_rls_rules
+            baseColumnNames: rt_id
+            referencedTableName: record_type
+            referencedColumnNames: id
+  - changeSet:
+      id: '000335.1.2'
+      comment: Create a sequence for oracle
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_type_rls_rules_sq
+  - changeSet:
+      id: '000335.2.0'
+      comment: remap json from rls_config to data_filter and membership_filter
+      author: appian
+      changes:
+        - customChange:
+            class: com.appiancorp.record.persistence.migration.RecordLevelSecurityRulesJsonChange
+  - changeSet:
+      author: appian
+      id: '000335.3.0'
+      comment: Drop foreign key constraint for record_type
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type
+            constraintName: rt_row_security_fk
+  - changeSet:
+      author: appian
+      id: '000335.3.1'
+      comment: drop old fk column on record_type
+      changes:
+        - dropColumn:
+            tableName: record_type
+            column:
+              - name: row_level_security_id
+  - changeSet:
+      author: appian
+      id: '000335.3.2'
+      comment: drop old table
+      changes:
+      - dropTable:
+          tableName: record_type_row_security
+          cascadeConstraints: true

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001039-correct-record-action-dialog-sizes.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001039'
+      tagDatabase:
+        tag: 'pre-001039'
+  - changeSet:
+      id: '001039.1.0'
+      author: appian
+      changes:
+        - customChange:
+            class: com.appiancorp.record.persistence.migration.SwapRecordActionDialogHeightsAndWidths

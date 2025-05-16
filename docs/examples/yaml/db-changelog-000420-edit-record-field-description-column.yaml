@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000420-edit-record-field-description-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000420
+      tagDatabase:
+        tag: 'pre-000420'
+  - changeSet:
+      author: appian
+      id: '000420.1.0'
+      comment: Dropping existing description column of type mediumStringType
+      dropColumn:
+        tableName: record_source_fields
+        columnName: description
+  - changeSet:
+      author: appian
+      id: '000420.1.1'
+      comment: Adding new description column of type expressionStringType
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: description
+              type: ${expressionStringType} #Potentially supporting expressionable descriptions in the future
+              constraints:
+                nullable: true

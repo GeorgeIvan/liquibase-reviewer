@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000169-enable-system-sites.xml">
+  <changeSet author="appian" id="tag-000168">
+    <tagDatabase tag="000168"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000169.0.0">
+    <comment>Create a new column called is_system to enable system Sites</comment>
+    <addColumn tableName="site">
+      <column name="is_system" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

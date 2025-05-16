@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000160-record-list-actions-table.xml">
+
+  <changeSet author="appian" id="tag-000159">
+    <tagDatabase tag="000159"/>
+  </changeSet>
+
+  <!-- TABLE Record List Action -->
+  <changeSet author="appian" id="000160.1.0">
+    <comment>Add Record List Action table</comment>
+    <createTable tableName="record_list_action_cfg">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="target_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="target_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="${expressionStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="title_src" type="${byteType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="description" type="${expressionStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="description_src" type="${byteType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="icon_id" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="visibility_expr" type="${expressionStringType}" value="=true()">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000160.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="record_list_action_cfg_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000160.1.2">
+    <comment>FK from record_list_action_cfg.record_type_id to record_type</comment>
+    <addForeignKeyConstraint constraintName="rec_lis_a_cfg_rec_type_id"
+      baseTableName="record_list_action_cfg" baseColumnNames="record_type_id"
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000160.1.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_lis_a_cfg_rec_type_fk_idx" tableName="record_list_action_cfg" unique="false">
+      <column name="record_type_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

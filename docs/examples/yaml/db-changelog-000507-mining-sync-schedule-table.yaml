@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000507-mining-sync-schedule-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000507'
+      tagDatabase:
+        tag: 'pre-000507'
+
+  - changeSet:
+      author: appian
+      id: '000507.1.0'
+      comment: Add mining process sync schedule table
+      changes:
+        - createTable:
+            tableName: mining_process_sync_sched
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: frequency
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: day_of_week
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: schedule_time_value
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activated
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000507.1.1'
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_process_sync_sched_sq
+
+  - changeSet:
+      id: '000507.2.0'
+      author: appian
+      comment: Create sync_schedule_id column on mining_process
+      addColumn:
+        tableName: mining_process
+        column:
+          name: sync_schedule_id
+          type: ${longType}
+          constraints:
+            nullable: true
+  - changeSet:
+      id: '000507.2.1'
+      author: appian
+      comment: Add FK from mining_process.sync_schedule_id to mining_process_sync_sched.id
+      addForeignKeyConstraint:
+        constraintName: mining_process_sync_sched_fk
+        baseTableName: mining_process
+        baseColumnNames: sync_schedule_id
+        referencedTableName: mining_process_sync_sched
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      id: '000507.2.2'
+      author: appian
+      comment: Add index on mining_process.sync_schedule_id
+      createIndex:
+        tableName: mining_process
+        columns:
+          - column:
+              name: sync_schedule_id
+        indexName: mining_proc_sync_sched_id_idx

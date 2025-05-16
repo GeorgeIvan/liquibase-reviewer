@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000523-update-load-event-table-add-cancellation.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000523
+      tagDatabase:
+        tag: 'pre-000523'
+
+  - changeSet:
+      author: appian
+      id: '000523.1.0'
+      comment: Add columns to track sync cancellation
+      changes:
+        - addColumn:
+            tableName: replica_load_event
+            columns:
+              - column:
+                  name: cancelled_by
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true

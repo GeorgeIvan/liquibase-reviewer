@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000429-add-record-source-sub-type.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000429
+      tagDatabase:
+        tag: 'pre-000429'
+  - changeSet:
+      author: appian
+      id: '000429.1.0'
+      comment: Create column for record source sub type
+      addColumn:
+        tableName: record_type_sources
+        columns:
+          - column: # All existing records will be defaulted to a subtype of RecordSourceSubType.NONE (1)
+              name: source_sub_type
+              type: ${byteType}
+              valueNumeric: 1
+              defaultValueNumeric: 1
+              constraints:
+                nullable: false

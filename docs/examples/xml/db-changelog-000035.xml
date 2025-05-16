@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000035.xml">
+
+  <changeSet author="appian" id="tag-000034">
+    <tagDatabase tag="000034"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000035.1.0">
+    <comment>Add new column to lock an entry's rolemap</comment>
+    <addColumn tableName="tp_feed_entry">
+      <column name="is_rolemap_locked" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

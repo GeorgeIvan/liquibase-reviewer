@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000337-add-dpkg-object-uuid-hash-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000337
+      tagDatabase:
+        tag: 'pre-000337'
+
+  - changeSet:
+      author: appian
+      id: '000337.1.0'
+      comment: Add column object_uuid_sha256 to dpkg_object table
+      addColumn:
+        tableName: dpkg_object
+        column:
+          name: object_uuid_sha256
+          type: varchar(64)
+          constraints:
+            nullable: true
+
+  - changeSet:
+      id: '000337.1.1'
+      author: appian
+      comment: Create the SHA256-hashed version of dpkg_object.object_uuid using SQL
+      dbms: mariadb,mysql
+      runInTransaction: false  # A really large Designer instance might have too many rows for 1 txn
+      sql: UPDATE dpkg_object SET object_uuid_sha256 = SHA2(object_uuid, 256);
+
+  - changeSet:
+      id: '000337.1.2'
+      author: appian
+      comment: Create the SHA256-hashed version of dpkg_object.object_uuid using SQL on oracle
+      dbms: oracle
+      runInTransaction: false  # A really large Designer instance might have too many rows for 1 txn
+      customChange:
+        class: com.appiancorp.deploymentpackages.persistence.migration.OracleAddHashToPackageObjectChange
+      validCheckSum:
+        - ANY  # Because we amended this migration after it already got deployed to some systems
+
+  - changeSet:
+      id: '000337.1.3'
+      author: appian
+      comment: Create the SHA256-hashed version of dpkg_object.object_uuid using SQL on mssql
+      dbms: mssql
+      runInTransaction: false  # A really large Designer instance might have too many rows for 1 txn
+      customChange:
+        class: com.appiancorp.deploymentpackages.persistence.migration.SqlServerAddHashToPackageObjectChange
+      validCheckSum:
+        - ANY  # Because we amended this migration after it already got deployed to some systems
+
+  - changeSet:
+      id: '000337.1.4'
+      author: appian
+      comment: Create the SHA256-hashed version of dpkg_object.object_uuid using SQL on Postgresql
+      dbms: postgresql
+      runInTransaction: false  # A really large Designer instance might have too many rows for 1 txn
+      sql: UPDATE dpkg_object SET object_uuid_sha256 = encode(sha256(object_uuid::bytea), 'hex');
+
+  - changeSet:
+      id: '000337.1.5'
+      author: appian
+      comment: Populate the object_uuid_sha256 column for existing rows using Java for DB2
+      dbms: db2
+      runInTransaction: false  # A really large Designer instance might have too many rows for 1 txn
+      # The following SQL "works" on DB2, but it blows when millions of rows are affected, with apparently
+      # no way to avoid enclosing the whole thing inside a single transaction:
+      #
+      # sql: UPDATE dpkg_object SET object_uuid_sha256 = lower(hex(hash(object_uuid, 2)));
+      customChange:
+        class: com.appiancorp.deploymentpackages.persistence.migration.Db2AddHashToPackageObjectChange
+
+  - changeSet:
+      author: appian
+      id: '000337.2.0'
+      comment: Make object_uuid_sha256 non-nullable
+      addNotNullConstraint:
+        tableName: dpkg_object
+        columnName: object_uuid_sha256
+        columnDataType: ${stringType}(64)
+
+  - changeSet:
+      author: appian
+      id: '000337.2.1'
+      comment: Add index on object_uuid_sha256
+      createIndex:
+        columns:
+          - column:
+              name: object_uuid_sha256
+        indexName: object_uuid_sha256_idx
+        tableName: dpkg_object
+        unique: false

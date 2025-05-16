@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000243-add-index-for-replica-load-event-type-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000243
+      tagDatabase:
+        tag: 'pre-000243'
+
+  - changeSet:
+      author: appian
+      id: '000243.0.0'
+      comment: Add index on replica_load_event.record_type_uuid
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494
+      createIndex:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: record_type_uuid
+        indexName: rpl_ld_evnt_rc_type_uuid_idx

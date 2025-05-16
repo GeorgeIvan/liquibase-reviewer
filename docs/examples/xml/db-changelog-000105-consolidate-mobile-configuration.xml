@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000105-consolidate-mobile-configuration.xml">
+
+    <changeSet author="appian" id="tag-000104">
+        <tagDatabase tag="000104"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000105.0.0">
+        <comment>Rename conf.security.mobile.REQUIRE_PASSCODE to conf.mobile.REQUIRE_PASSCODE</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.mobile.REQUIRE_PASSCODE"/>
+            <where>prop_key = 'conf.security.mobile.REQUIRE_PASSCODE'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000105.1.0">
+        <comment>Rename conf.security.mobile.ios.MIN_APP_VERSION to conf.mobile.ios.MIN_APP_VERSION</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.mobile.ios.MIN_APP_VERSION"/>
+            <where>prop_key = 'conf.security.mobile.ios.MIN_APP_VERSION'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000105.2.0">
+        <comment>Rename conf.security.mobile.android.MIN_APP_VERSION to conf.mobile.android.MIN_APP_VERSION</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.mobile.android.MIN_APP_VERSION"/>
+            <where>prop_key = 'conf.security.mobile.android.MIN_APP_VERSION'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000105.3.0">
+        <comment>Rename conf.security.mobile.ios.MIN_OS_VERSION to conf.mobile.ios.MIN_OS_VERSION</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.mobile.ios.MIN_OS_VERSION"/>
+            <where>prop_key = 'conf.security.mobile.ios.MIN_OS_VERSION'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000105.4.0">
+        <comment>Rename conf.security.mobile.android.MIN_OS_VERSION to conf.mobile.android.MIN_OS_VERSION</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.mobile.android.MIN_OS_VERSION"/>
+            <where>prop_key = 'conf.security.mobile.android.MIN_OS_VERSION'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

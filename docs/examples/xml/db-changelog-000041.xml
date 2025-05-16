@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000041.xml">
+
+  <changeSet author="appian" id="tag-000040">
+    <tagDatabase tag="000040"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000041.1.0">
+    <addColumn tableName="DT_MODEL">
+      <column name="CREATED_TS" type="${longType}" value="1380000000000"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000041.1.1">
+    <addNotNullConstraint tableName="DT_MODEL" columnName="CREATED_TS" columnDataType="${longType}"/>
+  </changeSet>
+
+</databaseChangeLog>

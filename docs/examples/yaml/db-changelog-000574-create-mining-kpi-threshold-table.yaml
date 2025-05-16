@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000574-create-mining-kpi-threshold-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000574
+      tagDatabase:
+        tag: 'pre-000574'
+  - changeSet:
+      id: '000574.1.0'
+      author: appian
+      comment: Create mining_kpi_threshold table
+      changes:
+        - createTable:
+            tableName: mining_kpi_threshold
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: threshold_value
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_on_graph
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000574.2.0'
+      comment: Create sequence for provide primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_kpi_threshold_sq
+  - changeSet:
+      author: appian
+      id: '000574.3.0'
+      comment: Add FK for mining_kpi_treshold.kp_id to mining_kpi.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_kpi_threshold_mkid_fk
+            baseTableName: mining_kpi_threshold
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000574.4.0'
+      comment: Create index for mining_kpi_threshold.mining_kpi_id
+      changes:
+        - createIndex:
+            indexName: mining_kpi_threshold_mkid_idx
+            tableName: mining_kpi_threshold
+            columns:
+              - column:
+                  name: mining_kpi_id

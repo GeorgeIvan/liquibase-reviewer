@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000112-embedded-v2-theming.xml">
+
+  <changeSet author="appian" id="tag-000111">
+    <tagDatabase tag="000111"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000112.0.0">
+    <comment>Add value_expr column to embedded_sail_style table</comment>
+    <addColumn tableName="embedded_sail_style">
+      <column name="value_expr" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000112.1.0">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="oracle"/>
+    </preConditions>
+    <comment>Migrate rows with key fieldValueFontSize to rows with key baseFontSize</comment>
+    <sql>
+      INSERT INTO embedded_sail_style (id, theme_id, name, value)
+      (SELECT embedded_sail_style_sq.nextval, theme_id, 'baseFontSize', value
+      FROM embedded_sail_style WHERE name = 'fieldValueFontSize')
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000112.2.0">
+    <preConditions onFail="MARK_RAN">
+      <not><dbms type="oracle"/></not>
+    </preConditions>
+    <comment>Migrate rows with key fieldValueFontSize to rows with key baseFontSize</comment>
+    <sql>
+      INSERT INTO embedded_sail_style (theme_id, name, value)
+      (SELECT theme_id, 'baseFontSize', value
+      FROM embedded_sail_style WHERE name = 'fieldValueFontSize')
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000112.3.0">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="oracle"/>
+    </preConditions>
+    <comment>Migrate rows with key pageBackgroundColor to rows with key backgroundColor</comment>
+    <sql>
+      INSERT INTO embedded_sail_style (id, theme_id, name, value)
+      (SELECT embedded_sail_style_sq.nextval, theme_id, 'backgroundColor', value
+      FROM embedded_sail_style WHERE name = 'pageBackgroundColor')
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000112.4.0">
+    <preConditions onFail="MARK_RAN">
+      <not><dbms type="oracle"/></not>
+    </preConditions>
+    <comment>Migrate rows with key pageBackgroundColor to rows with key backgroundColor</comment>
+    <sql>
+      INSERT INTO embedded_sail_style (theme_id, name, value)
+      (SELECT theme_id, 'backgroundColor', value
+      FROM embedded_sail_style WHERE name = 'pageBackgroundColor')
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

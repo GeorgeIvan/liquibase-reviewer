@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000225-record-relationship-name.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000225
+      tagDatabase:
+        tag: 'pre-000225'
+  - changeSet:
+      id: '000225.1.0'
+      author: appian
+      comment: Create new column relationship_name in record_type_relationships table
+      addColumn:
+        tableName: record_type_relationships
+        column:
+          name: relationship_name
+          type: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000225.2.0'
+      comment: Populate the names
+      changes:
+        - customChange:
+            class: com.appiancorp.record.relatedrecords.PopulateRecordRelationshipName
+            params:
+              - param:
+                  name: tableName
+                  value: record_type_relationships
+              - param:
+                  name: confirmationMessage
+                  value: Done populating relationship names
+  - changeSet:
+      id: '000225.3.0'
+      author: appian
+      comment: Make relationship_name not nullable
+      changes:
+        - addNotNullConstraint:
+            tableName: record_type_relationships
+            columnName: relationship_name
+            columnDataType: ${shortStringType}
+  - changeSet:
+      id: '000225.4.0'
+      author: appian
+      comment: Add composite unique constraint between rt_uuid and name
+      changes:
+        - addUniqueConstraint:
+            tableName: record_type_relationships
+            columnNames: target_rt_uuid, relationship_name
+            constraintName: rel_name_uuid_unique

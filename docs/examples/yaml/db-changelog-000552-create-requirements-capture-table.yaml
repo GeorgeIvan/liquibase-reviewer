@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000552-create-requirements-capture-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000552
+      tagDatabase:
+        tag: 'pre-000552'
+  - changeSet:
+      author: appian
+      id: '000552.0.0'
+      comment: Create requirements_capture table
+      createTable:
+        tableName: requirements_capture
+        columns:
+          - column:
+              name: id
+              type: ${longtype}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: application_uuid
+              type: ${uuidType}
+          - column:
+              name: requirements_capture_string
+              type: ${largeStringType}
+  - changeSet:
+      id: '000552.0.1'
+      author: appian
+      comment: Create a sequence to provide primary key values for the requirements_capture table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: requirements_capture_sq

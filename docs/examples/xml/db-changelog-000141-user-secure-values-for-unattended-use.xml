@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000141-user-secure-values-for-unattended-use.xml">
+
+  <changeSet author="appian" id="tag-000140">
+    <tagDatabase tag="000140"/>
+  </changeSet>
+
+  <!-- TABLE UnattendedUserSecuredAttribute -->
+  <changeSet author="appian" id="000141.1.0">
+    <comment>Add UnattendedUserSecuredAttribute table</comment>
+    <createTable tableName="external_sys_attr_una_val">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="external_sys_attr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="val" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="exp" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for UnattendedUserSecuredValue id -->
+  <changeSet author="appian" id="000141.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="external_sys_attr_una_val_sq"/>
+  </changeSet>
+
+  <!-- TUPLE for external_sys_id, unique_key -->
+  <changeSet author="appian" id="000141.1.2">
+    <addUniqueConstraint columnNames="usr_id, external_sys_attr_id" tableName="external_sys_attr_una_val"/>
+  </changeSet>
+
+  <!-- FK for external_sys_attr_id -->
+  <changeSet author="appian" id="000141.1.3">
+    <comment>Foreign Key FROM external_sys_attr_una_val.external_sys_attr_id TO external_sys_attr.id</comment>
+    <addForeignKeyConstraint constraintName="extsys_attr_unaval_aid_fk" baseTableName="external_sys_attr_una_val"
+                             baseColumnNames="external_sys_attr_id" referencedTableName="external_sys_attr" referencedColumnNames="id"/>
+  </changeSet>
+
+  <!-- FK for usr_id -->
+  <changeSet author="appian" id="000141.1.4">
+    <comment>Foreign Key FROM external_sys_attr_una_val.usr_id TO usr.id</comment>
+    <addForeignKeyConstraint constraintName="extsys_attr_unaval_usrid_fk"
+                             baseTableName="external_sys_attr_una_val" baseColumnNames="usr_id" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <!-- Index for external_sys_attr_id FK -->
+  <changeSet author="appian" id="000141.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Create an index for the FK external_sys_attr_una_val.external_sys_attr_id</comment>
+    <createIndex indexName="extsys_attr_unaval_aid_fk_idx" tableName="external_sys_attr_una_val"
+                 unique="true">
+      <column name="external_sys_attr_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

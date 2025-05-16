@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000551-remove-document-chat-feedback-fk.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000551'
+      tagDatabase:
+        tag: 'pre-000551'
+  - changeSet:
+      id: '000551.1.0'
+      author: appian
+      comment: Remove document_chat_feedback FKs
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: document_chat_feedback
+            constraintName: document_chat_feedback_kset_fk
+        - dropForeignKeyConstraint:
+            baseTableName: document_chat_feedback
+            constraintName: document_chat_feedback_umsg_fk
+        - dropForeignKeyConstraint:
+            baseTableName: document_chat_feedback
+            constraintName: document_chat_feedback_smsg_fk

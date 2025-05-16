@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000274-rename-dismissed-instance-count-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000274'
+      tagDatabase:
+        tag: 'pre-000274'
+  - changeSet:
+      author: appian
+      id: '000274.1.0'
+      comment: Rename column dismissed_instance_count to instance_count
+      changes:
+        - renameColumn:
+            columnDataType: ${integerType}
+            newColumnName: instance_count
+            oldColumnName: dismissed_instance_count
+            tableName: dg_object

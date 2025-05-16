@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000439-add-analyst-custom-field-table.yaml
+  - changeSet:
+      id: 'tag-pre-000439'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000439'
+  - changeSet:
+      id: '000439.1.0'
+      author: appian
+      changes:
+        comment: Create analyst_custom_field table
+        createTable:
+          tableName: analyst_custom_field
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: analyst_custom_field_uuid_uc
+            - column:
+                name: return_type
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: display_name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+                  unique: true
+            - column:
+                name: description
+                type: ${mediumStringType}
+            - column:
+                name: expression
+                type: ${expressionStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: default_value
+                type: ${mediumStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: template_type
+                type: ${byteType}
+                constraints:
+                  nullable: false
+            - column:
+                name: record_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000439.2.0'
+      comment: A sequence to provide primary key values for the analyst_custom_field table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: analyst_custom_field_sq
+  - changeSet:
+      id: '000439.3.0'
+      author: appian
+      changes:
+        comment: Add index on analyst_custom_field.record_uuid
+        createIndex:
+          columns:
+            - column:
+                name: record_uuid
+          indexName: acf_record_uuid_idx
+          tableName: analyst_custom_field

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000514-add-comment-event-type-id-to-record-events-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000514
+      tagDatabase:
+        tag: 'pre-000514'
+  - changeSet:
+      author: appian
+      id: '000514.1.0'
+      comment: Add comment_event_type_id column to record_events_config table
+      addColumn:
+        tableName: record_events_config
+        columns:
+          - column:
+              name: comment_event_type_id
+              type: ${integerType}
+              constraints:
+                nullable: true

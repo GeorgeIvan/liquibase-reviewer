@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000210-record-type-isVisibleInRecordTypeList.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000210'
+      tagDatabase:
+        tag: 'pre-000210'
+  - changeSet:
+      author: appian
+      id: '000210.1.0'
+      comment: Create new column is_visible_in_record_type_list
+      addColumn:
+        tableName: record_type
+        column:
+          name: is_visible_in_record_type_list
+          type: ${booleanType}
+          defaultValueBoolean: 'true'
+          valueBoolean: 'true'
+          constraints:
+            nullable: 'false'

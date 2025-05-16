@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000349-api-key-table-add-owner-and-owner-id.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000349
+      tagDatabase:
+        tag: 'pre-000349'
+
+  - changeSet:
+      author: appian
+      id: '000349.1.0'
+      comment: Add owner column to api_key table
+      addColumn:
+        tableName: api_key
+        column:
+          name: owner
+          type: ${byteType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000349.1.1'
+      comment: Remove the default value for owner
+      dropDefaultValue:
+        tableName: api_key
+        columnName: owner
+        columnDataType: ${byteType}
+
+  - changeSet:
+      author: appian
+      id: '000349.2.0'
+      comment: Add owner_id column to api_key table
+      addColumn:
+        tableName: api_key
+        column:
+          name: owner_id
+          type: ${shortStringType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000349.3.0'
+      comment: Add an index for the owner_id column
+      changes:
+        - createIndex:
+            indexName: api_key_owner_id_idx
+            tableName: api_key
+            unique: false
+            columns:
+              - column:
+                  name: owner_id
+        - modifySql:
+            dbms: mssql
+            append:
+              value: ' WHERE ([owner_id] IS NOT NULL)'
+        - modifySql:
+            dbms: db2
+            append:
+              value: ' EXCLUDE NULL KEYS'

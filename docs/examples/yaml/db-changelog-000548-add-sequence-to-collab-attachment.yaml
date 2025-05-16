@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000548-add-sequence-to-collab-attachment.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000548
+      tagDatabase:
+        tag: 'pre-000548'
+  - changeSet:
+      id: '000548.0.0'
+      author: appian
+      comment: Create a sequence to provide primary key values for the collab_attachment table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: collab_attachment_sq

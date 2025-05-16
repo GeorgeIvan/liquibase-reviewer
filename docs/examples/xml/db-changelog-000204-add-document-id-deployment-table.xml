@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000204-deployment-table.xml">
+
+  <changeSet author="appian" id="tag-000204">
+    <tagDatabase tag="000204"/>
+  </changeSet>
+
+  <changeSet author="appian" id="0000204.1.0">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>Add document ID to deployment_db_script</comment>
+    <addColumn tableName="deployment_db_script">
+      <column name="document_id" type="${longType}" defaultValue="-1">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000088-test-job-source.xml">
+
+  <changeSet author="appian" id="tag-000087">
+    <tagDatabase tag="000087"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000088.1.0">
+    <comment>Create test job source table</comment>
+    <createTable tableName="test_job_source">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="test_job_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="obj_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="obj_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseTableName="test_job_source"
+                             baseColumnNames="test_job_id"
+                             constraintName="test_job_source_job_id_fk"
+                             referencedTableName="test_job"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000088.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <createSequence sequenceName="test_job_source_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000088.1.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="test_job_source_job_id_fk_idx" tableName="test_job_source" unique="false">
+      <column name="test_job_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000088.1.3">
+    <comment>Drop existing object columns from job table</comment>
+    <dropColumn tableName="test_job" columnName="obj_uuid" />
+    <dropColumn tableName="test_job" columnName="obj_type" />
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000381-add-nav-node-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000381
+      tagDatabase:
+        tag: 'pre-000381'
+
+  - changeSet:
+      author: appian
+      id: '000381.1.0'
+      comment: Create navigation_node table
+      changes:
+        - createTable:
+            tableName: navigation_node
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: navigation_node_uuid_uc
+              - column:
+                  name: name_expr
+                  type: ${expressionStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: url_stub
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: appian_object_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: appian_object_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: icon_id
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: visibility_expr
+                  type: ${expressionStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_static_name
+                  type: ${booleanType}
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: page_width
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: parent_navigation_node_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: portal_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000381.2.0'
+      comment: Create foreign keys
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: navigation_node_parent_id_fk
+            baseTableName: navigation_node
+            baseColumnNames: parent_navigation_node_id
+            referencedTableName: navigation_node
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: navigation_node_portal_id_fk
+            baseTableName: navigation_node
+            baseColumnNames: portal_id
+            referencedTableName: portal
+            referencedColumnNames: id
+        - createIndex:
+            indexName: navigation_node_parent_id_idx
+            tableName: navigation_node
+            columns:
+              - column:
+                  name: parent_navigation_node_id
+        - createIndex:
+            indexName: navigation_node_portal_id_idx
+            tableName: navigation_node
+            columns:
+              - column:
+                  name: portal_id

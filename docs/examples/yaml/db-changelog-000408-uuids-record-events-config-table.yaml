@@ -1,0 +1,116 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000408-uuids-record-events-config-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000408
+      tagDatabase:
+        tag: 'pre-000408'
+
+  - changeSet:
+      id: '000408.1.0'
+      author: appian
+      comment: Remove existing ids columns
+      changes:
+        - dropIndex:
+            tableName: record_events_config
+            indexName: event_record_type_id_idx
+
+        - dropIndex:
+            tableName: record_events_config
+            indexName: event_type_record_type_id_idx
+
+        - dropColumn:
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: event_record_type_id
+              - column:
+                  name: event_type_record_type_id
+              - column:
+                  name: event_relationship_id
+              - column:
+                  name: event_type_relationship_id
+              - column:
+                  name: event_timestamp_field_id
+              - column:
+                  name: event_user_field_id
+              - column:
+                  name: type_value_field_id
+
+  - changeSet:
+      id: '000408.2.0'
+      author: appian
+      comment: Add uuids columns replacing removed ids columns
+      changes:
+        - addColumn:
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: base_record_type_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_record_type_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type_record_type_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_relationship_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type_relationship_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_timestamp_field_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_user_field_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type_value_field_uuid
+                  type: ${uuidType}
+                  defaultValue: MIGRATION_UUID
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: base_record_type_idx
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: base_record_type_uuid
+
+        - createIndex:
+            indexName: event_record_type_idx
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: event_record_type_uuid
+
+        - createIndex:
+            indexName: event_type_record_type_idx
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: event_type_record_type_uuid

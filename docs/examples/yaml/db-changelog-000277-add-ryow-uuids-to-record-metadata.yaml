@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000277-add-ryow-uuids-to-record-metadata.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000277'
+      tagDatabase:
+        tag: 'pre-000277'
+  - changeSet:
+      author: appian
+      id: '000277.1.0'
+      comment: Add fields to replica metadata to coordinate bulk loads with live/RYOW updates
+      addColumn:
+        tableName: record_replica_metadata
+        columns:
+          - column:
+              name: detect_load_running_row_uuid
+              type: ${uuidType}
+              remarks: The uuid of an ADS attribute. Each replicated record type will have an entity in this attr.
+          - column:
+              name: updated_primary_keys_queue
+              type: ${shortStringType}
+              remarks: Currently the uuid of an ADS attribute. May be replaced with something like a Kafka topic id.

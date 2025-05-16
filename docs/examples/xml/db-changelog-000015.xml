@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000015.xml">
+
+  <changeSet author="appian" id="tag-000014">
+    <tagDatabase tag="000014"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000015.1.0">
+    <comment>Renamed is_public column to is_unsecured in tp_feed_entry.</comment>
+    <!-- Because of http://liquibase.jira.com/browse/CORE-942,
+          the columnDataType cannot use a JDBC constant.
+          This is ok, because it's only used on MySQL
+          (for all other DBs this attribute is ignored). -->
+    <renameColumn tableName="tp_feed_entry" oldColumnName="is_public" newColumnName="is_unsecured"
+      columnDataType="TINYINT(1)"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000015.2.0">
+    <comment>Add is_targeted column to tp_feed_entry.</comment>
+    <addColumn tableName="tp_feed_entry">
+      <column name="is_targeted" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000015.2.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mssql"/><dbms type="mysql"/></or></not></preConditions>
+    <comment>Update is_targeted column.</comment>
+    <update tableName="tp_feed_entry">
+      <column name="is_targeted" value="true"/>
+      <where>is_unsecured='false'</where>
+    </update>
+  </changeSet>
+
+  <!-- Backwards compatibility with Liquibase 2.0.1 -->
+  <!-- This should only run on NEW sites that are initialized with Liquibase 3.5.5 -->
+  <!--  We use tinyint for booleans in MSSQL, and need to use "0"/"1" as literal values -->
+  <!--  This matches the original behavior of 000015.2.0 -->
+  <changeSet author="appian" id="000015.2.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or>
+        <dbms type="mssql"/>
+        <dbms type="mysql"/>
+      </or>
+      <not><changeSetExecuted id="000041.1.0" author="appian" changeLogFile="db-changelog-000041.xml"/></not>
+    </preConditions>
+    <comment>Update is_targeted column.</comment>
+    <update tableName="tp_feed_entry">
+      <column name="is_targeted" value="1"/>
+      <where>is_unsecured='0'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

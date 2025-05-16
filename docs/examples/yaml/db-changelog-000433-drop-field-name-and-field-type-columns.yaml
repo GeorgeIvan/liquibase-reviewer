@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000433-drop-field-name-and-field-type-columns.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000433
+      tagDatabase:
+        tag: 'pre-000433'
+
+  - changeSet:
+      author: appian
+      id: '000433.1.0'
+      comment: Dropping existing field_name column
+      dropColumn:
+        tableName: mining_log_field
+        columnName: field_name
+
+  - changeSet:
+      author: appian
+      id: '000433.2.0'
+      comment: Dropping existing field_type column
+      dropColumn:
+        tableName: mining_log_field
+        columnName: field_type

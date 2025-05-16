@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001015-remove-tier-uuid-cpti-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001015'
+      tagDatabase:
+        tag: 'pre-001015'
+  - changeSet:
+      id: '001015.1.0'
+      author: appian
+      comment: Drop column tier_uuid from control_panel_tier_item
+      changes:
+        dropColumn:
+          tableName: control_panel_tier_item
+          columnName: tier_uuid

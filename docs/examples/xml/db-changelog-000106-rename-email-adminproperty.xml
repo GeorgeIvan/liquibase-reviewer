@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000106-rename-email-adminproperty.xml">
+
+    <changeSet author="appian" id="tag-000105">
+        <tagDatabase tag="000105"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000106.1.0">
+        <comment>Rename conf.email.system.ENABLED to conf.email.SYSTEM_ENABLED</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.email.SYSTEM_ENABLED"/>
+            <where>prop_key = 'conf.email.system.ENABLED'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

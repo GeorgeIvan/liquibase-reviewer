@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000168-api-key-table.xml">
+
+  <changeSet author="appian" id="tag-000167">
+    <tagDatabase tag="000167"/>
+  </changeSet>
+
+  <!-- TABLE Api Key -->
+  <changeSet author="appian" id="000168.1.0">
+    <comment>Add API Key table</comment>
+    <createTable tableName="api_key">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="alias" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_used_date" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="is_active" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_revoked" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for api_key.id -->
+  <changeSet author="appian" id="000168.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="api_key_sq"/>
+  </changeSet>
+
+  <!-- FK for usr_id -->
+  <changeSet author="appian" id="000168.1.2">
+    <comment>Foreign Key FROM api_key.usr_id TO usr.id</comment>
+    <addForeignKeyConstraint constraintName="api_key_usrid_fk"
+                             baseTableName="api_key" baseColumnNames="usr_id" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+</databaseChangeLog>

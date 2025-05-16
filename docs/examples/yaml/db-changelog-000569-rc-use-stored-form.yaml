@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000569-rc-use-stored-form.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000569
+      tagDatabase:
+        tag: 'pre-000569'
+  - changeSet:
+      author: appian
+      id: '000569.0.0'
+      comment: Update requirements capture string to stored form
+      customChange:
+        class: com.appiancorp.requirementscapture.migration.DisplayToStoredForm569

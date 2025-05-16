@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000418-process-mining-log-provider.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000418
+      tagDatabase:
+        tag: 'pre-000418'
+  - changeSet:
+      author: appian
+      id: '000418.1.0'
+      comment: Create mining_log table
+      changes:
+        - createTable:
+            tableName: mining_log
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: log_id
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '000418.2.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_log_sq
+
+  - changeSet:
+      author: appian
+      id: '000418.3.0'
+      comment: Create mining_log_provider table
+      changes:
+        - createTable:
+            tableName: mining_log_provider
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_log_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_type
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: mining_log_provider_log_id_idx
+            tableName: mining_log_provider
+            columns:
+              - column:
+                  name: mining_log_id
+
+        - addUniqueConstraint:
+            constraintName: mining_log_provider_log_prv_uc
+            tableName: mining_log_provider
+            columnNames: mining_log_id, provider_uuid
+
+  - changeSet:
+      id: '000418.4.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_log_provider_sq
+
+  - changeSet:
+      id: '000418.5.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_log_provider to mining_log.id
+        addForeignKeyConstraint:
+          constraintName: mining_log_provider_log_id_fk
+          baseTableName: mining_log_provider
+          baseColumnNames: mining_log_id
+          referencedTableName: mining_log
+          referencedColumnNames: id
+          onDelete: CASCADE

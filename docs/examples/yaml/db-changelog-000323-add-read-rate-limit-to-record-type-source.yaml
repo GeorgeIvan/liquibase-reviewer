@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000323-add-read-rate-limit-to-record-type-source.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000323'
+      tagDatabase:
+        tag: 'pre-000323'
+
+  - changeSet:
+      author: appian
+      id: '000323.1.0'
+      comment: Add read_rate_limit column
+      addColumn:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: read_rate_limit
+              type: ${doubleType}
+              constraints:
+                nullable: true

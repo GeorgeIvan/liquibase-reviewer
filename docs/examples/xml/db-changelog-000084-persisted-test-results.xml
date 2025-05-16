@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000084-persisted-test-results.xml">
+
+  <changeSet author="appian" id="tag-000083">
+    <tagDatabase tag="000083"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000084.1.0">
+    <comment>Create jobs definition table</comment>
+    <createTable tableName="test_job">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="obj_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="obj_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addForeignKeyConstraint constraintName="test_job_created_by_uid_fk"
+                             baseTableName="test_job" baseColumnNames="created_by"
+                             referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000084.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <createSequence sequenceName="test_job_sq"/>
+  </changeSet>
+    
+  <changeSet author="appian" id="000084.2.0">
+    <comment>Create table to hold queued test cases</comment>
+    <createTable tableName="test_queue">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="test_job_id" type="${longType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="test_data_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="started_ts" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseTableName="test_queue" baseColumnNames="test_job_id" constraintName="test_queue_test_job_id_fk"
+                             referencedTableName="test_job" referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="test_queue" baseColumnNames="test_data_id" constraintName="test_queue_test_data_id_fk"
+                             referencedTableName="test_data" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000084.2.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <createSequence sequenceName="test_queue_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000084.3.0">
+    <comment>Create persisted test results table</comment>
+    <createTable tableName="test_result">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="test_job_id" type="${longType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="test_data_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="result_status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="result_message" type="${mediumStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="result_output" type="${largeStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="started_ts" type="${longType}"> <!-- When the individual test case was started -->
+        <constraints nullable="false"/>
+      </column>
+      <column name="duration_ms" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseTableName="test_result" baseColumnNames="test_job_id" constraintName="test_result_test_job_id_fk"
+                             referencedTableName="test_job" referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="test_result" baseColumnNames="test_data_id" constraintName="test_result_test_data_id_fk"
+                             referencedTableName="test_data" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000084.3.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <createSequence sequenceName="test_result_sq"/>
+  </changeSet>
+
+</databaseChangeLog>

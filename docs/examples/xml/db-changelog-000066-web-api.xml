@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000066-web-api.xml">
+
+  <changeSet author="appian" id="tag-000065">
+    <tagDatabase tag="000065"/>
+  </changeSet>
+
+  <!-- Dropping these three tables because we need to rename them without "endpoint" in their names.
+       Unreleased versions may have these tables, which we will want to clean up. -->
+  <changeSet author="appian" id="web-api.1.0">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="web_api_endpoint_rm"/>
+    </preConditions>
+    <comment>Drop web_api_endpoint_rm table and related constraints</comment>
+    <dropTable tableName="web_api_endpoint_rm" cascadeConstraints="true"/>
+  </changeSet>
+
+  <changeSet author="appian" id="web-api.1.1">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="web_api_endpoint"/>
+    </preConditions>
+    <comment>Drop web_api_endpoint table and related constraints</comment>
+    <dropTable tableName="web_api_endpoint" cascadeConstraints="true"/>
+  </changeSet>
+
+  <!-- web-api.2.x are steps to recreate web_api_endpoint with a new name, web_api -->
+  <changeSet author="appian" id="web-api.2.0">
+    <comment>Add web_api table</comment>
+    <createTable tableName="web_api">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}" />
+      <column name="expression" type="${mediumStringType}" />
+      <column name="url_alias" type="${shortStringType}" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="http_method" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="web-api.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="web_api_sq"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.2">
+    <comment>FK from web_api.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="webapi_cby_uid_fk"
+                             baseTableName="web_api" baseColumnNames="created_by"
+                             referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.3">
+    <comment>FK from web_api.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="webapi_uby_uid_fk"
+                             baseTableName="web_api" baseColumnNames="updated_by"
+                             referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="webapi_cby_uid_fk_idx" tableName="web_api" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="webapi_uby_uid_fk_idx" tableName="web_api" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.6">
+    <comment>Add index on UUID field in web_api table</comment>
+    <createIndex indexName="webapi_uuid_uc" tableName="web_api" unique="true">
+      <column name="uuid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.7">
+    <comment>Add index on name field in web_api table</comment>
+    <createIndex indexName="webapi_name_uc" tableName="web_api" unique="true">
+      <column name="name"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="web-api.2.8">
+    <createIndex indexName="webapi_aliasmethod_idx" tableName="web_api" unique="true">
+      <column name="url_alias"/>
+      <column name="http_method"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- web-api.3.x are steps to recreate web_api_endpoint_rm with a new name, web_api_rm -->
+  <changeSet author="appian" id="web-api.3.0">
+    <comment>Create role map table for web_api.</comment>
+    <createTable tableName="web_api_rm">
+      <column name="web_api_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="web-api.3.1">
+    <comment>Add PK for web_api_rm.</comment>
+    <addPrimaryKey columnNames="web_api_id, rm_entry_id" tableName="web_api_rm"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.3.2">
+    <comment>Add FK from web_api_rm to rm_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="webapi_rm_rmid_fk"
+                             baseTableName="web_api_rm" baseColumnNames="rm_entry_id"
+                             referencedTableName="rm_entry" referencedColumnNames="id"
+                             deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.3.3">
+    <comment>Add FK from web_api_rm to web_api.id.</comment>
+    <addForeignKeyConstraint constraintName="webapi_rm_waid_fk"
+                             baseTableName="web_api_rm" baseColumnNames="web_api_id"
+                             referencedColumnNames="id" referencedTableName="web_api"
+                             deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="web-api.3.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create an index for the FK column web_api_rm.rm_entry_id</comment>
+    <createIndex indexName="webapi_rm_rmei_idx" tableName="web_api_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- Drop old roles that contain "endpoint" -->
+  <changeSet author="appian" id="web-api.4.0">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1">select count(*) from rm_role where id = 18</sqlCheck>
+    </preConditions>
+    <comment>Delete old role for Web API Administrator.</comment>
+    <delete tableName="rm_role">
+      <where>id = 18</where>
+    </delete>
+  </changeSet>
+  <changeSet author="appian" id="web-api.4.1">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1">select count(*) from rm_role where id = 19</sqlCheck>
+    </preConditions>
+    <comment>Delete old role for Web API Editor.</comment>
+    <delete tableName="rm_role">
+      <where>id = 19</where>
+    </delete>
+  </changeSet>
+  <changeSet author="appian" id="web-api.4.2">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1">select count(*) from rm_role where id = 20</sqlCheck>
+    </preConditions>
+    <comment>Delete old role for Web API Auditor.</comment>
+    <delete tableName="rm_role">
+      <where>id = 20</where>
+    </delete>
+  </changeSet>
+  <changeSet author="appian" id="web-api.4.3">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1">select count(*) from rm_role where id = 21</sqlCheck>
+    </preConditions>
+    <comment>Delete old role for Web API Viewer.</comment>
+    <delete tableName="rm_role">
+      <where>id = 21</where>
+    </delete>
+  </changeSet>
+
+  <!-- Add back the roles -->
+  <changeSet author="appian" id="web-api.5.0">
+    <comment>Add a system role (in rm_role) for Web API Administrator.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="18"/>
+      <column name="name" value="web_api_administrator"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="web-api.5.1">
+    <comment>Add a system role (in rm_role) for Web API Editor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="19"/>
+      <column name="name" value="web_api_editor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="web-api.5.2">
+    <comment>Add a system role (in rm_role) for Web API Auditor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="20"/>
+      <column name="name" value="web_api_auditor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="web-api.5.3">
+    <comment>Add a system role (in rm_role) for Web API Viewer.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="21"/>
+      <column name="name" value="web_api_viewer"/>
+    </insert>
+  </changeSet>
+
+  <!-- Enable support for system Web APIs -->
+  <changeSet author="appian" id="web-api.6.0">
+    <comment>Adds a column to signify whether a Web API is a system API or not.</comment>
+    <addColumn tableName="web_api">
+      <column name="system" type="${booleanType}" defaultValue="0" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="web-api.6.1">
+    <comment>Modifies unique indexes to include the "system" column so user-defined Web APIs can't conflict with system Web APIs.</comment>
+
+    <dropIndex indexName="webapi_name_uc" tableName="web_api" />
+    <createIndex indexName="webapi_name_uc" tableName="web_api" unique="true">
+      <column name="name"/>
+      <column name="system"/>
+    </createIndex>
+
+    <dropIndex indexName="webapi_aliasmethod_idx" tableName="web_api" />
+    <createIndex indexName="webapi_aliasmethod_idx" tableName="web_api" unique="true">
+      <column name="url_alias"/>
+      <column name="http_method"/>
+      <column name="system"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

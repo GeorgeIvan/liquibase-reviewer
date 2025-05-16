@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001035-add-description-column-to-mining-scope.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001035
+      tagDatabase:
+        tag: pre-001035
+  - changeSet:
+      author: appian
+      id: 001035.1.0
+      comment: Add description column
+      addColumn:
+        columns:
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+        tableName: mining_scope

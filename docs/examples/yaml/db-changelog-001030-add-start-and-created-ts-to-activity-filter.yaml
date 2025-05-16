@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001030-add-start-and-created-ts-to-activity-filter.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001030
+      tagDatabase:
+        tag: pre-001030
+  - changeSet:
+      author: appian
+      id: 001030.1.0
+      comment: Add created timestamp column
+      addColumn:
+        columns:
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+                defaultValue: 0
+        tableName: mining_activity_filter
+  - changeSet:
+      author: appian
+      id: 001030.2.0
+      comment: Add is_start_filter column
+      addColumn:
+        columns:
+          - column:
+              name: is_start_filter
+              type: ${booleanType}
+              constraints:
+                nullable: false
+              defaultValueBoolean: false
+              valueBoolean: false
+        tableName: mining_activity_filter
+  - changeSet:
+      author: appian
+      id: 001030.3.0
+      comment: Remove the default value for created_ts
+      dropDefaultValue:
+        tableName: mining_activity_filter
+        columnName: created_ts
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: 001030.4.0
+      comment: Remove the default value for is_start_filter
+      dropDefaultValue:
+        tableName: mining_activity_filter
+        columnName: is_start_filter
+        columnDataType: ${booleanType}

@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000296-update-guidance-type-to-recommendation.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000296
+      tagDatabase:
+        tag: 'pre-000296'
+
+  - changeSet:
+      author: appian
+      id: '000296.1.0'
+      comment: Change GUIDANCE to RECOMMENDATION
+      update:
+        tableName: dg_object
+        column:
+          name: guidance_type
+          value: RECOMMENDATION
+        where: guidance_type = 'GUIDANCE'
+
+  - changeSet:
+      author: appian
+      id: '000296.1.1'
+      comment: Drop the default value since some DB require dropping before adding again
+      dropDefaultValue:
+        tableName: dg_object
+        columnName: guidance_type
+
+  - changeSet:
+      author: appian
+      id: '000296.1.2'
+      comment: Set the new default value for the guidance_type column
+      addDefaultValue:
+        tableName: dg_object
+        columnName: guidance_type
+        defaultValue: RECOMMENDATION

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000055.xml">
+  <changeSet author="appian" id="tag-000054">
+    <tagDatabase tag="000054"/>
+  </changeSet>
+  <changeSet author="appian" id="000055.1.0">
+    <comment>Create related action table for detail_view (dashboards).</comment>
+    <createTable tableName="record_dvc_rac">
+      <column name="record_detail_view_cfg_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="record_related_action_cfg_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000055.1.1">
+    <comment>Add PK for record_dvc_rac.</comment>
+    <addPrimaryKey columnNames="record_detail_view_cfg_id, record_related_action_cfg_id" tableName="record_dvc_rac"/>
+  </changeSet>
+  <changeSet author="appian" id="000055.1.2">
+    <comment>Add FK from record_dvc_rac to record_detail_view_cfg.id.</comment>
+    <addForeignKeyConstraint constraintName="record_dvc_rac_rdvcid_fk"
+      baseTableName="record_dvc_rac" baseColumnNames="record_detail_view_cfg_id"
+      referencedTableName="record_detail_view_cfg" referencedColumnNames="id"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000055.1.3">
+    <comment>Add FK from record_dvc_rac to record_related_action_cfg.id.</comment>
+    <addForeignKeyConstraint constraintName="record_dvc_rac_rracid_fk"
+      baseTableName="record_dvc_rac" baseColumnNames="record_related_action_cfg_id"
+      referencedTableName="record_related_action_cfg" referencedColumnNames="id"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000554-create-mining-automation-kpi-type-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000554
+      tagDatabase:
+        tag: 'pre-000554'
+  - changeSet:
+      id: '000554.0.0'
+      author: appian
+      comment: Create mining_kpi_type_automation table
+      changes:
+        - createTable:
+            tableName: mining_kpi_type_automation
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000554.0.1'
+      comment: Create index for mining_kpi_type_automation
+      changes:
+        - createIndex:
+            indexName: kpi_auto_type_kpi_type_id_idx
+            tableName: mining_kpi_type_automation
+            columns:
+              - column:
+                  name: kpi_type_id
+  - changeSet:
+      author: appian
+      id: '000554.0.2'
+      comment: Add fk for base table mining_kpi_type_automation
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_auto_type_kpi_type_id_fk
+            baseTableName: mining_kpi_type_automation
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000554.0.3'
+      comment: Create sequence for mining_kpi_type_automation
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_type_automation_sq

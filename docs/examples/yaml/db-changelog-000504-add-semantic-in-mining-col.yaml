@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000504-add-semantic-in-mining-col.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000504'
+      tagDatabase:
+        tag: 'pre-000504'
+
+  - changeSet:
+      author: appian
+      id: '000504.1.0'
+      comment: Add new column 'semantic_in_mining' to mining_process_field
+      changes:
+        - addColumn:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: semantic_in_mining
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000504.2.0'
+      comment: Add index to mining_process.log_id
+      changes:
+        - createIndex:
+            tableName: mining_process
+            columns:
+              - column:
+                  name: log_id
+            indexName: mining_process_log_id_idx

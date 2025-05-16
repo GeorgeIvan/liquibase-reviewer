@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000332-add-skip-failure-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000332
+      tagDatabase:
+        tag: 'pre-000332'
+
+  - changeSet:
+      author: appian
+      id: '000332.1.0'
+      comment: Create skip failure enabled column
+      addColumn:
+        tableName: record_type_sources
+        column:
+          name: skip_failure_enabled
+          type: ${booleanType}
+          valueBoolean: 'false'
+          defaultValueBoolean: 'true'
+          constraints:
+            nullable: 'false'

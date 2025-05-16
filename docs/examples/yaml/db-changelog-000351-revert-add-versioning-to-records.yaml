@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000351-revert-add-versioning-to-records.yaml
+  - changeSet:
+      id: 'tag-pre-000351'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000351'
+
+  - changeSet:
+      id: '000351.1.0'
+      author: appian
+      comment: Remove the index from the uuid_if_current column
+      changes:
+        - dropIndex:
+            tableName: record_type
+            indexName: rec_type_uuid_if_current_idx
+
+  - changeSet:
+      id: '000351.2.0'
+      author: appian
+      comment: Remove the index from the url_stub_if_current column
+      changes:
+        - dropIndex:
+            tableName: record_type
+            indexName: rt_url_stub_if_current_idx
+
+  - changeSet:
+      id: '000351.3.0'
+      author: appian
+      comment: Remove the version-related columns
+      changes:
+        - dropColumn:
+            tableName: record_type
+            columns:
+              - column:
+                  name: uuid_if_current
+              - column:
+                  name: url_stub_if_current
+
+  - changeSet:
+      id: '000351.4.0'
+      author: appian
+      comment: Remove the non-unique index from the uuid column
+      changes:
+        - dropIndex:
+            tableName: record_type
+            indexName: rec_type_uuid_idx
+
+  - changeSet:
+      id: '000351.5.0'
+      author: appian
+      comment: Add the unique constraint back to the uuid column
+      changes:
+        - addUniqueConstraint:
+            tableName: record_type
+            columnNames: uuid
+            constraintName: record_type_uuid_uc
+
+  - changeSet:
+      id: '000351.6.0'
+      author: appian
+      comment: Remove the non-unique index from the url_stub column
+      changes:
+        - dropIndex:
+            tableName: record_type
+            indexName: rec_type_url_stub_idx
+
+  - changeSet:
+      id: '000351.7.0'
+      author: appian
+      comment: Add the unique constraint back to the url_stub column
+      changes:
+        - addUniqueConstraint:
+            tableName: record_type
+            columnNames: url_stub
+            constraintName: record_type_urlstub_uc

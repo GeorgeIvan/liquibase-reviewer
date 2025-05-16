@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000060.xml">
+
+  <changeSet author="appian" id="tag-000059">
+    <tagDatabase tag="000059"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000060.0.0">
+    <createTable tableName="tx">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000060.0.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="tx_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000060.0.2">
+    <createTable tableName="tx_data">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="tx_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="entity_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="entity_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="op" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000060.0.3">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="tx_data_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000060.0.4">
+    <comment>FK from tx_data.tx_id to tx</comment>
+    <addForeignKeyConstraint constraintName="tx_data_tx_id"
+      baseTableName="tx_data" baseColumnNames="tx_id"
+      referencedTableName="tx" referencedColumnNames="id"/>
+  </changeSet>
+  
+</databaseChangeLog>

@@ -1,0 +1,163 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000391-drop-record-type-view-security-create-new-table-for-actions-and-views.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000391
+      tagDatabase:
+        tag: 'pre-000391'
+  - changeSet:
+        id: '000391.1.0'
+        author: appian
+        changes:
+          comment: Create record_type_ui_security table
+          createTable:
+            tableName: record_type_ui_security
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: membership_filter
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data_filter
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000391.1.1'
+      author: appian
+      comment: Create a new sequence for the new record_type_ui_security table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_type_ui_security_sq
+  - changeSet:
+      author: appian
+      id: '000391.2.0'
+      comment: Drop the foreign key constraints on record_detail_view_cfg
+      dropForeignKeyConstraint:
+            baseTableName: record_detail_view_cfg
+            constraintName: rdvc_rtvs_security_cfg_id_fk
+  - changeSet:
+      author: appian
+      id: '000391.3.0'
+      comment: Copy original contents from record_type_view_security into record_type_ui_security
+      changes:
+        - sql:
+            dbms: 'mssql'
+            sql:
+              SET IDENTITY_INSERT record_type_ui_security ON;
+              INSERT INTO record_type_ui_security (id, membership_filter, data_filter) SELECT id, membership_filter, data_filter FROM record_type_view_security;
+              SET IDENTITY_INSERT record_type_ui_security OFF;
+        - sql:
+            dbms: '!mssql'
+            sql:
+              INSERT INTO record_type_ui_security (id, membership_filter, data_filter) SELECT id, membership_filter, data_filter FROM record_type_view_security;
+  - changeSet:
+      author: appian
+      id: '000391.4.0'
+      comment: Create the foreign key constraints on record_detail_view_cfg
+      addForeignKeyConstraint:
+        constraintName: rdvc_rtus_security_cfg_id_fk
+        baseTableName: record_detail_view_cfg
+        baseColumnNames: security_cfg_id
+        referencedTableName: record_type_ui_security
+        referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000391.5.0'
+      comment: Drop the old record_type_view_security table
+      changes:
+        - dropTable:
+            tableName: record_type_view_security
+            cascadeConstraints: true
+  - changeSet:
+      author: appian
+      id: '000391.6.0'
+      comment: Add security columns on record_list_action_cfg
+      addColumn:
+        tableName: record_list_action_cfg
+        columns:
+          - column:
+              name: security_cfg_id
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: security_type
+              type: ${byteType}
+              valueNumeric: 0
+              defaultValueNumeric: 0
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000391.6.1'
+      author: appian
+      changes:
+        comment: Add relevant foreign keys
+        addForeignKeyConstraint:
+          constraintName: rlac_rtus_security_cfg_id_fk
+          baseTableName: record_list_action_cfg
+          baseColumnNames: security_cfg_id
+          referencedTableName: record_type_ui_security
+          referencedColumnNames: id
+  - changeSet:
+      id: '000391.6.2'
+      author: appian
+      changes:
+        comment: Drop not null constraint on visibility_expr
+        dropNotNullConstraint:
+          tableName: record_list_action_cfg
+          columnName: visibility_expr
+          columnDataType: ${expressionStringType}
+  - changeSet:
+      author: appian
+      id: '000391.7.0'
+      comment: Add security columns on record_related_action_cfg
+      addColumn:
+        tableName: record_related_action_cfg
+        columns:
+          - column:
+              name: security_cfg_id
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: security_type
+              type: ${byteType}
+              valueNumeric: 0
+              defaultValueNumeric: 0
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000391.7.1'
+      author: appian
+      changes:
+        comment: Add relevant foreign keys
+        addForeignKeyConstraint:
+          constraintName: rrac_rtus_security_cfg_id_fk
+          baseTableName: record_related_action_cfg
+          baseColumnNames: security_cfg_id
+          referencedTableName: record_type_ui_security
+          referencedColumnNames: id
+  - changeSet:
+      id: '000391.7.2'
+      author: appian
+      changes:
+        comment: Drop not null constraint on visibility_expr
+        dropNotNullConstraint:
+          tableName: record_related_action_cfg
+          columnName: visibility_expr
+          columnDataType: ${expressionStringType}
+

@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001046-add-ssa-library-object-usr-fav-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001046'
+      tagDatabase:
+        tag: 'pre-001046'
+  - changeSet:
+      id: '001046.1.0'
+      author: appian
+      comment: Create ssa_library_object_usr_fav table
+      createTable:
+        tableName: ssa_library_object_usr_fav
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: ssa_library_object_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: usr_id
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '001046.2.0'
+      comment: Create sequence for ssa_library_object_usr_fav
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: ssa_library_object_usr_fav_sq
+  - changeSet:
+      author: appian
+      id: '001046.3.0'
+      comment: Create index for ssa_library_object_usr_fav.ssa_library_object_id
+      createIndex:
+        tableName: ssa_library_object_usr_fav
+        column:
+          name: ssa_library_object_id
+        indexName: ssa_lib_usr_fav_ssa_lib_id_idx
+        unique: false
+  - changeSet:
+      author: appian
+      id: '001046.4.0'
+      comment: Add fk for ssa_library_object_usr_fav.ssa_library_object_id to ssa_library_object.id
+      addForeignKeyConstraint:
+        constraintName: ssa_lib_usr_fav_ssa_lib_id_fk
+        baseTableName: ssa_library_object_usr_fav
+        baseColumnNames: ssa_library_object_id
+        referencedTableName: ssa_library_object
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '001046.5.0'
+      comment: Create index for ssa_library_object_usr_fav.usr_id
+      createIndex:
+        tableName: ssa_library_object_usr_fav
+        column:
+          name: usr_id
+        indexName: ssa_lib_usr_fav_usr_id_idx
+        unique: false
+  - changeSet:
+      author: appian
+      id: '001046.6.0'
+      comment: Add fk for ssa_library_object_usr_fav.usr_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: ssa_lib_usr_fav_usr_id_fk
+        baseTableName: ssa_library_object_usr_fav
+        baseColumnNames: usr_id
+        referencedTableName: usr
+        referencedColumnNames: id
+        onDelete: CASCADE

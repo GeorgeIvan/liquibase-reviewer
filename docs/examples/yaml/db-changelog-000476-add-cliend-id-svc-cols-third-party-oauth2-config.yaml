@@ -1,0 +1,147 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000476-add-cliend-id-svc-cols-third-party-oauth2-config.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000476'
+      tagDatabase:
+        tag: 'pre-000476'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000476.1.0'
+      comment: Adding cliend_id column with shortStringType
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: cliend_id
+          type: ${shortStringType}
+          defaultValue: ""
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000476.2.0'
+      comment: Adding svc_acc_id column with longType
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: svc_acc_id
+          type: ${longType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '000476.2.1'
+      author: appian
+      comment: FK from third_party_oauth2_config.svc_acc_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: tp_oauth2_cfg_svc_acc_id_fk
+        baseTableName: third_party_oauth2_config
+        baseColumnNames: svc_acc_id
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000476.2.2'
+      author: appian
+      changes:
+        comment: Add index on svc_acc_id
+        createIndex:
+          columns:
+            - column:
+                name: svc_acc_id
+          indexName: tp_oauth2_cfg_svc_acc_id_idx
+          tableName: third_party_oauth2_config
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000476.3.0'
+      comment: Add client_id_mapping column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: client_id_mapping
+          type: ${shortStringType}
+          defaultValue: ""
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000476.4.0'
+      comment: Add jwk_set_source_type column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: jwk_set_source_type
+          type: ${stringType}(20)
+          defaultValue: ""
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000476.5.0'
+      comment: Dropping existing username_claim column
+      dropColumn:
+        tableName: third_party_oauth2_config
+        columnName: username_claim
+  - changeSet:
+      author: appian
+      id: '000476.5.1'
+      comment: Dropping existing jwk_set_source column
+      dropColumn:
+        tableName: third_party_oauth2_config
+        columnName: jwk_set_source
+  - changeSet:
+      author: appian
+      id: '000476.5.2'
+      comment: Dropping existing authz_grp_uuid column
+      dropColumn:
+        tableName: third_party_oauth2_config
+        columnName: authz_grp_uuid
+  - changeSet:
+      author: appian
+      id: '000476.6.0'
+      comment: Remove the default value for svc_acc_id
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: svc_acc_id
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000476.6.1'
+      comment: Remove the default value for updated_by
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: updated_by
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000476.6.2'
+      comment: Remove the default value for updated_ts
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: updated_ts
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000476.6.3'
+      comment: Remove the default value for client_id_mapping
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: client_id_mapping
+        columnDataType: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000476.6.4'
+      comment: Remove the default value for cliend_id
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: cliend_id
+        columnDataType: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000476.6.5'
+      comment: Remove the default value for jwk_set_source_type
+      dropDefaultValue:
+        tableName: third_party_oauth2_config
+        columnName: jwk_set_source_type
+        columnDataType: ${stringType}(20)

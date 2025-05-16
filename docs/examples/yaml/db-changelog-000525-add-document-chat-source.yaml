@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000525-add-document-chat-source.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000525'
+      tagDatabase:
+        tag: 'pre-000525'
+  - changeSet:
+      id: '000525.1.0'
+      author: appian
+      comment: Create document_chat_source table
+      changes:
+        - createTable:
+            tableName: document_chat_source
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: message_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: appian_document_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: source_text
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: dc_chat_source_message_id_fk
+            baseTableName: document_chat_source
+            baseColumnNames: message_id
+            referencedTableName: document_chat_message
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: dc_chat_source_document_id_fk
+            baseTableName: document_chat_source
+            baseColumnNames: document_id
+            referencedTableName: document_chat_document
+            referencedColumnNames: id
+            onDelete: NO ACTION
+  - changeSet:
+      id: '000525.1.1'
+      author: appian
+      comment: Add sequence to document_chat_source
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: document_chat_source_sq

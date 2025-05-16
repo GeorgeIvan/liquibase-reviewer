@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000393-migrate-portal-from-single-interface-to-nav-nodes.yaml
+  - changeSet:
+      id: 'tag-pre-000393'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000393'
+
+  - changeSet:
+      author: appian
+      id: '000393.1.0'
+      comment: Create a navigation node for each portal with an interface and then empty out the interfaceUuid column
+      changes:
+      - customChange:
+          class: com.appiancorp.portal.persistence.migration.PortalNavNodeMigration

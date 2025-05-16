@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000010.xml">
+
+  <changeSet author="appian" id="tag-000009">
+    <tagDatabase tag="000009"/>
+  </changeSet>
+
+  <changeSet id="000010.1.0" author="appian">
+    <comment>Rename record_fld_cfg.order_idx to sort_order_idx</comment>
+    <renameColumn tableName="record_fld_cfg" oldColumnName="order_idx" newColumnName="sort_order_idx" columnDataType="INT(11)"/>
+  </changeSet>
+
+  <changeSet id="000010.1.1" author="appian">
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_order_idx" type="${integerType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="000010.1.2" author="appian">
+    <update tableName="record_fld_cfg">
+      <column name="facet_order_idx" value="0"/>
+    </update>
+  </changeSet>
+
+  <changeSet id="000010.2.0" author="appian">
+    <addNotNullConstraint tableName="record_fld_cfg" columnName="facet_order_idx" columnDataType="${integerType}"/>
+  </changeSet>
+
+  <changeSet id="000010.2.1" author="appian">
+    <addNotNullConstraint tableName="record_fld_cfg" columnName="sort_order_idx" columnDataType="${integerType}"/>
+  </changeSet>
+
+  <changeSet id="000010.2.2" author="appian">
+    <addNotNullConstraint tableName="record_facet_opt_cfg" columnName="order_idx" columnDataType="${integerType}"/>
+  </changeSet>
+
+  <changeSet id="000010.2.3" author="appian">
+    <addNotNullConstraint tableName="record_detail_view_cfg" columnName="order_idx" columnDataType="${integerType}"/>
+  </changeSet>
+</databaseChangeLog>

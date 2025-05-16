@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000006.xml">
+  <!-- Author: Dan Mascenik -->
+
+  <!-- Create the record types table. -->
+  <changeSet author="appian" id="000006.1.0">
+    <createTable tableName="record_type">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="record_type_uuid_uc"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="plural_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}" />
+      <column name="src_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="src_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lv_tmpt_expr" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url_stub" type="${shortStringType}" >
+        <constraints nullable="false" unique="true" uniqueConstraintName="record_type_urlstub_uc"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="record_type_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000006.1.2">
+    <comment>FK from record_type.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="rec_type_created_by_uid_fk"
+      baseTableName="record_type" baseColumnNames="created_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000006.1.3">
+    <comment>FK from record_type.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="rec_type_updated_by_uid_fk"
+      baseTableName="record_type" baseColumnNames="updated_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000006.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_type_cby_uid_fk_idx" tableName="record_type" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000006.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_type_uby_uid_fk_idx" tableName="record_type" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- Create the record field definitions table. -->
+  <changeSet author="appian" id="000006.2.0">
+    <createTable tableName="record_fld_cfg">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_ref" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_sortable" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_searchable" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_facet" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="facet_type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_excl_facet" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="facet_label_expr" type="${mediumStringType}" />
+      <column name="order_idx" type="${integerType}" />
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="record_fld_cfg_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.3">
+    <addForeignKeyConstraint constraintName="rec_fld_cfg_rec_type_fk"
+      baseTableName="record_fld_cfg" baseColumnNames="record_type_id" 
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_fld_cfg_rec_type_fk_idx" tableName="record_fld_cfg" unique="false">
+      <column name="record_type_id"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- Create the facet options table. -->
+  <changeSet author="appian" id="000006.2.5">
+    <createTable tableName="record_facet_opt_cfg">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="record_fld_cfg_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="label_expr" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="crit_oper" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value_list" type="${mediumStringType}" />
+      <column name="low_lim_expr" type="${mediumStringType}" />
+      <column name="top_lim_expr" type="${mediumStringType}" />
+      <column name="order_idx" type="${integerType}" />
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.6">
+    <addForeignKeyConstraint constraintName="rec_facet_opt_cfg_fld_fk" 
+      baseTableName="record_facet_opt_cfg" baseColumnNames="record_fld_cfg_id"
+      referencedTableName="record_fld_cfg" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.7">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_facet_opt_cfg_fld_fk_idx" tableName="record_facet_opt_cfg" unique="false">
+      <column name="record_fld_cfg_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000006.2.8">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="record_facet_opt_cfg_sq"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000078-rt-facet-expr.xml">
+
+  <changeSet author="appian" id="tag-000077">
+    <tagDatabase tag="000077"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000078.1.0">
+    <comment>Add column facet_expr to table record_fld_cfg for expressionable user filters</comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_expr" type="${mediumStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000078.1.1">
+    <comment>Make record_fld_cfg.name column nullable due to new ability of user filters to be defined by an expression.</comment>
+    <dropNotNullConstraint tableName="record_fld_cfg" columnName="name" columnDataType="${shortStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000078.1.2">
+    <comment>Make record_fld_cfg.source_ref column nullable due to new ability of user filters to be defined by an expression.</comment>
+    <dropNotNullConstraint tableName="record_fld_cfg" columnName="source_ref" columnDataType="${shortStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000078.1.3">
+    <comment>Revert record_fld_cfg.name column to not nullable.</comment>
+    <addNotNullConstraint tableName="record_fld_cfg" columnName="name" columnDataType="${shortStringType}"/>
+  </changeSet>
+</databaseChangeLog>

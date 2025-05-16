@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000154-user-settings-table.xml">
+
+  <changeSet author="appian" id="tag-000153">
+    <tagDatabase tag="000153"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000154.1.0">
+    <comment>Create user settings table</comment>
+    <createTable tableName="usr_settings">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="usr_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="prop" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000154.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="usr_settings_sq"/>
+  </changeSet>
+</databaseChangeLog>

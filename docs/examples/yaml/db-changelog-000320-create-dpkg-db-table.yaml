@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000320-create-dpkg-db-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000320'
+      tagDatabase:
+        tag: 'pre-000320'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000320.1.0'
+      comment: Create dpkg_db_script table
+      changes:
+        - createTable:
+            tableName: dpkg_db_script
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: package_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ddl_doc_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_index
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_user_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_ts
+                  type: ${longtype}
+                  constraints:
+                    nullable: true
+                  defaultValue: 0
+
+        - addForeignKeyConstraint:
+            constraintName: dpkg_db_script_package_id_fk
+            baseTableName: dpkg_db_script
+            baseColumnNames: package_id
+            referencedTableName: dpkg
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: dpkg_db_script_package_id_idx
+            tableName: dpkg_db_script
+            columns:
+              - column:
+                  name: package_id
+  - changeSet:
+      id: '000320.1.1'
+      comment: A sequence to provide primary key values for the dpkg_db_script table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_db_script_sq
+  - changeSet:
+      author: appian
+      id: '000320.2.0'
+      comment: Add data source column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: data_source_uuid
+          type: ${uuidType}
+          constraints:
+            nullable: true

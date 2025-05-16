@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000388-add-object-id-index.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000388'
+      tagDatabase:
+        tag: 'pre-000388'
+
+  - changeSet:
+      author: appian
+      id: '000388.1.0'
+      comment: Add index to object_type_id column
+      createIndex:
+        tableName: user_obj_edit
+        columns:
+          - column:
+              name: object_type_id
+        indexName: user_obj_edit_obj_type_idx
+

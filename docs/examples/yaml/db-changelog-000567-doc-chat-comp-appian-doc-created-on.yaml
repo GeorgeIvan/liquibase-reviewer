@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000567-doc-chat-comp-appian-doc-created-on.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000567'
+      tagDatabase:
+        tag: 'pre-000567'
+  - changeSet:
+      id: '000567.1.1'
+      author: appian
+      comment: Delete old existing data in dcc_processed_document
+      changes:
+        - delete:
+            tableName: dcc_processed_document
+
+  - changeSet:
+      id: '000567.1.2'
+      author: appian
+      comment: Add appian_document_created_on column
+      changes:
+        - addColumn:
+            tableName: dcc_processed_document
+            columns:
+              - column:
+                  name: appian_document_created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+  - changeSet:
+      author: appian
+      id: '000567.1.3'
+      comment: Create new index for dcc_processed_document
+      changes:
+        - createIndex:
+            indexName: appian_document_created_on_idx
+            tableName: dcc_processed_document
+            unique: false
+            columns:
+              - column:
+                  name: appian_document_created_on

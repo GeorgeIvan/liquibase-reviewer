@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000220-rls-uuid-unique-constraint.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000220
+      tagDatabase:
+        tag: 'pre-000220'
+
+  - changeSet:
+      id: '000220.0.0'
+      author: appian
+      changes:
+        - addUniqueConstraint:
+            columnNames: uuid
+            tableName: record_type_row_security

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000087-datasource.xml">
+
+  <changeSet author="appian" id="tag-000086">
+    <tagDatabase tag="000086"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000087.1.0">
+    <comment>Add datasource table</comment>
+    <createTable tableName="datasource">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="connection_url" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="username" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="password" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000087.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="datasource_sq"/>
+  </changeSet>
+  <changeSet author="appian" id="000087.1.2">
+    <comment>FK from datasource.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="datasource_cby_uid_fk"
+                             baseTableName="datasource" baseColumnNames="created_by"
+                             referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000087.1.3">
+    <comment>FK from datasource.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="datasource_uby_uid_fk"
+                             baseTableName="datasource" baseColumnNames="updated_by"
+                             referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000087.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="datasource_cby_uid_fk_idx" tableName="datasource" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000087.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="datasource_uby_uid_fk_idx" tableName="datasource" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000087.1.6">
+    <comment>Add index on name field in datasource table</comment>
+    <createIndex indexName="datasource_name_idx" tableName="datasource" unique="true">
+      <column name="name"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

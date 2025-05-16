@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000053.xml">
+
+  <changeSet author="appian" id="tag-000052">
+    <tagDatabase tag="000052"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000053.1.0">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="oracle"/>
+    </preConditions>
+    <comment>Modify User Record to use a!userRecordHeader in Oracle</comment>
+    <update tableName="record_detail_view_cfg">
+        <column name="header_expr" value="a!userRecordHeader()"/>
+        <where>to_char(ui_expr)='a!userRecordSummaryDashboard()'</where>
+    </update>    
+  </changeSet>
+
+  <changeSet author="appian" id="000053.1.1">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="mssql"/>
+    </preConditions>
+    <comment>Modify User Record to use a!userRecordHeader in SQL Server</comment>
+    <update tableName="record_detail_view_cfg">
+      <column name="header_expr" value="a!userRecordHeader()"/>
+      <where>CAST(ui_expr as varchar)='a!userRecordSummaryDashboard()'</where>
+    </update>    
+  </changeSet>
+  
+
+  <changeSet author="appian" id="000053.1.2">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <dbms type="oracle"/>
+        <dbms type="mssql"/>
+      </not>
+    </preConditions>
+    <comment>Modify User Record to use a!userRecordHeader in MySQL and DB2</comment>
+    <update tableName="record_detail_view_cfg">
+      <column name="header_expr" value="a!userRecordHeader()"/>
+      <where>ui_expr='a!userRecordSummaryDashboard()'</where>
+    </update>    
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000340-add-icf-status-to-dpkg.yaml
+  - changeSet:
+      id: 'tag-pre-000340'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000340'
+
+  - changeSet:
+      id: '000340.1.0'
+      author: appian
+      comment: Add icf_status column to dpkg table
+      addColumn:
+        tableName: dpkg
+        column:
+          name: icf_status
+          type: ${byteType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000340.1.1'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: dpkg
+        columnName: icf_status
+        columnDataType: ${byteType}

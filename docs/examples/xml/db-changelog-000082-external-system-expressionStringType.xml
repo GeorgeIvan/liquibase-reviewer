@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000082-external-system-expressionStringType.xml">
+
+  <!-- For all expression fields, we have to create a new column because conversion of a column from
+       text to largeStringType is not supported for all of our databases. -->
+  
+  <changeSet author="appian" id="tag-000081">
+    <tagDatabase tag="000081"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000082.1.0">
+    <comment>Create new column new_test_expr</comment>
+    <addColumn tableName="external_sys">
+      <column name="new_test_expr" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000082.1.1">
+    <comment>Copy over the data from test_expr to new_test_expr</comment>
+    <sql>UPDATE external_sys SET new_test_expr = test_expr</sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000082.1.2">
+    <comment>Drop column test_expr</comment>
+    <dropColumn tableName="external_sys" columnName="test_expr"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000082.1.3">
+    <comment>Rename column new_test_expr to test_expr</comment>
+    <renameColumn tableName="external_sys" oldColumnName="new_test_expr" newColumnName="test_expr" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

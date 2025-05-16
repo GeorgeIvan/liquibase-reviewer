@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000026.xml">
+
+  <changeSet author="appian" id="tag-000025">
+    <tagDatabase tag="000025"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000026.1.0">
+    <comment>Add ExternalSystem table</comment>
+
+    <createTable tableName="external_sys">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="external_sys_uuid_uc"/>
+      </column>
+      <column name="unique_key" type="${shortStringType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="external_sys_key_uc"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="external_sys_name_uc"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000026.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="external_sys_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000026.1.2">
+    <comment>FK from external_sys.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="external_sys_cby_uid_fk"
+      baseTableName="external_sys" baseColumnNames="created_by" referencedTableName="usr"
+      referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000026.1.3">
+    <comment>FK from external_sys.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="external_sys_uby_uid_fk"
+      baseTableName="external_sys" baseColumnNames="updated_by" referencedTableName="usr"
+      referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000026.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="external_sys_cby_uid_fk_idx" tableName="external_sys" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000026.1.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="external_sys_uby_uid_fk_idx" tableName="external_sys" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000026.2.0">
+    <comment>Create role map table for external_sys.</comment>
+    <createTable tableName="external_sys_rm">
+      <column name="external_sys_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.1">
+    <comment>Add PK for external_sys_rm.</comment>
+    <addPrimaryKey columnNames="external_sys_id, rm_entry_id" tableName="external_sys_rm"/>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.2">
+    <comment>Add FK from external_sys_rm to rm_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="external_sys_rm_rmeid_fk"
+      baseTableName="external_sys_rm" baseColumnNames="rm_entry_id" referencedTableName="rm_entry"
+      referencedColumnNames="id" deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.3">
+    <comment>Add FK from external_sys_rm to external_sys.id.</comment>
+    <addForeignKeyConstraint constraintName="external_sys_rm_esid_fk"
+      baseTableName="external_sys_rm" baseColumnNames="external_sys_id" referencedColumnNames="id"
+      referencedTableName="external_sys" deferrable="false" initiallyDeferred="false"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Create an index for the FK column external_sys_rm.rm_entry_id</comment>
+    <createIndex indexName="external_sys_rm_rmei_idx" tableName="external_sys_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000026.2.5">
+    <comment>Add a system role (in rm_role) for External System Administrator.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="14"/>
+      <column name="name" value="external_system_administrator"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.6">
+    <comment>Add a system role (in rm_role) for External System Editor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="15"/>
+      <column name="name" value="external_system_editor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.7">
+    <comment>Add a system role (in rm_role) for External System Auditor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="16"/>
+      <column name="name" value="external_system_auditor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000026.2.8">
+    <comment>Add a system role (in rm_role) for External System Viewer.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="17"/>
+      <column name="name" value="external_system_viewer"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

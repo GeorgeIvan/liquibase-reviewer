@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000032.xml">
+
+  <changeSet author="appian" id="tag-000031">
+    <tagDatabase tag="000031"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000032.1.0">
+    <comment>Create an index for tp_feed.name</comment>
+    <createIndex indexName="tp_feed_name_idx" tableName="tp_feed" unique="false">
+      <column name="name"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

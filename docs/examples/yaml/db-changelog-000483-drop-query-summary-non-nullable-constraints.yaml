@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000483-drop-query-summary-non-nullable-constraints.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000483
+      tagDatabase:
+        tag: 'pre-000483'
+  - changeSet:
+      author: appian
+      id: '000483.1.0'
+      comment: Drop unnecessary non-nullable constraints for query summary columns
+      changes:
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: start_time
+            columnDataType: ${longType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: execution_time
+            columnDataType: ${longType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: wait_time
+            columnDataType: ${longType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: issuer
+            columnDataType: ${shortStringType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: trace_id
+            columnDataType: ${shortStringType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: top_design_object_uuid
+            columnDataType: ${uuidType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: current_design_object_uuid
+            columnDataType: ${uuidType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: record_type_uuid
+            columnDataType: ${uuidType}
+        - dropNotNullConstraint:
+            tableName: record_query_summary
+            columnName: query_source
+            columnDataType: ${shortStringType}
+

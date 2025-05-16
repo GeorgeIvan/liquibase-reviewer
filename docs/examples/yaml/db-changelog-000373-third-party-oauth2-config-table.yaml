@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000373-third-party-oauth2-config-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000373'
+      tagDatabase:
+        tag: 'pre-000373'
+  - changeSet:
+      author: appian
+      id: '000373.1.0'
+      comment: Create third_party_oauth2_config table
+      createTable:
+        tableName: third_party_oauth2_config
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: is_active
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: created_by
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: created_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: description
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                unique: true
+          - column:
+              name: issuer
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                unique: true
+          - column:
+              name: audience
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: jwk_set
+              type: ${largeStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: jwk_set_uri
+              type: ${mediumStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: jwk_last_update_date
+              type: ${longType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000373.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: third_party_oauth2_config_sq
+  - changeSet:
+      id: '000373.1.2'
+      author: appian
+      comment: FK from third_party_oauth2_config.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: tp_oauth2_cfg_created_by_fk
+        baseTableName: third_party_oauth2_config
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+

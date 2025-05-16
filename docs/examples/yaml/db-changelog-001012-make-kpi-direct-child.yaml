@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001012-make-kpi-direct-child.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001012'
+      tagDatabase:
+        tag: 'pre-001012'
+  - changeSet:
+      author: appian
+      id: '001012.1.0'
+      comment: Add new column to mining_kpi table
+      changes:
+        - addColumn:
+            tableName: mining_kpi
+            column:
+              name: is_pinned
+              type: ${booleanType}
+              valueBoolean: false
+              defaultValueBoolean: false
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '001012.2.0'
+      comment: Copy each KPI so that KPIs and Views are 1 to 1
+      customChange:
+        class: com.appiancorp.processHq.persistence.migration.MakeKpisDirectChildrenOfViewsMigration
+  - changeSet:
+      author: appian
+      id: '001012.3.0'
+      comment: Associate existing insights with some kpi for mariadb server
+      dbms: '!postgresql, !db2, !mssql, !oracle'
+      sql: UPDATE mining_insight ins INNER JOIN mining_investigation inv ON ins.mining_investigation_id = inv.id
+        INNER JOIN mining_scope_kpis skpi ON inv.mining_scope_id = skpi.mining_scope_id INNER JOIN
+        (SELECT ikpi.id FROM mining_kpi ikpi INNER JOIN mining_kpi_type ktype ON ikpi.id = ktype.mining_kpi_id
+        INNER JOIN mining_kpi_type_duration tdur ON tdur.kpi_type_id = ktype.id
+        WHERE ikpi.is_default_kpi=1 AND tdur.measure_option=1) defaultkpis
+        ON skpi.mining_kpi_id = defaultkpis.id
+        SET ins.mining_scope_id = inv.mining_scope_id, ins.mining_kpi_id = defaultkpis.id
+        WHERE ins.mining_kpi_id IS NULL;
+  - changeSet:
+      author: appian
+      id: '001012.3.1'
+      comment: Associate existing insights with some kpi for postgres server
+      dbms: 'postgresql, db2'
+      sql: UPDATE mining_insight ins SET mining_scope_id = inv.mining_scope_id, mining_kpi_id = defaultkpis.id
+        FROM mining_investigation inv INNER JOIN mining_scope_kpis skpi 
+        ON inv.mining_scope_id = skpi.mining_scope_id INNER JOIN
+        (SELECT ikpi.id FROM mining_kpi ikpi INNER JOIN mining_kpi_type ktype ON ikpi.id = ktype.mining_kpi_id
+        INNER JOIN mining_kpi_type_duration tdur ON tdur.kpi_type_id = ktype.id
+        WHERE ikpi.is_default_kpi=true AND tdur.measure_option=1) defaultkpis
+        ON skpi.mining_kpi_id = defaultkpis.id
+        WHERE ins.mining_investigation_id = inv.id AND ins.mining_kpi_id IS NULL;
+  - changeSet:
+      author: appian
+      id: '001012.3.2'
+      comment: Associate existing insights with some kpi for sql server
+      dbms: 'mssql'
+      sql: UPDATE ins SET ins.mining_scope_id = inv.mining_scope_id, ins.mining_kpi_id = defaultkpis.id
+        FROM mining_insight ins INNER JOIN mining_investigation inv ON ins.mining_investigation_id = inv.id
+        INNER JOIN mining_scope_kpis skpi ON inv.mining_scope_id = skpi.mining_scope_id INNER JOIN
+        (SELECT ikpi.id FROM mining_kpi ikpi INNER JOIN mining_kpi_type ktype ON ikpi.id = ktype.mining_kpi_id
+        INNER JOIN mining_kpi_type_duration tdur ON tdur.kpi_type_id = ktype.id
+        WHERE ikpi.is_default_kpi=1 AND tdur.measure_option=1) defaultkpis
+        ON skpi.mining_kpi_id = defaultkpis.id
+        WHERE ins.mining_kpi_id IS NULL;
+  - changeSet:
+      author: appian
+      id: '001012.3.3'
+      comment: Associate existing insights with some kpi for oracle
+      dbms: 'oracle'
+      sql: UPDATE mining_insight ins SET ins.mining_scope_id = (SELECT inv.mining_scope_id FROM mining_investigation inv
+        WHERE ins.mining_investigation_id = inv.id),
+        ins.mining_kpi_id = (SELECT ikpi.id FROM mining_kpi ikpi
+        INNER JOIN mining_scope_kpis skpi ON ikpi.id = skpi.mining_kpi_id
+        INNER JOIN mining_investigation inv ON inv.mining_scope_id = skpi.mining_scope_id
+        WHERE ins.mining_investigation_id = inv.id AND ikpi.is_default_kpi=1 AND ROWNUM = 1)
+        WHERE ins.mining_kpi_id IS NULL;

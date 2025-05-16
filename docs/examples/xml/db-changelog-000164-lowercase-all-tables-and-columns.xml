@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000164-lowercase-all-tables-and-columns.xml">
+
+  <changeSet author="appian" id="tag-000163">
+    <tagDatabase tag="000163"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000164.1.0">
+    <comment>Lowercase login_page_links.orderIdx column</comment>
+    <dropPrimaryKey tableName="login_page_links"/> <!-- DB2 doesn't allow renaming a PK column -->
+    <renameColumn tableName="login_page_links" oldColumnName="orderIdx" newColumnName="order_idx" columnDataType="INT(11)"/>
+    <addPrimaryKey columnNames="order_idx" tableName="login_page_links"/>
+  </changeSet>
+
+  <!--- Liquibase renameColumn tag removes the NOT NULL constraint for MySQL -->
+  <changeSet author="appian" id="000164.1.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><or><dbms type="mysql"/><dbms type="mariadb"/></or></preConditions>
+    <comment>Add back NOT NULL constraint on login_page_links.order_idx column</comment>
+    <addNotNullConstraint tableName="login_page_links" columnName="order_idx" columnDataType="${integerType}"/>
+  </changeSet>
+
+</databaseChangeLog>

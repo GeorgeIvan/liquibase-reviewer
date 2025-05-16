@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000046.xml">
+
+  <changeSet author="appian" id="tag-000045">
+    <tagDatabase tag="000045"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000046.0.0">
+    <comment>Create a new column for tp_comment_id in tp_feed_entry_linked_obj</comment>
+    <addColumn tableName="tp_feed_entry_linked_obj">
+      <column name="tp_comment_id" type="${longType}"/>
+    </addColumn>
+  </changeSet>
+
+
+  <!-- DROPPING OLD CONSTRAINTS -->
+
+  <!-- We must drop the FK on tp_feed_entry_linked_obj.tp_feed_entry_id, because it uses the UC tpfelo_uc, which we need to remove for objects linked to comments. -->
+  <changeSet author="appian" id="000046.1.0">
+    <dropForeignKeyConstraint constraintName="tpfelo_feid_fk" baseTableName="tp_feed_entry_linked_obj"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000046.1.1">
+    <comment>Drop uniqueness constraint on (tp_feed_entry_id, object_set_key, object_type, object_id)</comment>
+    <dropUniqueConstraint constraintName="tpfelo_uc" tableName="tp_feed_entry_linked_obj"/>
+  </changeSet>
+
+  <!-- CREATING NEW CONSTRAINTS -->
+
+  <changeSet author="appian" id="000046.2.0">
+    <comment>FK from tp_feed_entry_linked_obj.tp_feed_entry_id to tp_feed_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="tpfelo_feid_fk" baseTableName="tp_feed_entry_linked_obj"
+      baseColumnNames="tp_feed_entry_id" referencedTableName="tp_feed_entry" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000046.2.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Index for tp_feed_entry_linked_obj.tp_feed_entry.id.</comment>
+    <createIndex indexName="tpfelo_feid_idx" tableName="tp_feed_entry_linked_obj" unique="false">
+      <column name="tp_feed_entry_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000046.2.2">
+    <comment>FK from tp_feed_entry_linked_obj.tp_comment_id to tp_comment.id.</comment>
+    <addForeignKeyConstraint constraintName="tpfelo_cid_fk" baseTableName="tp_feed_entry_linked_obj"
+      baseColumnNames="tp_comment_id" referencedTableName="tp_comment" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000046.2.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Index for tp_feed_entry_linked_obj.tp_comment_id.</comment>
+    <createIndex indexName="tpfelo_cid_idx" tableName="tp_feed_entry_linked_obj" unique="false">
+      <column name="tp_comment_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

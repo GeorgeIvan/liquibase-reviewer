@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000179-facetdata-column-daterangefilter-default-values.xml">
+
+  <changeSet author="appian" id="tag-000178">
+    <tagDatabase tag="000178"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000179.0.0">
+    <comment>Add column for saving default values for startDate/endDate on a Date Range Filter</comment>
+    <addColumn tableName="record_fld_cfg">
+      <column name="facet_data" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

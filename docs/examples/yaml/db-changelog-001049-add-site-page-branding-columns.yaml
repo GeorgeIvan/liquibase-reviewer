@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001049-add-site-page-branding-columns.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001049
+      tagDatabase:
+        tag: pre-001049
+  - changeSet:
+      author: appian
+      id: 001049.1.0
+      comment: Add site_branding_enabled and dark_theme_enabled columns
+      changes:
+        - addColumn:
+            tableName: site_page
+            columns:
+              - column:
+                  name: site_branding_enabled
+                  type: ${booleanType}
+                  valueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dark_theme_enabled
+                  type: ${booleanType}
+                  valueBoolean: false
+                  constraints:
+                    nullable: false

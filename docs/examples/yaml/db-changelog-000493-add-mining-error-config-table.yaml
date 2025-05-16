@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000493-add-mining-error-config-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000493'
+      tagDatabase:
+        tag: 'pre-000493'
+  - changeSet:
+      author: appian
+      id: '000493.1.0'
+      comment: Create table for mining_anlys_error_cfg
+      changes:
+        - createTable:
+            tableName: mining_anlys_error_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_analysis_config_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: predecessor
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: config_type
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000493.1.1'
+      comment: Create table mining_anlys_error_cfg_succ
+      changes:
+        - createTable:
+            tableName: mining_anlys_error_cfg_succ
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_anlys_error_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: successor
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '000493.2.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_anlys_error_cfg.mining_analysis_config_id to mining_process_analysis_cfg.id
+        addForeignKeyConstraint:
+          constraintName: ma_err_ma_cfg_fk
+          baseTableName: mining_anlys_error_cfg
+          baseColumnNames: mining_analysis_config_id
+          referencedTableName: mining_process_analysis_cfg
+          referencedColumnNames: id
+          onDelete: CASCADE
+  - changeSet:
+      id: '000493.2.1'
+      author: appian
+      changes:
+        comment: Add FK from mining_anlys_error_cfg_succ.mining_anlys_error_cfg_id to mining_anlys_error_cfg.id
+        addForeignKeyConstraint:
+          constraintName: ma_err_ma_successor_fk
+          baseTableName: mining_anlys_error_cfg_succ
+          baseColumnNames: mining_anlys_error_cfg_id
+          referencedTableName: mining_anlys_error_cfg
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+  - changeSet:
+      id: '000493.3.0'
+      author: appian
+      comment: Create a sequence to provide primary key values to mining_anlys_error_cfg table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_anlys_error_cfg_sq
+  - changeSet:
+      id: '000493.3.1'
+      author: appian
+      comment: Create a sequence to provide primary key values to mining_anlys_error_cfg_succ table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_anlys_error_cfg_succ_sq

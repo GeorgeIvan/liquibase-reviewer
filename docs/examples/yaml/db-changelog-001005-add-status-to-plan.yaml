@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001005-add-status-to-plan.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001005'
+      tagDatabase:
+        tag: 'pre-001005'
+  - changeSet:
+      id: '001005.1.0'
+      author: appian
+      comment: Add status column to requirements_capture
+      addColumn:
+        tableName: requirements_capture
+        column:
+          name: status
+          type: ${shortStringType}
+          defaultValue: "NEW"
+          constraints:
+            nullable: false
+
+  - changeSet:
+      id: '001005.1.1'
+      author: appian
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: requirements_capture
+        columnName: status
+        columnDataType: ${shortStringType}
+

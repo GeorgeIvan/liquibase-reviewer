@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000013.xml">
+
+  <!-- Create the filter table -->
+  <changeSet author="appian" id="000013.1.0">
+    <createTable tableName="filter">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="field" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="operator" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value_expr" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000013.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="filter_sq"/>
+  </changeSet>
+
+  <!-- Create the join table for record type default filters -->
+  <changeSet author="appian" id="000013.2.0">
+    <createTable tableName="record_type_filters">
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="filter_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000013.2.1">
+    <comment>FK from record_type_filter.record_type_id to record_type</comment>
+    <addForeignKeyConstraint constraintName="rec_type_filters_rec_type_id"
+      baseTableName="record_type_filters" baseColumnNames="record_type_id"
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000013.2.2">
+    <comment>FK from record_type_filter.filter_id to filter</comment>
+    <addForeignKeyConstraint constraintName="rec_type_filters_filter_id"
+      baseTableName="record_type_filters" baseColumnNames="filter_id"
+      referencedTableName="filter" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000013.2.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_type_filt_rec_type_fk_idx" tableName="record_type_filters" unique="false">
+      <column name="record_type_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000013.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_type_filt_filt_fk_idx" tableName="record_type_filters" unique="false">
+      <column name="filter_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

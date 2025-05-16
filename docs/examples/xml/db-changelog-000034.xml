@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000034.xml">
+
+  <changeSet author="appian" id="tag-000033">
+    <tagDatabase tag="000033"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000034.1.0">
+    <comment>Add tp_feed_entry_linked_obj table</comment>
+    <createTable tableName="tp_feed_entry_linked_obj">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="tp_feed_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_set_key" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_id" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>  
+  </changeSet>
+  
+  <changeSet author="appian" id="000034.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <comment>Sequence for tp_feed_entry_linked_obj</comment>
+    <createSequence sequenceName="tp_feed_entry_linked_obj_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000034.1.2">
+    <comment>Set uniqueness constraint on (tp_feed_entry_id, object_set_key, object_type, object_id)</comment>
+    <addUniqueConstraint constraintName="tpfelo_uc" tableName="tp_feed_entry_linked_obj"
+      columnNames="tp_feed_entry_id, object_set_key, object_type, object_id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000034.1.3">
+    <comment>FK from tp_feed_entry_linked_obj.tp_feed_entry_id to tp_feed_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="tpfelo_feid_fk"
+      baseTableName="tp_feed_entry_linked_obj" baseColumnNames="tp_feed_entry_id"
+      referencedTableName="tp_feed_entry" referencedColumnNames="id"/>
+  </changeSet>
+  <!-- No index needed on tp_feed_entry_linked_obj.tp_feed_entry_id, because it's the first column
+       in the combined index tpfelo_uc (see above). -->
+  
+  <changeSet author="appian" id="000034.1.5">
+    <comment>FK from tp_feed_entry_linked_obj.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="tpfelo_cby_uid_fk"
+      baseTableName="tp_feed_entry_linked_obj" baseColumnNames="created_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000034.1.6">
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Index for tp_feed_entry_linked_obj.created_by.</comment>
+    <createIndex indexName="tpfelo_cby_uid_fk_idx" tableName="tp_feed_entry_linked_obj" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+  
+  <changeSet author="appian" id="000034.1.7">
+    <comment>FK from tp_feed_entry_linked_obj.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="tpfelo_uby_uid_fk"
+      baseTableName="tp_feed_entry_linked_obj" baseColumnNames="updated_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000034.1.8">
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Index for tp_feed_entry_linked_obj.updated_by.</comment>
+    <createIndex indexName="tpfelo_uby_uid_fk_idx" tableName="tp_feed_entry_linked_obj" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

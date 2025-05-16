@@ -1,0 +1,179 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001009-add-control-panel-tier-item-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001009'
+      tagDatabase:
+        tag: 'pre-001009'
+  - changeSet:
+      id: '001009.1.0'
+      author: appian
+      comment: Create control_panel_tier_item table
+      changes:
+        - createTable:
+            tableName: control_panel_tier_item
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: control_panel_ti_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: control_panel_ti_vrs_uuid_uc
+              - column:
+                  name: control_panel_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tier_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: url_stub
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url_stub_unique
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: control_panel_ti_url_stub_uc
+              - column:
+                  name: is_collection
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: settings
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '001009.1.1'
+      author: appian
+      comment: A sequence to provide primary key values for the control_panel_tier_item table
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      changes:
+        - createSequence:
+            sequenceName: control_panel_tier_item_sq
+  - changeSet:
+      id: '001009.1.2'
+      author: appian
+      comment: Add FK for control_panel_tier_item.created_by to usr.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: control_panel_ti_created_by_fk
+            baseTableName: control_panel_tier_item
+            baseColumnNames: created_by
+            referencedTableName: usr
+            referencedColumnNames: id
+  - changeSet:
+      id: '001009.1.3'
+      author: appian
+      comment: Add FK for control_panel_tier_item.updated_by to usr.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: control_panel_ti_updated_by_fk
+            baseTableName: control_panel_tier_item
+            baseColumnNames: updated_by
+            referencedTableName: usr
+            referencedColumnNames: id
+  - changeSet:
+      id: '001009.1.4'
+      author: appian
+      comment: Add index on control_panel_tier_item.created_by
+      changes:
+        changes:
+          - createIndex:
+              indexName: control_panel_ti_createdby_idx
+              tableName: control_panel_tier_item
+              unique: false
+              columns:
+                - column:
+                    name: created_by
+  - changeSet:
+      id: '001009.1.5'
+      author: appian
+      comment: Add index on control_panel_tier_item.updated_by
+      changes:
+        - createIndex:
+            indexName: control_panel_ti_updatedby_idx
+            tableName: control_panel_tier_item
+            unique: false
+            columns:
+              - column:
+                  name: updated_by
+  - changeSet:
+      id: '001009.1.6'
+      author: appian
+      comment: Add FK for control_panel_tier_item.control_panel_id to control_panel.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: control_panel_ti_cp_id_fk
+            baseTableName: control_panel_tier_item
+            baseColumnNames: control_panel_id
+            referencedTableName: control_panel
+            referencedColumnNames: id
+  - changeSet:
+      id: '001009.1.7'
+      author: appian
+      comment: Add FK for control_panel_tier_item.parent_id to control_panel_tier_item.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: control_panel_ti_parent_id_fk
+            baseTableName: control_panel_tier_item
+            baseColumnNames: parent_id
+            referencedTableName: control_panel_tier_item
+            referencedColumnNames: id

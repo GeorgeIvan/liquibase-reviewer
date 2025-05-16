@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000294-deployment-package-last-modified.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000294'
+      tagDatabase:
+        tag: 'pre-000294'
+
+  - changeSet:
+      author: appian
+      id: '000294.1.0'
+      comment: Add modified_ts column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: modified_ts
+          type: ${longType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+
+  #Remove the default value.  This is necessary because db2 requires new non-nullable columns to have
+  #a default value.  Thus we need to remove afterwards because we do not desire a defaultValue
+  #See DB2 SQLCODE=-193
+  - changeSet:
+      author: appian
+      id: '000294.1.1'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: dpkg
+        columnName: modified_ts
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000294.2.0'
+      comment: Add index on modifed_ts column
+      createIndex:
+        tableName: dpkg
+        columns:
+          - column:
+              name: modified_ts
+        indexName: dpkg_modified_ts_idx
+        unique: false

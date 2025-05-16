@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000501-add-show-divider-line-to-record-header-cfg.yaml
+  - changeSet:
+      id: 'tag-pre-000501'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000501'
+
+  - changeSet:
+      id: '000501.1.0'
+      author: appian
+      comment: Add show_divider column to record_header_cfg table
+      addColumn:
+        tableName: record_header_cfg
+        column:
+          name: show_divider
+          type: ${booleanType}
+          defaultValueBoolean: true
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '000501.1.1'
+      author: appian
+      comment: Drop default value constraint for show_divider column
+      dropDefaultValue:
+        tableName: record_header_cfg
+        columnName: show_divider
+        columnDataType: ${booleanType}

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000247-site-typeface.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000247
+      tagDatabase:
+        tag: 'pre-000247'
+  - changeSet:
+      author: appian
+      id: '000247.0.0'
+      comment: Create String column for typeface
+      addColumn:
+        tableName: site
+        columns:
+          - column:
+              name: typeface
+              type: ${shortStringType}
+              constraints:
+                nullable: 'true'

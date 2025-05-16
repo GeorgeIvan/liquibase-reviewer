@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000550-add-default-kpis-for-existing-scopes.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000550
+      tagDatabase:
+        tag: 'pre-000550'
+  - changeSet:
+      id: '000550.0.0'
+      author: appian
+      comment: Identify and create default KPIs for any scopes that currently do not have predefined KPIs assigned
+      customChange:
+        class: com.appiancorp.processHq.persistence.migration.CreateDefaultKPIsForExistingScopesMigration

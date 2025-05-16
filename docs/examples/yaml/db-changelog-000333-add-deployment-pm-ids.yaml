@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000333-add-deployment-pm-ids.yaml
+  - changeSet:
+      id: 'tag-pre-000333'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000333'
+
+  - changeSet:
+      id: '000333.1.0'
+      author: appian
+      comment: Create a new column for process_instance_id
+      addColumn:
+        tableName: deployment_app
+        column:
+          name: process_instance_id
+          type: ${longType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      id: '000333.2.0'
+      author: appian
+      comment: Migrate the process_instance_id in deployment into the deployment in deployment_app
+      customChange:
+        class: com.appiancorp.designdeployments.persistence.migration.MoveProcessInstanceIdToDeploymentApp
+
+  - changeSet:
+      id: '000333.3.0'
+      author: appian
+      comment: Remove a column for process_instance_id
+      dropColumn:
+        tableName: deployment
+        columnName: process_instance_id

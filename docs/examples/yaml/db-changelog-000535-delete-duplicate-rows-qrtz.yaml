@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000535-delete-duplicate-rows-qrtz.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000535
+      tagDatabase:
+        tag: 'pre-000535'
+
+  # AN-237448 introduces a dedicated Quartz scheduler for the record replica reaper. In order to not have 2 reapers running on
+  # after upgrade, we need to go and delete the existing entries for the reaper under the old schedule.
+
+  # The following tables (QRTZ_BLOB_TRIGGERS, QRTZ_CRON_TRIGGERS, QRTZ_SIMPLE_TRIGGERS, QRTZ_SIMPROP_TRIGGERS) have a foreign key
+  # constraint on QRTZ_TRIGGERS so these rows must be deleted first.
+  - changeSet:
+      author: appian
+      id: '000535.1.0'
+      comment: Remove duplicate rows from QRTZ_BLOB_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_BLOB_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'
+
+  - changeSet:
+      author: appian
+      id: '000535.1.1'
+      comment: Remove duplicate rows from QRTZ_CRON_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_CRON_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'
+
+  - changeSet:
+      author: appian
+      id: '000535.1.2'
+      comment: Remove duplicate rows from QRTZ_SIMPLE_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_SIMPLE_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'
+
+  - changeSet:
+      author: appian
+      id: '000535.1.3'
+      comment: Remove duplicate rows from QRTZ_SIMPROP_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_SIMPROP_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'
+
+  # QRTZ_TRIGGERS has a foreign key constraint on QRTZ_JOB_DETAILS so its rows must be deleted first.
+  - changeSet:
+      author: appian
+      id: '000535.1.4'
+      comment: Remove duplicate rows from QRTZ_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'
+
+  - changeSet:
+      author: appian
+      id: '000535.1.5'
+      comment: Remove duplicate rows from QRTZ_JOB_DETAILS
+      changes:
+        - delete:
+            tableName: QRTZ_JOB_DETAILS
+            where: SCHED_NAME='RecordSyncScheduler' AND JOB_NAME='record_replica_reaper'
+
+  - changeSet:
+      author: appian
+      id: '000535.1.6'
+      comment: Remove duplicate rows from QRTZ_FIRED_TRIGGERS
+      changes:
+        - delete:
+            tableName: QRTZ_FIRED_TRIGGERS
+            where: SCHED_NAME='RecordSyncScheduler' AND TRIGGER_NAME='record_replica_reaper'

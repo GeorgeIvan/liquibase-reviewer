@@ -1,0 +1,297 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000285-deployment-packages.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000285'
+      tagDatabase:
+        tag: 'pre-000285'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000285.1.0'
+      comment: Create dpkg table
+      changes:
+        - createTable:
+            tableName: dpkg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: dpkg_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name_lc
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: app_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: proj_mgmt_url
+                  type: ${urlType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_user_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: dpkg_name_lc_idx
+            tableName: dpkg
+            columns:
+              - column:
+                  name: name_lc
+        - createIndex:
+            indexName: dpkg_app_uuid_idx
+            tableName: dpkg
+            columns:
+              - column:
+                  name: app_uuid
+        - addUniqueConstraint:
+            constraintName: dpkg_app_uuid_name_lc_uc
+            tableName: dpkg
+            columnNames: app_uuid, name_lc
+  - changeSet:
+      id: '000285.1.1'
+      comment: A sequence to provide primary key values for the dpkg table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_sq
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000285.2.0'
+      comment: Create dpkg_object table
+      changes:
+        - createTable:
+            tableName: dpkg_object
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: package_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: dpkg_object_object_uuid_idx
+            tableName: dpkg_object
+            columns:
+              - column:
+                  name: object_uuid
+        # Note that Appian has historically used special MySQL- and MariaDB-specific logic to try to
+        # avoid making indexes on FK columns like the one below. However, those historical attempts
+        # were all flawed by YAML typos and actually had no DB-specific effects! So we'll simply be
+        # unconditional and take advantage of the fact that MariaDB/MySQL will automatically use an
+        # existing index OR drop their own auto-created index if we explicitly make an equivalent
+        # one on the same column.
+        - createIndex:
+            indexName: dpkg_object_package_id_idx
+            tableName: dpkg_object
+            columns:
+              - column:
+                  name: package_id
+        - addForeignKeyConstraint:
+            constraintName: dpkg_object_package_id_fk
+            baseTableName: dpkg_object
+            baseColumnNames: package_id
+            referencedTableName: dpkg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000285.2.1'
+      comment: A sequence to provide primary key values for the dpkg_object table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_object_sq
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000285.3.0'
+      comment: Create dpkg_activity table
+      changes:
+        - createTable:
+            tableName: dpkg_activity
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: package_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action
+                  type: ${byteType}
+                  constraints:
+                    - nullable: false
+        - createIndex:
+            indexName: dpkg_activity_act_ts_idx
+            tableName: dpkg_activity
+            columns:
+              - column:
+                  name: activity_ts
+        # Note that Appian has historically used special MySQL- and MariaDB-specific logic to try to
+        # avoid making indexes on FK columns like the one below. However, those historical attempts
+        # were all flawed by YAML typos and actually had no DB-specific effects! So we'll simply be
+        # unconditional and take advantage of the fact that MariaDB/MySQL will automatically use an
+        # existing index OR drop their own auto-created index if we explicitly make an equivalent
+        # one on the same column.
+        - createIndex:
+            indexName: dpkg_activity_pkg_id_idx
+            tableName: dpkg_activity
+            columns:
+              - column:
+                  name: package_id
+        - addForeignKeyConstraint:
+            constraintName: dpkg_activity_package_id_fk
+            baseTableName: dpkg_activity
+            baseColumnNames: package_id
+            referencedTableName: dpkg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000285.3.1'
+      comment: A sequence to provide primary key values for the dpkg_activity table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_activity_sq
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000285.4.0'
+      comment: Create dpkg_activity_object table
+      changes:
+        - createTable:
+            tableName: dpkg_activity_object
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: package_activity_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+        # Note that Appian has historically used special MySQL- and MariaDB-specific logic to try to
+        # avoid making indexes on FK columns like the one below. However, those historical attempts
+        # were all flawed by YAML typos and actually had no DB-specific effects! So we'll simply be
+        # unconditional and take advantage of the fact that MariaDB/MySQL will automatically use an
+        # existing index OR drop their own auto-created index if we explicitly make an equivalent
+        # one on the same column.
+        - createIndex:
+            indexName: dpkg_activity_object_pa_idx
+            tableName: dpkg_activity_object
+            columns:
+              - column:
+                  name: package_activity_id
+        - addForeignKeyConstraint:
+            constraintName: dpkg_activity_object_pa_fk
+            baseTableName: dpkg_activity_object
+            baseColumnNames: package_activity_id
+            referencedTableName: dpkg_activity
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000285.4.1'
+      comment: A sequence to provide primary key values for the dpkg_activity_object table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_activity_object_sq
+  #----------------------------------------------------------------------------------------------------

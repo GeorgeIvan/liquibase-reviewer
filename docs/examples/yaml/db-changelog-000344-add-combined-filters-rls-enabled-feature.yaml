@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000344-add-combined-filters-rls-enabled-feature.yaml
+  - changeSet:
+      id: 'tag-pre-000344'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000344'
+
+  - changeSet:
+      author: appian
+      id: '000344.1.0'
+      comment: Conditionally update enabled feature bit
+      changes:
+      - customChange:
+          class: com.appiancorp.record.persistence.migration.CombinedDefaultFiltersAndRlsBitmaskChange

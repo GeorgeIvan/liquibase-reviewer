@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000297-add-source-filter-to-record-type-source.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000297'
+      tagDatabase:
+        tag: 'pre-000297'
+
+  - changeSet:
+      author: appian
+      id: '000297.1.0'
+      comment: Add source filter expression column
+      addColumn:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: source_filter_expr
+              type: ${expressionStringType}
+              constraints:
+                nullable: true
+

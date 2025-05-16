@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000383-remap-view-security-foreign-key-columns.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000383
+      tagDatabase:
+        tag: 'pre-000383'
+  - changeSet:
+      author: appian
+      id: '000383.1.0'
+      comment: Drop foreign key constraint for record_type
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type_view_security
+            constraintName: rt_view_security_view_id_fk
+  - changeSet:
+      author: appian
+      id: '000383.1.1'
+      comment: Drop the view_id column from record_type_view_security
+      changes:
+        - dropColumn:
+            tableName: record_type_view_security
+            column:
+              - name: view_id
+  - changeSet:
+      author: appian
+      id: '000383.2.0'
+      comment: Add a new security_cfg_id to record_detail_view_cfg
+      addColumn:
+        tableName: record_detail_view_cfg
+        columns:
+          - column:
+              name: security_cfg_id
+              type: ${longType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000383.2.1'
+      author: appian
+      changes:
+        comment: Add relevant foreign keys
+        addForeignKeyConstraint:
+          constraintName: rdvc_rtvs_security_cfg_id_fk
+          baseTableName: record_detail_view_cfg
+          baseColumnNames: security_cfg_id
+          referencedTableName: record_type_view_security
+          referencedColumnNames: id

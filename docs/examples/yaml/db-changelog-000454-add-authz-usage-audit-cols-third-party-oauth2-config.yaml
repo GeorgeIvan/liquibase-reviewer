@@ -1,0 +1,131 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000454-add-authz-usage-audit-cols-third-party-oauth2-config.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000454'
+      tagDatabase:
+        tag: 'pre-000454'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000454.1.0'
+      comment: Dropping existing jwk_set column for adding with different type
+      dropColumn:
+        tableName: third_party_oauth2_config
+        columnName: jwk_set
+  - changeSet:
+      author: appian
+      id: '000454.1.1'
+      comment: Adding jwk_set column with shortStringType, nulls allowed
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: jwk_set
+          type: ${shortStringType}
+          constraints:
+            nullable: true
+  - changeSet:
+      author: appian
+      id: '000454.2.0'
+      comment: Add updated_by column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: updated_by
+          type: ${longType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000454.2.1'
+      comment: FK from updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: tp_oauth2_cfg_updated_by_fk
+        baseTableName: third_party_oauth2_config
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000454.2.2'
+      author: appian
+      changes:
+        comment: Add index on updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: tp_oauth2_cfg_updated_by_idx
+          tableName: third_party_oauth2_config
+          unique: false
+  - changeSet:
+      id: '000454.2.3'
+      author: appian
+      changes:
+        comment: Add index on created_by
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: tp_oauth2_cfg_created_by_idx
+          tableName: third_party_oauth2_config
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000454.3.0'
+      comment: Add updated_ts column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: updated_ts
+          type: ${longType}
+          defaultValue: 0
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000454.4.0'
+      comment: Add authentication_group_uuid column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: authz_grp_uuid
+          type: ${shortStringType}
+          defaultValue: ""
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000454.5.0'
+      comment: Add username_claim column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: username_claim
+          type: ${shortStringType}
+          defaultValue: ""
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000454.6.0'
+      comment: Add jwk_set_source column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: jwk_set_source
+          type: ${stringType}(20)
+          defaultValue: "upload"
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000454.7.0'
+      comment: Add last_used_ts column in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: last_used_ts
+          type: ${longType}
+          constraints:
+            nullable: true

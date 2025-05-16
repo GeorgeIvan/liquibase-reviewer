@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000098-user-start-page-rename.xml">
+
+    <changeSet author="appian" id="tag-000097">
+        <tagDatabase tag="000097"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000098.0.0">
+        <comment>Rename conf.defaultLandingPage.DEFAULT_LANDING_PAGE to conf.userStartPages.DEFAULT_START_PAGE</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.userStartPages.DEFAULT_START_PAGE"/>
+            <where>prop_key = 'conf.defaultLandingPage.DEFAULT_LANDING_PAGE'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000098.1.0">
+        <comment>Rename conf.defaultLandingPage.LANDING_PAGES to conf.userStartPages.START_PAGES</comment>
+        <update tableName="cfg">
+            <column name="prop_key" value="conf.userStartPages.START_PAGES"/>
+            <where>prop_key = 'conf.defaultLandingPage.LANDING_PAGES'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

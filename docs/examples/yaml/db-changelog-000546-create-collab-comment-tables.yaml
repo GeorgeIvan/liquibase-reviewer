@@ -1,0 +1,302 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000546-create-collab-comment-tables
+  - changeSet:
+      author: appian
+      id: tag-pre-000546
+      tagDatabase:
+        tag: 'pre-000546'
+  - changeSet:
+      author: appian
+      id: '000546.0.0'
+      comment: Create collab_group table
+      createTable:
+        tableName: collab_group
+        columns:
+          - column:
+              name: id
+              type: ${longtype}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: temp_mining_insight_id
+              type: ${longType}
+  - changeSet:
+      id: '000546.0.1'
+      author: appian
+      comment: Create a sequence to provide primary key values for the collab_group table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: collab_group_sq
+  - changeSet:
+      author: appian
+      id: '000546.1.0'
+      comment: Create collab_comment table
+      createTable:
+        tableName: collab_comment
+        columns:
+          - column:
+              name: id
+              type: ${longtype}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: collab_group_id
+              type: ${longtype}
+              constraints:
+                nullable: false
+          - column:
+              name: created_by_uuid
+              type: ${uuidType}
+          - column:
+              name: created_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: body
+              type: ${largeStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: is_deleted
+              type: ${booleanType}
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000546.1.1'
+      comment: Create index for collab_group_id in collab_comment
+      changes:
+        - createIndex:
+            indexName: collab_comment_collab_gid_idx
+            tableName: collab_comment
+            unique: false
+            columns:
+              - column:
+                  name: collab_group_id
+  - changeSet:
+      id: '000546.1.2'
+      author: appian
+      comment: Create a sequence to provide primary key values for the collab_comment table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: collab_comment_sq
+  - changeSet:
+      author: appian
+      id: '000546.1.3'
+      comment: Add fk for base table collab_comment
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: collab_comment_collab_gid_fk
+            baseTableName: collab_comment
+            baseColumnNames: collab_group_id
+            referencedTableName: collab_group
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000546.2.0'
+      comment: Create collab_attachment table
+      createTable:
+        tableName: collab_attachment
+        columns:
+          - column:
+              name: id
+              type: ${longtype}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: collab_comment_id
+              type: ${longtype}
+              constraints:
+                nullable: false
+          - column:
+              name: attachment_doc_id
+              type: ${longtype}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000546.2.1'
+      comment: Create index for collab_comment_id
+      changes:
+        - createIndex:
+            indexName: collab_attachment_clb_cid_idx
+            tableName: collab_attachment
+            unique: false
+            columns:
+              - column:
+                  name: collab_comment_id
+  - changeSet:
+      author: appian
+      id: '000546.2.2'
+      comment: Add fk for base table collab_attachment
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: collab_attachment_clb_cid_fk
+            baseTableName: collab_attachment
+            baseColumnNames: collab_comment_id
+            referencedTableName: collab_comment
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000546.3.0'
+      comment: Add new column 'collab_group_id' to mining_insight
+      changes:
+        - addColumn:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: collab_group_id
+                  type: ${longType}
+  - changeSet:
+      author: appian
+      id: '000546.3.1'
+      comment: Create index for collab_group_id
+      changes:
+        - createIndex:
+            indexName: mining_insight_clb_grp_id_idx
+            tableName: mining_insight
+            unique: false
+            columns:
+              - column:
+                  name: collab_group_id
+  - changeSet:
+      author: appian
+      id: '000546.3.2'
+      comment: Add fk for base table mining_insight
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_insight_clb_grp_id_fk
+            baseTableName: mining_insight
+            baseColumnNames: collab_group_id
+            referencedTableName: collab_group
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000546.4.0'
+      comment: Migrate insight id into Collab Group
+      dbms: '!oracle'
+      sql: INSERT INTO collab_group(temp_mining_insight_id)
+        SELECT mining_insight.id
+        FROM mining_insight        
+        ORDER BY mining_insight.id;
+  - changeSet:
+      author: appian
+      id: '000546.4.1'
+      comment: Migrate insight id into Collab Group for oracle
+      dbms: 'oracle'
+      sql: INSERT INTO collab_group(id, temp_mining_insight_id) 
+        SELECT collab_group_sq.nextval, mining_insight_id.id FROM (
+          SELECT mining_insight.id 
+          FROM mining_insight           
+          ORDER BY mining_insight.id 
+        ) mining_insight_id
+  - changeSet:
+      author: appian
+      id: '000546.5.0'
+      comment: Migrate collab_group_id back into mining_insight
+      dbms: '!postgresql, !mssql, !db2, !oracle'
+      sql: UPDATE mining_insight
+        INNER JOIN collab_group
+        ON mining_insight.id = collab_group.temp_mining_insight_id
+        SET mining_insight.collab_group_id = collab_group.id;
+  - changeSet:
+      author: appian
+      id: '000546.5.1'
+      comment: Migrate collab_group_id back into mining_insight for postgres
+      dbms: 'postgresql'
+      sql: UPDATE mining_insight
+        SET collab_group_id = c.id
+        FROM collab_group AS c
+        WHERE mining_insight.id = c.temp_mining_insight_id;
+  - changeSet:
+      author: appian
+      id: '000546.5.2'
+      comment: Migrate collab_group_id back into mining_insight for sql server
+      dbms: 'mssql'
+      sql: UPDATE m
+        SET m.collab_group_id = c.id
+        FROM mining_insight AS m
+        INNER JOIN collab_group AS c
+        ON m.id = c.temp_mining_insight_id;
+  - changeSet:
+      author: appian
+      id: '000546.5.3'
+      comment: Migrate collab_group_id back into mining_insight for db2 and oracle
+      dbms: 'db2, oracle'
+      sql:
+        UPDATE mining_insight SET mining_insight.collab_group_id = (
+          SELECT collab_group.id 
+          FROM collab_group
+          WHERE mining_insight.id = collab_group.temp_mining_insight_id
+        )
+        WHERE EXISTS (
+          SELECT collab_group.id
+          FROM collab_group
+          WHERE mining_insight.id = collab_group.temp_mining_insight_id
+        )
+  - changeSet:
+      author: appian
+      id: '000546.6.0'
+      comment: Migrate collab_group_id and mining_insight.notes into collab_comment
+      dbms: '!mssql, !oracle'
+      sql: INSERT INTO collab_comment(collab_group_id, created_ts, body)
+        SELECT collab_group.id, mining_insight.modify_ts, mining_insight.notes
+        FROM mining_insight INNER JOIN collab_group
+        ON mining_insight.id = collab_group.temp_mining_insight_id
+        WHERE mining_insight.notes IS NOT NULL
+        AND length(mining_insight.notes) > 0
+        ORDER BY mining_insight.id;
+  - changeSet:
+      author: appian
+      id: '000546.6.1'
+      comment: Migrate collab_group_id and mining_insight.notes into collab_comment for sql server
+      dbms: 'mssql'
+      sql: INSERT INTO collab_comment(collab_group_id, created_ts, body)
+        SELECT collab_group.id, mining_insight.modify_ts, mining_insight.notes
+        FROM mining_insight INNER JOIN collab_group
+        ON mining_insight.id = collab_group.temp_mining_insight_id
+        WHERE mining_insight.notes IS NOT NULL
+        AND datalength(mining_insight.notes) > 0
+        ORDER BY mining_insight.id;
+  - changeSet:
+      author: appian
+      id: '000546.6.2'
+      comment: Migrate collab_group_id and mining_insight.notes into collab_comment for oracle
+      dbms: 'oracle'
+      sql: INSERT INTO collab_comment(id, collab_group_id, created_ts, body)
+        SELECT collab_comment_sq.nextval, collab_comment_fields.* FROM (
+          SELECT collab_group.id, mining_insight.modify_ts, mining_insight.notes
+          FROM mining_insight INNER JOIN collab_group
+          ON mining_insight.id = collab_group.temp_mining_insight_id
+          WHERE mining_insight.notes IS NOT NULL
+          AND length(mining_insight.notes) > 0
+          ORDER BY mining_insight.id
+        ) collab_comment_fields
+  - changeSet:
+      author: appian
+      id: '000546.7.0'
+      comment: Remove temp_mining_insight_id
+      dropColumn:
+        tableName: collab_group
+        columnName: temp_mining_insight_id

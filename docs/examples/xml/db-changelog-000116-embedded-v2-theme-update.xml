@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000116-embedded-v2-theme-update.xml">
+
+  <changeSet author="appian" id="tag-000115">
+    <tagDatabase tag="000115"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000116.1.0">
+    <comment>Migrate rows with key backgroundColor -> background-color</comment>
+    <update tableName="embedded_sail_style">
+      <column name="name" value="background-color"/>
+      <where>name = 'backgroundColor'</where>
+    </update>
+  </changeSet>
+
+  <changeSet author="appian" id="000116.1.1">
+    <comment>Change rows with key baseFontSize -> basefontsize</comment>
+    <update tableName="embedded_sail_style">
+      <column name="name" value="basefontsize"/>
+      <where>name = 'baseFontSize'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

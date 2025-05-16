@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000327-remove-duplicate-rows-qrtz.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000327
+      tagDatabase:
+        tag: 'pre-000327'
+
+  - changeSet:
+      author: appian
+      id: '000327.1.0'
+      validCheckSum:
+        - ANY
+      comment: Delete rows from Quartz tables such that there is only entry per job, trigger, etc. See DeleteDuplicateRowsInQuartzTables for more details
+      changes:
+      - customChange:
+          class: com.appiancorp.record.persistence.migration.DeleteDuplicateRowsInQuartzTables

@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000339-translate-static-default-filters.yaml
+  - changeSet:
+      id: 'tag-pre-000339'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000339'
+
+  - changeSet:
+      author: appian
+      id: '000339.1.0'
+      comment: Translate static default filters to expressions
+      changes:
+      - customChange:
+          class: com.appiancorp.tempo.rdbms.TranslateStaticDefaultFiltersToExpressions

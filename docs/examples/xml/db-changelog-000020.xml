@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000020.xml">
+  
+  <changeSet author="appian" id="tag-000019">
+    <tagDatabase tag="000019"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000020.1.0">
+    <comment>Add sort_info table</comment>
+    <createTable tableName="sort_info">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="field" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ascending" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000020.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="sort_info_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000020.1.2">
+    <comment>Add default_sort_info_id field to record_type</comment>
+    <addColumn tableName="record_type">
+      <column name="default_sort_info_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000020.1.3">
+    <comment>FK from record_type.default_sort_info_id to sort_info</comment>
+    <addForeignKeyConstraint constraintName="rec_type_default_sort_id"
+      baseTableName="record_type" baseColumnNames="default_sort_info_id"
+      referencedTableName="sort_info" referencedColumnNames="id"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000020.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create index on record_type.default_sort_info_id</comment>
+    <createIndex indexName="rec_type_default_sort_fk_idx" tableName="record_type" unique="false">
+      <column name="default_sort_info_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001013-add-new-sync-refresh-schedule-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001013'
+      tagDatabase:
+        tag: 'pre-001013'
+  - changeSet:
+      author: appian
+      id: '001013.1.0'
+      comment: Create incremental_refresh_sched_id column on record_type_sources
+      addColumn:
+        tableName: record_type_sources
+        column:
+          name: incremental_refresh_sched_id
+          type: ${longType}
+          constraints:
+            nullable: true
+        afterColumn: refresh_schedule_id
+  - changeSet:
+      author: appian
+      id: '001013.2.0'
+      comment: FK from record_type_sources.incremental_refresh_sched_id to record_source_rf_schedule.id
+      addForeignKeyConstraint:
+        constraintName: record_type_sources_irs_id_fk
+        baseTableName: record_type_sources
+        baseColumnNames: incremental_refresh_sched_id
+        referencedTableName: record_source_rf_schedule
+        referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '001013.3.0'
+      comment: Add index on record_type_sources.incremental_refresh_sched_id
+      createIndex:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: incremental_refresh_sched_id
+        indexName: record_type_sources_irs_id_idx

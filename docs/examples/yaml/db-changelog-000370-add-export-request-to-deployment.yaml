@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000370-add-export-request-to-deployment.yaml
+  - changeSet:
+      id: 'tag-pre-000370'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000370'
+
+  - changeSet:
+      id: '000370.1.0'
+      author: appian
+      comment: Add export_request_doc_id column to deployment table
+      addColumn:
+        tableName: deployment
+        column:
+          name: export_request_doc_id
+          type: ${longType}
+          constraints:
+            nullable: true

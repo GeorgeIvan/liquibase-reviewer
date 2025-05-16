@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000319-field-calculation-type.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000319
+      tagDatabase:
+        tag: 'pre-000319'
+  - changeSet:
+      author: appian
+      id: '000319.1.0'
+      comment: Create column for field_calculation_type
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: field_calculation_type
+              type: ${byteType}
+              defaultValueNumeric: 0
+              valueNumeric: 0
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000319.1.1'
+      comment: Update field_calculation_type to write_time (1) for existing custom fields
+      changes:
+        update:
+          tableName: record_source_fields
+          column:
+            name: field_calculation_type
+            value: 1
+          where: is_custom_field = '1'

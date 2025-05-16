@@ -1,0 +1,93 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001027-add-moidc-columns-to-oidc-settings.yaml
+
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001027'
+      tagDatabase:
+        tag: 'pre-001027'
+
+  - changeSet:
+      id: '001027.1.0'
+      author: appian
+      comment: Add Multiple OIDC columns to oidc_settings table with default values
+      addColumn:
+        tableName: oidc_settings
+        columns:
+          - column:
+              name: priority
+              type: ${integerType}
+              defaultValueNumeric: 1
+              constraints:
+                nullable: false
+          - column:
+              name: description
+              type: ${shortStringType}
+              defaultValue: "OpenID Connect"
+              constraints:
+                nullable: false
+          - column:
+              name: remember_me_token_exp_web
+              type: ${integerType}
+              defaultValueNumeric: 0
+              constraints:
+                nullable: false
+          - column:
+              name: remember_me_token_exp_mobile
+              type: ${integerType}
+              defaultValueNumeric: 0
+              constraints:
+                nullable: false
+          - column:
+              name: auto_reactivate_users
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false
+          - column:
+              name: remember_idp
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '001027.2.0'
+      comment: Remove the default value in columns after migration
+      changes:
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: priority
+            columnDatatype: ${integerType}
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: description
+            columnDatatype: ${shortStringType}
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: remember_me_token_exp_web
+            columnDatatype: ${integerType}
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: remember_me_token_exp_mobile
+            columnDatatype: ${integerType}
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: auto_reactivate_users
+            columnDatatype: ${booleanType}
+        - dropDefaultValue:
+            tableName: oidc_settings
+            columnName: remember_idp
+            columnDatatype: ${booleanType}
+  - changeSet:
+      author: appian
+      id: '001027.3.0'
+      comment: Ensures unique client_id and issuer_uri combination for multiple OIDC providers
+      changes:
+        - addUniqueConstraint:
+            tableName: oidc_settings
+            columnNames: client_id,issuer_uri
+            constraintName: client_id_issuer_uri_uc

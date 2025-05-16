@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000199-rename-join-operator.xml">
+
+  <changeSet author="appian" id="tag-0000198">
+    <tagDatabase tag="000198"/>
+  </changeSet>
+
+  <changeSet id="000199.1.0" author="appian">
+    <comment>Rename joinOperator since camelcase is not supported in postgresql</comment>
+    <renameColumn tableName="record_source_relationships" oldColumnName="joinOperator" newColumnName="join_operator"
+                  columnDataType="${shortStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

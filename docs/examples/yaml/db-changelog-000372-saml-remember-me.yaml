@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000372-saml-remember-me.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000372
+      tagDatabase:
+        tag: 'pre-000372'
+  - changeSet:
+      author: appian
+      id: '000372.1.0'
+      comment: Create columns for SAML remember me
+      addColumn:
+        tableName: saml_settings
+        columns:
+          - column:
+              name: remember_me_token_exp_web
+              type: ${integerType}
+              defaultValueNumeric: 0
+              valueNumeric: 0
+              constraints:
+                nullable: false
+          - column:
+              name: remember_me_token_exp_mobile
+              type: ${integerType}
+              defaultValueNumeric: 0
+              valueNumeric: 0
+              constraints:
+                nullable: false

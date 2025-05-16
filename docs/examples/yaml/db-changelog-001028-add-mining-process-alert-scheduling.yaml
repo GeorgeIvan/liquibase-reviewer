@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001028-add-mining-process-alert-scheduling.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001028'
+      tagDatabase:
+        tag: 'pre-001028'
+
+  - changeSet:
+      author: appian
+      id: '001028.1.0'
+      comment: Add last alert time to the mining_kpi_alert table
+      changes:
+        - addColumn:
+            tableName: mining_kpi_alert
+            columns:
+              - column:
+                  name: last_alert_end_time_ms
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '001028.2.0'
+      comment: Add default aggregation to the mining_kpi table
+      changes:
+        - addColumn:
+            tableName: mining_kpi
+            columns:
+              - column:
+                  name: default_aggregation
+                  type: ${byteType}
+                  constraints:
+                    nullable: true

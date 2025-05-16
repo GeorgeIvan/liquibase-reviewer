@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000415-add-ext-dep-checkbox.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000415'
+      tagDatabase:
+        tag: 'pre-000415'
+
+
+  - changeSet:
+      author: appian
+      id: '000415.1.0'
+      comment: Create conf.designDeployment.GOVERNANCE_REQUIRED_FOR_EXTERNAL row with prop_value = true if conf.designDeployment.GOVERNANCE_REQUIRED is true
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          onError: MARK_RAN
+          sqlCheck:
+            expectedResult: "true"
+            sql: "SELECT prop_value FROM cfg WHERE prop_key = 'conf.designDeployment.GOVERNANCE_REQUIRED'"
+        insert:
+          tableName: cfg
+          columns:
+            - column:
+                name: prop_key
+                value: "conf.designDeployment.GOVERNANCE_REQUIRED_FOR_EXTERNAL"
+            - column:
+                name: prop_value
+                value: "true"
+            - column:
+                name: is_default
+                value: 0

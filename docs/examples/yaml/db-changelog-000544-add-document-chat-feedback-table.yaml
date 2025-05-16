@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000544-add-document-chat-feedback-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000544'
+      tagDatabase:
+        tag: 'pre-000544'
+  - changeSet:
+      id: '000544.1.0'
+      author: appian
+      comment: Create document_chat_feedback table
+      changes:
+        - createTable:
+            tableName: document_chat_feedback
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: knowledge_set_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_message_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: system_message_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: rating
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feedback
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: document_chat_feedback_kset_fk
+            baseTableName: document_chat_feedback
+            baseColumnNames: knowledge_set_id
+            referencedTableName: document_chat_knowledge_set
+            referencedColumnNames: id
+            onDelete: NO ACTION
+        - addForeignKeyConstraint:
+            constraintName: document_chat_feedback_umsg_fk
+            baseTableName: document_chat_feedback
+            baseColumnNames: user_message_id
+            referencedTableName: document_chat_message
+            referencedColumnNames: id
+            onDelete: NO ACTION
+        - addForeignKeyConstraint:
+            constraintName: document_chat_feedback_smsg_fk
+            baseTableName: document_chat_feedback
+            baseColumnNames: system_message_id
+            referencedTableName: document_chat_message
+            referencedColumnNames: id
+            onDelete: NO ACTION
+  - changeSet:
+      id: '000544.1.1'
+      author: appian
+      comment: Add sequence to document_chat_feedback
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: document_chat_feedback_sq

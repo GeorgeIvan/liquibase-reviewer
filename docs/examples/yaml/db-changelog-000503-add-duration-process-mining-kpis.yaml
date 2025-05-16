@@ -1,0 +1,263 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000503-add-duration-process-mining-kpis.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000503'
+      tagDatabase:
+        tag: 'pre-000503'
+  - changeSet:
+      author: appian
+      id: '000503.1.0'
+      comment: Create table for mining_kpi_duration_type
+      changes:
+        - createTable:
+            tableName: mining_kpi_duration_type
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: measure_option
+                  type: ${byteType}
+              - column:
+                  name: unit_option
+                  type: ${byteType}
+  - changeSet:
+      author: appian
+      id: '000503.1.1'
+      comment: Create index for mining_kpi_duration_type
+      changes:
+        - createIndex:
+            indexName: kpi_dur_type_kpi_type_id_idx
+            tableName: mining_kpi_duration_type
+            columns:
+              - column:
+                  name: kpi_type_id
+  - changeSet:
+      author: appian
+      id: '000503.2.0'
+      comment: Create table for mining_kpi_duration_cfg
+      changes:
+        - createTable:
+            tableName: mining_kpi_duration_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_duration_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000503.2.1'
+      comment: Create index for mining_kpi_duration_cfg
+      changes:
+        - createIndex:
+            indexName: kpi_duration_cfg_type_id_idx
+            tableName: mining_kpi_duration_cfg
+            columns:
+              - column:
+                  name: mining_kpi_duration_type_id
+  - changeSet:
+      author: appian
+      id: '000503.2.2'
+      comment: Create sequence to provide primary key values for mining_kpi_duration_cfg
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_duration_cfg_sq
+  - changeSet:
+      author: appian
+      id: '000503.3.0'
+      comment: Create table for kpi_duration_process
+      changes:
+        - createTable:
+            tableName: kpi_duration_process
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_duration_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000503.3.1'
+      comment: Create index for kpi_duration_process
+      changes:
+        - createIndex:
+            indexName: kpi_dur_process_cfg_id_idx
+            tableName: kpi_duration_process
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_duration_cfg_id
+  - changeSet:
+      author: appian
+      id: '000503.4.0'
+      comment: Create table for kpi_duration_activity
+      changes:
+        - createTable:
+            tableName: kpi_duration_activity
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_duration_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000503.4.1'
+      comment: Create index for kpi_duration_activity
+      changes:
+        - createIndex:
+            indexName: kpi_dur_activity_cfg_id_idx
+            tableName: kpi_duration_activity
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_duration_cfg_id
+  - changeSet:
+      author: appian
+      id: '000503.5.0'
+      comment: Create table for kpi_duration_sequence
+      changes:
+        - createTable:
+            tableName: kpi_duration_sequence
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_duration_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: to_activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: is_direct_follower
+                  type: ${booleanType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000503.5.1'
+      comment: Create index for kpi_duration_sequence
+      changes:
+        - createIndex:
+            indexName: kpi_dur_sequence_cfg_id_idx
+            tableName: kpi_duration_sequence
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_duration_cfg_id
+  - changeSet:
+      author: appian
+      id: '000503.6.0'
+      comment: Add fk for base table mining_kpi_duration_type
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_dur_type_kpi_type_id_fk
+            baseTableName: mining_kpi_duration_type
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000503.6.1'
+      comment: Add fk for base table mining_kpi_duration_cfg
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_duration_cfg_dur_typ_id_fk
+            baseTableName: mining_kpi_duration_cfg
+            baseColumnNames: mining_kpi_duration_type_id
+            referencedTableName: mining_kpi_duration_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000503.6.2'
+      comment: Add fk for base table kpi_duration_process
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_duration_process_cfg_id_fk
+            baseTableName: kpi_duration_process
+            baseColumnNames: mining_kpi_duration_cfg_id
+            referencedTableName: mining_kpi_duration_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000503.6.3'
+      comment: Add fk for base table kpi_duration_activity
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_duration_activty_cfg_id_fk
+            baseTableName: kpi_duration_activity
+            baseColumnNames: mining_kpi_duration_cfg_id
+            referencedTableName: mining_kpi_duration_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000503.6.4'
+      comment: Add fk for base table kpi_duration_sequence
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_duration_sequenc_cfg_id_fk
+            baseTableName: kpi_duration_sequence
+            baseColumnNames: mining_kpi_duration_cfg_id
+            referencedTableName: mining_kpi_duration_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE

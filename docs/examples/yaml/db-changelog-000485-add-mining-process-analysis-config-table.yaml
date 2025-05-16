@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000485-add-mining-process-analysis-config-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000485'
+      tagDatabase:
+        tag: 'pre-000485'
+  - changeSet:
+      author: appian
+      id: '000485.1.0'
+      comment: Create table for mining_process_analysis_cfg
+      changes:
+        - createTable:
+            tableName: mining_process_analysis_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: mining_proc_cfg_proc_id_uc
+              - column:
+                  name: currency
+                  type: ${stringType}(3)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: cost_custom_field_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000485.2.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_process_analysis_cfg to mining_process.id
+        addForeignKeyConstraint:
+          constraintName: mining_process_cfg_proc_fk
+          baseTableName: mining_process_analysis_cfg
+          baseColumnNames: mining_process_id
+          referencedTableName: mining_process
+          referencedColumnNames: id
+          onDelete: CASCADE
+  - changeSet:
+      id: '000485.3.0'
+      author: appian
+      comment: Create a sequence to provide primary key values for the mining_process_analysis_cfg table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_process_analysis_cfg_sq

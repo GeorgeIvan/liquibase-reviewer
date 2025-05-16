@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000214-add-deployment-log-deployment-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000214'
+      tagDatabase:
+        tag: 'pre-000214'
+  - changeSet:
+      author: appian
+      id: '000214.1.0'
+      comment: Add deployment log ID to deployment
+      addColumn:
+        tableName: deployment
+        column:
+          name: deployment_log_doc
+          type: ${longType}
+          constraints:
+            nullable: 'true'
+  - changeSet:
+      author: appian
+      id: '000214.2.0'
+      comment: Add event description to deployment_event
+      addColumn:
+        tableName: deployment_event
+        column:
+          name: description
+          type: ${mediumStringType}
+          constraints:
+            nullable: 'true'

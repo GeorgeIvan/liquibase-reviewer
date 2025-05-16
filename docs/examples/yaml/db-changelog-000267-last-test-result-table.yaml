@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000267-last-test-result-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000267'
+      tagDatabase:
+        tag: 'pre-000267'
+  - changeSet:
+      author: appian
+      id: '000267.1.0'
+      comment: Create last_test_result table
+      createTable:
+        tableName: last_test_result
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: obj_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: obj_version_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: obj_type
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: test_result_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: outdated_status
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000267.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: last_test_result_sq
+  - changeSet:
+      author: appian
+      id: '000267.1.2'
+      comment: FK from last_test_result.test_result_id to test_result.id
+      addForeignKeyConstraint:
+        constraintName: last_result_test_result_fk
+        baseTableName: last_test_result
+        baseColumnNames: test_result_id
+        referencedTableName: test_result
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000267.1.3'
+      comment: Add index on obj_uuid column since we are most commonly doing a lookup by obj_uuid
+      createIndex:
+        columns:
+          - column:
+              name: obj_uuid
+        indexName: obj_uuid_idx
+        tableName: last_test_result

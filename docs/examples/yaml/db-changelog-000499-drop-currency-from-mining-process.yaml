@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000499-drop-currency-from-mining-process.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000499'
+      tagDatabase:
+        tag: 'pre-000499'
+
+  - changeSet:
+      author: appian
+      id: '000499.1.0'
+      comment: Drop column currency in mining_process
+      dropColumn:
+        tableName: mining_process
+        columnName: currency

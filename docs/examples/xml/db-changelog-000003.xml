@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="resources/appian/db/changelog/db-changelog-000003.xml">
+
+  <!-- Updating the Tempo subscriptions table to support different types of subscriptions (instead of just
+  two types: subscribed & personalized). -->
+  <changeSet author="appian" id="000003.1.0">
+    <delete tableName="tp_feed_usr_subs"/>
+  </changeSet>
+  <changeSet author="appian" id="000003.1.1">
+    <!-- Because of http://liquibase.jira.com/browse/CORE-942, the columnDataType cannot use a JDBC
+    constant. This is ok, because it's only used on MySQL (for all other DBs this attribute is ignored). -->
+    <renameColumn tableName="tp_feed_usr_subs" oldColumnName="is_personalized" newColumnName="type" columnDataType="TINYINT(1)"/>
+  </changeSet>
+  <changeSet author="appian" id="000003.1.2">
+    <modifyDataType tableName="tp_feed_usr_subs" columnName="type" newDataType="${byteType}"/>
+  </changeSet>
+  <!-- Because of http://liquibase.jira.com/browse/CORE-670, on MySQL only, modifying the column
+  type removes the NOT NULL constraint so we have to add it back. -->
+  <changeSet author="appian" id="000003.1.3" dbms="mysql,mariadb">
+    <addNotNullConstraint tableName="tp_feed_usr_subs" columnName="type" columnDataType="${byteType}"/>
+  </changeSet>
+  
+</databaseChangeLog>

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000560-subscribers-to-record-events-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000560
+      tagDatabase:
+        tag: "pre-000560"
+  - changeSet:
+      author: appian
+      id: "000560.1.0"
+      comment: Add subscriber uuid columns to record_events_config table
+      addColumn:
+        tableName: record_events_config
+        columns:
+          - column:
+              name: subscriber_record_type_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: subscriber_relationship_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: subscriber_user_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

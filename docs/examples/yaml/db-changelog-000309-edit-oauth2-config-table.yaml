@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000309-edit-oauth2-config-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000309'
+      tagDatabase:
+        tag: 'pre-000309'
+  - changeSet:
+      author: appian
+      id: '000309.1.0'
+      comment: Update client_secret data type
+      modifyDataType:
+        tableName: oauth2_config
+        columnName: client_secret
+        newDataType: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000309.1.1'
+      comment: Rename client_secret column to salt
+      changes:
+        - renameColumn:
+            columnDataType: ${shortStringType}
+            newColumnName: salt
+            oldColumnName: client_secret
+            tableName: oauth2_config

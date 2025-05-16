@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000005.xml">
+ 
+  <changeSet author="appian" id="000005.1.0">
+    <tagDatabase tag="6.6.1.0"/>
+  </changeSet> 
+  
+  <changeSet author="appian" id="000005.2.0">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <dbms type="oracle"/>
+        <sqlCheck expectedResult="0">select count(*) from usr where username='Administrator'</sqlCheck>
+      </and>
+    </preConditions>
+    <comment>Make sure that Administrator is in the usr table.</comment>
+    <insert tableName="usr">
+      <column name="id" valueComputed="usr_sq.nextval"/>
+      <column name="username" value="Administrator"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000005.2.1">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <not><dbms type="oracle"/></not>
+        <sqlCheck expectedResult="0">select count(*) from usr where username='Administrator'</sqlCheck>
+      </and>
+    </preConditions>
+    <comment>Make sure that Administrator is in the usr table.</comment>
+    <insert tableName="usr">
+      <column name="username" value="Administrator"/>
+    </insert>
+  </changeSet>
+  
+  <changeSet author="appian" id="000005.3.0">
+    <comment>Add created_ts column to tp_feed.</comment>
+    <addColumn tableName="tp_feed">
+      <column name="created_ts" type="${longType}" value="java:System.currentTimeMillis()"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000005.3.1">
+    <comment>Not null constraint for tp_feed.created_ts.</comment>
+    <addNotNullConstraint tableName="tp_feed" columnName="created_ts" columnDataType="${longType}"/>
+  </changeSet>
+   
+  <changeSet author="appian" id="000005.4.0">
+    <comment>Add created_by column to tp_feed.</comment>
+    <addColumn tableName="tp_feed">
+      <column name="created_by" type="${longType}" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000005.4.1">
+    <comment>Not null constraint for tp_feed.created_by.</comment>
+    <addNotNullConstraint tableName="tp_feed" columnName="created_by" columnDataType="${longType}"/>
+  </changeSet>
+  <changeSet author="appian" id="000005.4.2">
+    <comment>FK from tp_feed.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="tp_feed_created_by_uid_fk"
+      baseTableName="tp_feed" baseColumnNames="created_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+    
+  <changeSet author="appian" id="000005.5.0" >
+  <validCheckSum></validCheckSum>
+    <comment>Add updated_ts column to tp_feed.</comment>
+    <addColumn tableName="tp_feed">
+      <column name="updated_ts" type="${longType}" value="java:System.currentTimeMillis()"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000005.5.1">
+    <comment>Not null constraint for tp_feed.updated_ts.</comment>
+    <addNotNullConstraint tableName="tp_feed" columnName="updated_ts" columnDataType="${longType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000005.6.0">
+    <comment>Add updated_by column to tp_feed.</comment>
+    <addColumn tableName="tp_feed">
+      <column name="updated_by" type="${longType}" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000005.6.1">
+    <comment>Not null constraint for tp_feed.updated_by.</comment>
+    <addNotNullConstraint tableName="tp_feed" columnName="updated_by" columnDataType="${longType}"/>
+  </changeSet>
+  <changeSet author="appian" id="000005.6.2">
+    <comment>FK from tp_feed.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="tp_feed_updated_by_uid_fk"
+      baseTableName="tp_feed" baseColumnNames="updated_by"
+      referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000343-add-record-rls-active-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000343
+      tagDatabase:
+        tag: 'pre-000343'
+
+  - changeSet:
+      author: appian
+      id: '000343.1.0'
+      comment: Add the is_active column for record type RLS rules
+      addColumn:
+        tableName: record_type_rls_rules
+        column:
+          name: is_active
+          type: ${booleanType}
+          defaultValueBoolean: true
+          valueBoolean: true
+          constraints:
+            nullable: false

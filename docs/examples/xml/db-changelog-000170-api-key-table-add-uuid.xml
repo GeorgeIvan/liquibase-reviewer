@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000170-api-key-table.xml">
+
+  <changeSet author="appian" id="tag-000169">
+    <tagDatabase tag="000169"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000170.0.0">
+    <comment>Create new column uuid</comment>
+    <addColumn tableName="api_key">
+      <column name="uuid" type="${uuidType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000170.0.1">
+    <addNotNullConstraint tableName="api_key" columnName="uuid" columnDataType="${uuidType}" defaultNullValue=""/>
+  </changeSet>
+
+  <changeSet author="appian" id="000170.0.2">
+    <createIndex indexName="apikey_uuid_idx" tableName="api_key" unique="true">
+      <column name="uuid"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

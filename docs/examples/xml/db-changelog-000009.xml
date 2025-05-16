@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000009.xml">
+  
+  <changeSet author="appian" id="tag-000008">
+    <tagDatabase tag="000008"/>
+  </changeSet>
+
+  <!-- Create the rm_role table. -->
+  <changeSet author="appian" id="000009.1.0">
+    <createTable tableName="rm_role">
+      <column name="id" type="${longType}" autoIncrement="false">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+  <!-- Populate the role table. -->
+  <changeSet author="appian" id="000009.1.1">
+    <comment>Populate static roles in rm_role.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="1"/>
+      <column name="name" value="editor"/>
+    </insert>
+    <insert tableName="rm_role">
+      <column name="id" value="2"/>
+      <column name="name" value="administrator"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="appian" id="000009.2.0">
+    <comment>Add role_id column to rm_entry.</comment>
+    <addColumn tableName="rm_entry">
+      <column name="role_id" type="${longType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000009.2.1">
+    <comment>Migrate admins.</comment>
+    <update tableName="rm_entry">
+	    <column name="role_id" value="2"/>
+	    <where>role_name='administrator'</where>
+		</update>
+  </changeSet>
+  <changeSet author="appian" id="000009.2.2">
+    <comment>Migrate editors.</comment>
+    <update tableName="rm_entry">
+      <column name="role_id" value="1"/>
+      <where>role_name='editor'</where>
+    </update>
+  </changeSet>
+  <changeSet author="appian" id="000009.2.3">
+    <comment>Not null constraint for rm_entry.role_id.</comment>
+    <addNotNullConstraint tableName="rm_entry" columnName="role_id" columnDataType="${longType}"/>
+  </changeSet>
+  <changeSet author="appian" id="000009.2.4">
+    <comment>FK from rm_entry.role_id to fm_role.id.</comment>
+    <addForeignKeyConstraint constraintName="rm_entry_role_id_fk"
+      baseTableName="rm_entry" baseColumnNames="role_id"
+      referencedTableName="rm_role" referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000009.2.5">
+    <comment>Remove rm_entry.role_name column.</comment>
+    <dropColumn tableName="rm_entry" columnName="role_name"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000009.2.6">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create index on rm_entry.role_id.</comment>
+    <createIndex indexName="rm_entry_role_id_idx" tableName="rm_entry" unique="false">
+	    <column name="role_id"/>
+	  </createIndex>
+  </changeSet>
+
+  <!-- Create the grp table. -->
+  <changeSet author="appian" id="000009.3.0">
+    <createTable tableName="grp">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="grp_uuid_uc"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000009.3.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="grp_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.2">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <dbms type="oracle"/>
+      </not>
+    </preConditions>
+    <comment>Populate the grp table from existing feed security.</comment>
+    <sql>
+      insert into grp (uuid) select distinct group_uuid from rm_entry_groups
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000009.3.3">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="oracle"/>
+    </preConditions>
+    <comment>Populate the grp table from existing feed security (oracle).</comment>
+    <sql>
+      insert into grp (id, uuid) select grp_sq.nextval, group_uuid from ( select distinct group_uuid from rm_entry_groups ) g
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.4">
+    <comment>Add group_id column to rm_entry_groups.</comment>
+    <addColumn tableName="rm_entry_groups">
+      <column name="group_id" type="${longType}"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.5">
+    <comment>Populate rm_entry_groups.group_id.</comment>
+    <sql>
+      update rm_entry_groups 
+        set group_id = ( 
+	        select g.id 
+	        from grp g 
+	        where
+	           rm_entry_groups.group_uuid = g.uuid )
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.6">
+    <comment>Not null constraint for rm_entry_groups.group_id.</comment>
+    <addNotNullConstraint tableName="rm_entry_groups" columnName="group_id" columnDataType="${longType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000009.3.7">
+    <comment>FK from rm_entry_groups.group_id to grp.id.</comment>
+    <addForeignKeyConstraint constraintName="rm_entry_groups_group_id_fk"
+      baseTableName="rm_entry_groups" baseColumnNames="group_id"
+      referencedTableName="grp" referencedColumnNames="id"/>
+  </changeSet>
+  
+  <!-- Foreign key needs to be removed or can't drop the primary key in mysql -->
+  <changeSet author="appian" id="000009.3.8">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+    </preConditions>
+	  <comment>Temporarily remove foreign key from rm_entry_groups so primary key can be changed (mysql only).</comment>
+	  <dropForeignKeyConstraint
+	    constraintName="rm_entry_groups_rmeid_fk"
+	    baseTableName="rm_entry_groups"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.9">
+    <comment>Remove old primary key from rm_entry_groups.</comment>
+    <dropPrimaryKey tableName="rm_entry_groups"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.10">
+    <comment>Remove rm_entry_groups.group_uuid column.</comment>
+    <dropColumn tableName="rm_entry_groups" columnName="group_uuid"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000009.3.11">
+    <comment>Add new primary key for rm_entry_groups.</comment>
+    <addPrimaryKey columnNames="rm_entry_id, group_id" tableName="rm_entry_groups"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000009.3.12">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+    </preConditions>
+    <comment>Re-add foreign key to rm_entry_groups (mysql only).</comment>
+    <addForeignKeyConstraint baseColumnNames="rm_entry_id" baseTableName="rm_entry_groups"
+      constraintName="rm_entry_groups_rmeid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rm_entry"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+
+</databaseChangeLog>

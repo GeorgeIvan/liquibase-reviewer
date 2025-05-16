@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000492-update-mining-kpi-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000492
+      tagDatabase:
+        tag: 'pre-000492'
+  - changeSet:
+      author: appian
+      id: '000492.1.0'
+      comment: Add created_ts, created_by, updated_ts and updated_by column for mining kpi
+      addColumn:
+        tableName: mining_kpi
+        columns:
+          - column:
+              name: created_ts
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+          - column:
+              name: updated_ts
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000492.1.1'
+      comment: Remove the default value for the created_ts column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: created_ts
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000492.1.2'
+      comment: Remove the default value for the created_by column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: created_by
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000492.1.3'
+      comment: Remove the default value for the updated_ts column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: updated_ts
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000492.1.4'
+      comment: Remove the default value for the updated_by column
+      dropDefaultValue:
+        tableName: mining_kpi
+        columnName: updated_by
+        columnDataType: ${longType}

@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000270-add-index-and-columns-to-design-guidance.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000270'
+      tagDatabase:
+        tag: 'pre-000270'
+  - changeSet:
+      author: appian
+      id: '000270.1.0'
+      comment: Create new columns deactivated and dismissed_instance_count
+      addColumn:
+        tableName: dg_object
+        columns:
+          - column:
+              name: deactivated
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'
+          - column:
+              name: dismissed_instance_count
+              type: ${integerType}
+              defaultValueNumeric: 0
+              valueNumeric: 0
+              constraints:
+                nullable: 'false'
+  - changeSet:
+      author: appian
+      id: '000270.2.0'
+      comment: Add index on object_type_id
+      createIndex:
+        columns:
+          - column:
+              name: object_type_id
+        indexName: object_type_id_idx
+        tableName: dg_object
+        unique: false
+  - changeSet:
+      author: appian
+      id: '000270.3.0'
+      comment: Modify the data type for design_guidance_key
+      modifyDataType:
+        tableName: dg_object
+        columnName: design_guidance_key
+        newDataType: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000270.4.0'
+      comment: Add index on design_guidance_key
+      createIndex:
+        columns:
+          - column:
+              name: design_guidance_key
+        indexName: design_guidance_key_idx
+        tableName: dg_object
+        unique: false

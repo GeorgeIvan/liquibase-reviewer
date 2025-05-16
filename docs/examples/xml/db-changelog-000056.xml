@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000056.xml">
+
+  <changeSet author="appian" id="tag-000055">
+    <tagDatabase tag="000055"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000056.0.0">
+    <comment>Create a "system" column in tp_feed that indicates whether the feed is a system feed.</comment>
+    <addColumn tableName="tp_feed">
+      <column name="is_system" type="${booleanType}" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="0000056.1.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Add app designer system feed.</comment>
+    <insert tableName="tp_feed">
+      <column name="id" valueComputed="tp_feed_sq.nextval"/>
+      <column name="uuid" value="SYSTEM_FEED_IX"/>
+      <column name="name" value="Design Objects Import Export"/>
+      <column name="show_in_catalog" valueBoolean="false"/>
+      <column name="created_ts" value="1408567332888"/>
+      <column name="created_by" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+      <column name="updated_ts" value="1408567332888"/>
+      <column name="updated_by" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+      <column name="is_system" valueBoolean="true"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="0000056.1.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Add app designer system feed.</comment>
+    <insert tableName="tp_feed">
+      <column name="uuid" value="SYSTEM_FEED_IX"/>
+      <column name="name" value="Design Objects Import Export"/>
+      <column name="show_in_catalog" valueBoolean="false"/>
+      <column name="created_ts" value="1408567332888"/>
+      <column name="created_by" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+      <column name="updated_ts" value="1408567332888"/>
+      <column name="updated_by" value="sql:class:java.lang.Long:select id from usr where username='Administrator'"/>
+      <column name="is_system" valueBoolean="true"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

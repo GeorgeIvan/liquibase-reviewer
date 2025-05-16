@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000329-deployment-package-include-app-config.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000329'
+      tagDatabase:
+        tag: 'pre-000329'
+  - changeSet:
+      author: appian
+      id: '000329.1.0'
+      comment: Add include_app_config column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: include_app_config
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          constraints:
+            nullable: 'false'

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000094-sites-branding.xml">
+
+  <changeSet author="appian" id="tag-000093">
+    <tagDatabase tag="000093"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.1.0">
+    <comment>Create new column header_bkgd_color</comment>
+    <addColumn tableName="site">
+      <column name="header_bkgd_color" type="${shortStringType}" value="#F3F3F3">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.2.0">
+    <comment>Create new column unhighlighted_tab_fg_color</comment>
+    <addColumn tableName="site">
+      <column name="unhighlighted_tab_fg_color" type="${shortStringType}" value="#333333">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.3.0">
+    <comment>Create new column highlighted_tab_fg_color</comment>
+    <addColumn tableName="site">
+      <column name="highlighted_tab_fg_color" type="${shortStringType}" value="#FFFFFF">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.4.0">
+    <comment>Create new column tab_hover_color</comment>
+    <addColumn tableName="site">
+      <column name="tab_hover_color" type="${shortStringType}" value="#DCDCDC">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.5.0">
+    <comment>Create new column selected_tab_color</comment>
+    <addColumn tableName="site">
+      <column name="selected_tab_color" type="${shortStringType}" value="#333333">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.6.0">
+    <comment>Create new column favicon_uuid</comment>
+    <addColumn tableName="site">
+      <column name="favicon_uuid" type="${uuidType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.7.0">
+    <comment>Create new column favicon_href</comment>
+    <addColumn tableName="site">
+      <column name="favicon_href" type="${urlType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.8.0">
+    <comment>Create new column logo_uuid</comment>
+    <addColumn tableName="site">
+      <column name="logo_uuid" type="${uuidType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.9.0">
+    <comment>Create new column logo_href</comment>
+    <addColumn tableName="site">
+      <column name="logo_href" type="${urlType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.10.0">
+    <comment>Populate site.logo_uuid and site.logo_href with Tempo branding logo</comment>
+    <customChange class="com.appiancorp.tempo.rdbms.PopulateSiteLogo"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000094.11.0">
+    <comment>Populate site.favicon_uuid and site.favicon_href with Tempo branding logo</comment>
+    <customChange class="com.appiancorp.tempo.rdbms.PopulateSiteFavicon"/>
+  </changeSet>
+
+</databaseChangeLog>

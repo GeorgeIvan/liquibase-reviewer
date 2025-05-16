@@ -1,0 +1,234 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000444-add-dataset-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000444'
+      tagDatabase:
+        tag: 'pre-000444'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000444.1.0'
+      comment: Create dataset, dataset_field, and dataset_custom_field_info tables
+      changes:
+        - createTable:
+            tableName: dataset
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: dataset_uuid_uc
+              - column:
+                  name: root_record_type_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: dataset_field
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: dataset_field_uuid_uc
+              - column:
+                  name: dataset_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rel_path_from_root
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: record_field_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: dataset_custom_field_info_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: dataset_custom_field_info
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: return_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expression
+                  type: ${expressionStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: default_value
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: template_type
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: extension_owner_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000444.2.0'
+      comment: Create sequences to provide primary key values for dataset, dataset_field, and dataset_custom_field_info
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: dataset_sq
+        - createSequence:
+            sequenceName: dataset_field_sq
+        - createSequence:
+            sequenceName: dataset_custom_field_info_sq
+
+  - changeSet:
+      author: appian
+      id: '000444.3.0'
+      comment: Add dataset_id column to mining_process_provider
+      changes:
+        - addColumn:
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: dataset_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000444.4.0'
+      comment: Add dataset_field_id column to mining_process_field
+      changes:
+        - addColumn:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: dataset_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000444.5.0'
+      comment: Add FK from mining_process_provider to dataset.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mnng_prcss_prov_dataset_id_fk
+            baseTableName: mining_process_provider
+            baseColumnNames: dataset_id
+            referencedTableName: dataset
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000444.6.0'
+      comment: Add FK from mining_process_field to dataset_field.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mnng_prcss_fld_ds_fld_id_fk
+            baseTableName: mining_process_field
+            baseColumnNames: dataset_field_id
+            referencedTableName: dataset_field
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000444.7.0'
+      comment: Add FKs for dataset_field
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: dataset_field_dataset_id_fk
+            baseTableName: dataset_field
+            baseColumnNames: dataset_id
+            referencedTableName: dataset
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: dataset_field_ds_cust_fld_fk
+            baseTableName: dataset_field
+            baseColumnNames: dataset_custom_field_info_id
+            referencedTableName: dataset_custom_field_info
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000444.8.0'
+      comment: Add indexes for FKs
+      changes:
+        - createIndex:
+            tableName: dataset_field
+            columns:
+              - column:
+                  name: dataset_id
+            indexName: dataset_field_dataset_id_idx
+        - createIndex:
+            tableName: dataset_field
+            columns:
+              - column:
+                  name: dataset_custom_field_info_id
+            indexName: dataset_field_ds_cust_fld_idx
+        - createIndex:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: dataset_field_id
+            indexName: mnng_prcss_fld_ds_fld_id_idx
+        - createIndex:
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: dataset_id
+            indexName: mnng_prcss_prov_ds_id_idx

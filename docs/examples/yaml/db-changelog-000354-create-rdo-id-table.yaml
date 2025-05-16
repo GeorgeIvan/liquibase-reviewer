@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000354-create-rdo-id-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000354'
+      tagDatabase:
+        tag: 'pre-000354'
+  - changeSet:
+      author: appian
+      id: '000354.1.0'
+      comment: Create rdo_id table
+      createTable:
+        tableName: rdo_id
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+                unique: true
+          - column:
+              name: type_id
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000354.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: rdo_id_sq

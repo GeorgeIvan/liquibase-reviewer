@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000272-replica-load-error-causes.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000272'
+      tagDatabase:
+        tag: 'pre-000272'
+  - changeSet:
+      author: appian
+      id: '000272.1.0'
+      comment: Add causes column to replica_load_error table
+      addColumn:
+        tableName: replica_load_error
+        columns:
+          - column:
+              name: causes
+              type: ${mediumStringType}
+              constraints:
+                nullable: 'true'

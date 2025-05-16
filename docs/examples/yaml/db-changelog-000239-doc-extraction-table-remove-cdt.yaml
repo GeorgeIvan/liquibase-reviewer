@@ -1,0 +1,15 @@
+---
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000239-doc-extraction-table-remove-cdt.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000239
+      tagDatabase:
+        tag: 'pre-000239'
+  - changeSet:
+      author: appian
+      id: '000239.1.0'
+      comment: Drop cdt_type_id column
+      dropColumn:
+        tableName: doc_extract_job
+        columnName: cdt_type_id

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000059.xml">
+
+  <changeSet author="appian" id="tag-000058">
+    <tagDatabase tag="000058"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000059.0.1">
+    <comment>Create record_follower_cfg table</comment>
+    <createTable tableName="record_follower_cfg">
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>    
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="record_id" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000059.0.2">
+    <comment>Add composite primary key consisting of all columns</comment>
+    <addPrimaryKey columnNames="usr_id, record_type_id, record_id" tableName="record_follower_cfg"/>
+  </changeSet>
+
+   <changeSet author="appian" id="000059.0.3">
+    <comment>Add FKs from record_follower_cfg to usr and record_type tables</comment>
+    <addForeignKeyConstraint constraintName="record_follower_cfg_uid_fk"
+      baseTableName="record_follower_cfg" baseColumnNames="usr_id"
+      referencedTableName="usr" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="record_follower_cfg_rtid_fk"
+      baseTableName="record_follower_cfg" baseColumnNames="record_type_id"
+      referencedTableName="record_type" referencedColumnNames="id"/>      
+  </changeSet>
+
+</databaseChangeLog>
+

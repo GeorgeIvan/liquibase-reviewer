@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000112-login-page-links-table.xml">
+
+  <changeSet author="appian" id="tag-000112">
+    <tagDatabase tag="000112"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000113.1.0">
+    <comment>Create sign-in page links table</comment>
+    <createTable tableName="login_page_links">
+      <column name="orderIdx" type="${integerType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="text" type="${stringType}(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="link" type="${stringType}(2083)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>

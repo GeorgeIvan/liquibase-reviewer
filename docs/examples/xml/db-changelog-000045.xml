@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000045.xml">
+
+  <changeSet author="appian" id="tag-000044">
+    <tagDatabase tag="000044"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000045.0.0">
+    <comment>Create a new column visibility expression in record_related_action_cfg</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="visibility_expr" type="${mediumStringType}" value="=true()"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000045.0.1">
+    <addNotNullConstraint tableName="record_related_action_cfg" columnName="visibility_expr" columnDataType="${mediumStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000458-add-ssa-report-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000458'
+      tagDatabase:
+        tag: 'pre-000458'
+  - changeSet:
+      id: '000458.1.0'
+      author: appian
+      changes:
+        comment: Create ssa_report table
+        createTable:
+          tableName: ssa_report
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: ssa_report_uuid_uc
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: selected_component
+                type: ${byteType}
+                constraints:
+                  nullable: false
+            - column:
+                name: config_json
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: is_published
+                type: ${booleanType}
+                defaultValueBoolean: false
+                constraints:
+                  nullable: false
+            - column:
+                name: created_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000458.1.1'
+      author: appian
+      comment: Add sequence to provide primary key values for the ssa_report table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ssa_report_sq
+  - changeSet:
+      id: '000458.1.2'
+      author: appian
+      comment: Add FK for ssa_report.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ssa_report_created_by_fk
+        baseTableName: ssa_report
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000458.1.3'
+      author: appian
+      comment: Add FK for ssa_report.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ssa_report_updated_by_fk
+        baseTableName: ssa_report
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000458.1.4'
+      author: appian
+      comment: Add indexes on ssa_report.created_by, ssa_report.updated_ts
+      changes:
+        - createIndex:
+            tableName: ssa_report
+            columns:
+              - column:
+                  name: created_by
+            indexName: ssa_report_created_by_idx
+        - createIndex:
+            tableName: ssa_report
+            columns:
+              - column:
+                  name: updated_ts
+            indexName: ssa_report_updated_ts_idx

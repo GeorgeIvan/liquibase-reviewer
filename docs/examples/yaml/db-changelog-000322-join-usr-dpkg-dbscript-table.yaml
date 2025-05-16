@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000322-join-usr-dpkg-dbscript-table.yaml
+  - changeSet:
+      id: 'tag-pre-000322'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000322'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000322.1.0'
+      comment: Drop dpkg_db_script created_by_user_uuid column
+      dropColumn:
+        tableName: dpkg_db_script
+        columnName: created_by_user_uuid
+  - changeSet:
+      author: appian
+      id: '000322.2.0'
+      comment: Add created_by_user_id column
+      addColumn:
+        tableName: dpkg_db_script
+        column:
+          name: created_by_user_id
+          type: ${longType}
+          constraints:
+            nullable: false
+          defaultValue: 1
+  #Remove the default value.  This is necessary because db2 requires new non-nullable columns to have
+  #a default value.  Thus we need to remove afterwards because we do not desire a defaultValue
+  #See DB2 SQLCODE=-193
+  - changeSet:
+      author: appian
+      id: '000322.2.1'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: dpkg_db_script
+        columnName: created_by_user_id
+        columnDataType: ${longType}
+  - changeSet:
+      id: '000322.3.0'
+      author: appian
+      comment: FK from dpkg_db_script.created_by_user_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: created_by_user_id_fk
+        baseTableName: dpkg_db_script
+        baseColumnNames: created_by_user_id
+        referencedTableName: usr
+        referencedColumnNames: id

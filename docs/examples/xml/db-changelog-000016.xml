@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000016.xml">
+
+  <changeSet author="appian" id="tag-000015">
+    <tagDatabase tag="000015"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000016.1.0">
+    <comment>Add recipient column to tp_feed_entry.</comment>
+    <addColumn tableName="tp_feed_entry">
+      <column name="recipient" type="${longType}" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000016.1.1">
+    <addForeignKeyConstraint baseColumnNames="recipient" baseTableName="tp_feed_entry"
+      constraintName="tp_feed_entry_rcpt_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <!-- MySQL automatically creates indexes for FK columns, but other DBs don't, so we have to do it ourselves. -->
+  <changeSet author="appian" id="000016.1.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="tp_feed_entry_rcpt_fk" tableName="tp_feed_entry" unique="false">
+      <column name="recipient"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

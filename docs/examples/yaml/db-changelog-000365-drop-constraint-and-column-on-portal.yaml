@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000365-drop-constraint-and-column-on-portal.yaml
+  - changeSet:
+      id: 'tag-pre-000365'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000365'
+  - changeSet:
+      id: '000365.1.0'
+      author: appian
+      changes:
+        comment: Remove constraint on the portal table
+        dropUniqueConstraint:
+          tableName: portal
+          constraintName: portal_name_uc
+  - changeSet:
+      id: '000365.1.1'
+      author: appian
+      changes:
+        comment: Drop the default value constraint on visibility column in the portal table
+        dropDefaultValue:
+          tableName: portal
+          columnName: visibility
+          columnDataType: ${integerType}
+  - changeSet:
+      id: '000365.1.2'
+      comment: Drop the visibility column for the portal table
+      author: appian
+      changes:
+        dropColumn:
+          tableName: portal
+          columnName: visibility

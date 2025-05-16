@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000183-deployment-table.xml">
+
+  <changeSet author="appian" id="tag-000183">
+    <tagDatabase tag="000182"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.0">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>Create deployment table</comment>
+    <createTable tableName="deployment">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_env_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="target_env_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="patch_file_doc" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="env_config_doc" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.1">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="deployment_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.2">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>Add Deployment Action table</comment>
+    <createTable tableName="deployment_action">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="user_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="time_stamp" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="deployment_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.3">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="deployment_action_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.4">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>FK from deployment_action to deployment.id</comment>
+    <addForeignKeyConstraint constraintName="dpl_action_deploymentId_fk" baseTableName="deployment_action"
+                             baseColumnNames="deployment_id" referencedTableName="deployment" referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.5">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>Add DeploymentDbScript table</comment>
+    <createTable tableName="deployment_db_script">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="order_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="data_source_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="deployment_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.6">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="deployment_db_script_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.7">
+    <validCheckSum>ANY</validCheckSum>
+    <comment>FK from deployment_db_script to deployment.id</comment>
+    <addForeignKeyConstraint constraintName="dpl_db_script_dplId_fk" baseTableName="deployment_db_script"
+                             baseColumnNames="deployment_id" referencedTableName="deployment" referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000183.1.8">
+    <addUniqueConstraint columnNames="deployment_id, order_id" tableName="deployment_db_script"/>
+  </changeSet>
+
+</databaseChangeLog>

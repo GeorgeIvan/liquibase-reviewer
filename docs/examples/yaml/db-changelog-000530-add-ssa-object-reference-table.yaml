@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000530-add-ssa-object-reference-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000530'
+      tagDatabase:
+        tag: 'pre-000530'
+  - changeSet:
+      id: '000530.1.0'
+      author: appian
+      changes:
+        comment: Create ssa_object_reference table
+        createTable:
+          tableName: ssa_object_reference
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: parent_id
+                type: ${longtype}
+                constraints:
+                  nullable: false
+            - column:
+                name: child_id
+                type: ${longtype}
+                constraints:
+                  nullable: false
+  - changeSet:
+      author: appian
+      id: '000530.1.1'
+      comment: Add foreign key constraint to ssa_object_reference
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: ssa_obj_ref_parent_id_fk
+            baseTableName: ssa_object_reference
+            baseColumnNames: parent_id
+            referencedTableName: ssa_library_object
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000530.1.2'
+      author: appian
+      comment: Add sequence to provide primary key values for the ssa_object_reference table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ssa_object_reference_sq

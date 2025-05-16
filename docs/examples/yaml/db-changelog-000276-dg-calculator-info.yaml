@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000276-dg-calculator-info.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000276'
+      tagDatabase:
+        tag: 'pre-000276'
+  - changeSet:
+      author: appian
+      id: '000276.1.0'
+      comment: Create dg_calculator_info table
+      createTable:
+        tableName: dg_calculator_info
+        columns:
+          - column:
+              name: guidance_key
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: version_number
+              type: ${longType}
+              constraints:
+                nullable: false

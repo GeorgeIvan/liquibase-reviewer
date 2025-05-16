@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001006-create-filter-groups-for-existing-kpis.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001006
+      tagDatabase:
+        tag: 'pre-001006'
+  - changeSet:
+      id: '001006.0.0'
+      author: appian
+      comment: Identify and create filter group for any kpi without one
+      customChange:
+        class: com.appiancorp.processHq.persistence.migration.CreateFilterGroupForExistingKpisMigration

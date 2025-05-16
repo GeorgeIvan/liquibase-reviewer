@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000250-deployment-plugins.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000250
+      tagDatabase:
+        tag: 'pre-000250'
+
+  - changeSet:
+      author: appian
+      id: '000250.1.0'
+      comment: Create plugin info table
+      createTable:
+        tableName: deployment_plugin
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: deployment_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: name
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: version
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000250.2.0'
+      comment: Create sequence for deployment_plugin
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: deployment_plugin_sq
+
+  - changeSet:
+      author: appian
+      id: '000250.3.0'
+      comment: Create plugin related columns in deployment table
+      addColumn:
+        tableName: deployment
+        columns:
+          - column:
+              name: plugin_jars_doc
+              type: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000250.4.0'
+      comment: FK from deployment_plugin.deployment_id to deployment.id
+      addForeignKeyConstraint:
+        constraintName: dpl_plugin_dpl_id_fk
+        baseTableName: deployment_plugin
+        baseColumnNames: deployment_id
+        referencedTableName: deployment
+        referencedColumnNames: id
+        onDelete: CASCADE

@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001038-arc-prod-ind-unique-file-path.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001038'
+      tagDatabase:
+        tag: 'pre-001038'
+  - changeSet:
+      author: appian
+      id: '001038.1.0'
+      comment: drop arc_proc_ind table, it's not used in prod yet, and we want to add a uniqueness constraint
+      changes:
+        - dropTable:
+            tableName: arc_proc_ind
+            cascadeConstraints: true
+  - changeSet:
+      id: '001038.2.0'
+      author: appian
+      comment: Drop arc_proc_ind_sq sequence to recreate it with the new table
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - dropSequence:
+            sequenceName: arc_proc_ind_sq
+  - changeSet:
+      id: '001038.3.0'
+      author: appian
+      changes:
+        comment: Recreate arc_proc_ind table with shorter and unique file_path column
+        createTable:
+          tableName: arc_proc_ind
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: pid
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: model_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: file_path
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: arc_proc_ind_file_path_uc
+  - changeSet:
+      author: appian
+      id: '001038.4.0'
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: arc_proc_ind_sq
+  - changeSet:
+      author: appian
+      id: '001038.5.0'
+      comment: Create index for process id
+      changes:
+        - createIndex:
+            indexName: arc_proc_ind_pid_idx
+            tableName: arc_proc_ind
+            unique: false
+            columns:
+              - column:
+                  name: pid
+  - changeSet:
+      author: appian
+      id: '001038.6.0'
+      comment: Create index for created timestamp
+      changes:
+        - createIndex:
+            indexName: arc_proc_ind_created_ts_idx
+            tableName: arc_proc_ind
+            unique: false
+            columns:
+              - column:
+                  name: created_ts

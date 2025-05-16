@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="resources/appian/db/changelog/db-changelog-000002.xml">
+
+  <!-- Create the user table. -->
+  <changeSet author="appian" id="000002.1.0">
+    <createTable tableName="usr">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="username" type="${stringType}(255)">
+        <constraints nullable="false" unique="true" uniqueConstraintName="usr_username_uc"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="usr_sq"/>
+  </changeSet>
+
+  <!-- Create the role map tables. -->
+  <changeSet author="appian" id="000002.2.0">
+    <createTable tableName="rm_entry">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="role_name" type="${stringType}(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="rm_entry_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000002.3.0">
+    <createTable tableName="rm_entry_groups">
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="group_uuid" type="${stringType}(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.3.1">
+    <addPrimaryKey columnNames="rm_entry_id, group_uuid" tableName="rm_entry_groups"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.3.2">
+    <addForeignKeyConstraint baseColumnNames="rm_entry_id" baseTableName="rm_entry_groups"
+      constraintName="rm_entry_groups_rmeid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rm_entry"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000002.4.0">
+    <createTable tableName="rm_entry_users">
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.4.1">
+    <addPrimaryKey columnNames="rm_entry_id, usr_id" tableName="rm_entry_users"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.4.2">
+    <addForeignKeyConstraint baseColumnNames="rm_entry_id" baseTableName="rm_entry_users"
+      constraintName="rm_entry_users_rmeid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rm_entry"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.4.3">
+    <addForeignKeyConstraint baseColumnNames="usr_id" baseTableName="rm_entry_users"
+      constraintName="rm_entry_users_uid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <!-- Create the tempo feed tables. -->
+  <changeSet author="appian" id="000002.5.0">
+    <createTable tableName="tp_feed">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${stringType}(255)">
+        <constraints nullable="false" unique="true" uniqueConstraintName="tp_feed_uuid_uc"/>
+      </column>
+      <column name="name" type="${stringType}(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${stringType}(1000)"/>
+      <column name="show_in_catalog" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.5.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="tp_feed_sq"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000002.6.0">
+    <createTable tableName="tp_feed_rm">
+      <column name="tp_feed_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.6.1">
+    <addPrimaryKey columnNames="tp_feed_id, rm_entry_id" tableName="tp_feed_rm"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.6.2">
+    <addForeignKeyConstraint baseColumnNames="rm_entry_id" baseTableName="tp_feed_rm"
+      constraintName="tp_feed_rm_rmeid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rm_entry"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.6.3">
+    <addForeignKeyConstraint baseColumnNames="tp_feed_id" baseTableName="tp_feed_rm"
+      constraintName="tp_feed_rm_tfid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tp_feed"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  
+  <!-- is_personalized used to be $booleanType.  It is converted to $byteType in 000003.1.2.  This change results in identical schema -->
+  <!-- empty validCheckSum tag doesn't seem to work for createTable as of 3.6.2.  -->
+  <changeSet author="appian" id="000002.7.0">
+    <validCheckSum>ANY</validCheckSum>
+    <createTable tableName="tp_feed_usr_subs">
+      <column name="feed_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_personalized" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.7.1">
+    <addPrimaryKey columnNames="feed_id, usr_id" tableName="tp_feed_usr_subs"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.7.2">
+    <addForeignKeyConstraint baseColumnNames="feed_id" baseTableName="tp_feed_usr_subs"
+      constraintName="tp_feed_usr_subs_tfid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tp_feed"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.7.3">
+    <addForeignKeyConstraint baseColumnNames="usr_id" baseTableName="tp_feed_usr_subs"
+      constraintName="tp_feed_usr_subs_uid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+
+  <!-- Create the tempo feed entry and comment tables. -->
+  <changeSet author="appian" id="000002.8.0">
+    <createTable tableName="tp_comment">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="author" type="${stringType}(255)"/>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="parent_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="body" type="${stringType}(1000)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.8.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="tp_comment_sq"/>
+  </changeSet>
+  <!-- For Oracle, we add the id column to indexes used for sorting. Oracle needs the id to be
+  explicitly added to the index to perform the sort, since we sort on both timestamp and id. -->
+  <changeSet author="appian" id="000002.8.2">
+    <createIndex indexName="tp_comment_ci_idx" tableName="tp_comment" unique="false">
+      <column name="created_ts"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+  <!-- We have to manually create an index for the parent_id column, because it's not a FK. -->
+  <changeSet author="appian" id="000002.8.3">
+    <createIndex indexName="tp_comment_p_idx" tableName="tp_comment" unique="false">
+      <column name="parent_id"/>
+    </createIndex>
+  </changeSet>
+  
+  <changeSet author="appian" id="000002.9.0">
+    <createTable tableName="tp_feed_entry">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="author" type="${stringType}(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="feed_id" type="${longType}"/>
+      <column name="group_uuid" type="${stringType}(255)"/>
+      <column name="body" type="${stringType}(1000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="assoc_data" type="${stringType}(4000)"/>
+      <column name="assoc_group_uuid" type="${stringType}(255)"/>
+      <column name="action_instr" type="${stringType}(140)"/>
+      <column name="action_label" type="${stringType}(50)"/>
+      <column name="action_pm" type="${stringType}(255)"/>
+      <column name="action_summary" type="${stringType}(140)"/>
+      <column name="icon_doc_uuid" type="${stringType}(255)"/>
+      <column name="source" type="${stringType}(50)"/>
+      <column name="comment_count" type="${integerType}"/>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="tp_feed_entry_sq"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.2">
+    <addForeignKeyConstraint baseColumnNames="feed_id" baseTableName="tp_feed_entry"
+      constraintName="tp_feed_entry_tfid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tp_feed"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <!-- For Oracle, we add the id column to indexes used for sorting. Oracle needs the id to be
+  explicitly added to the index to perform the sort, since we sort on both timestamp and id. -->
+  <changeSet author="appian" id="000002.9.3">
+    <createIndex indexName="tp_feed_entry_ci_idx" tableName="tp_feed_entry" unique="false">
+      <column name="created_ts"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.4">
+    <createIndex indexName="tp_feed_entry_ui_idx" tableName="tp_feed_entry" unique="false">
+      <column name="updated_ts"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.5">
+    <createIndex indexName="tp_feed_entry_fag_idx" tableName="tp_feed_entry" unique="false">
+      <column name="feed_id"/>
+      <column name="assoc_group_uuid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.6">
+    <createIndex indexName="tp_feed_entry_fci_idx" tableName="tp_feed_entry" unique="false">
+      <column name="feed_id"/>
+      <column name="created_ts"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000002.9.7">
+    <createIndex indexName="tp_feed_entry_fui_idx" tableName="tp_feed_entry" unique="false">
+      <column name="feed_id"/>
+      <column name="updated_ts"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+  
+  <changeSet author="appian" id="000002.10.0">
+    <createTable tableName="tp_feed_entry_usr_favs">
+      <column name="tp_feed_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000002.10.1">
+    <addPrimaryKey columnNames="tp_feed_entry_id, usr_id" tableName="tp_feed_entry_usr_favs"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.10.2">
+    <addForeignKeyConstraint baseColumnNames="usr_id" baseTableName="tp_feed_entry_usr_favs"
+      constraintName="tp_feed_entry_usr_favs_uid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000002.10.3">
+    <addForeignKeyConstraint baseColumnNames="tp_feed_entry_id" baseTableName="tp_feed_entry_usr_favs"
+      constraintName="tp_feed_entry_usr_favs_eid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tp_feed_entry"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  
+</databaseChangeLog>

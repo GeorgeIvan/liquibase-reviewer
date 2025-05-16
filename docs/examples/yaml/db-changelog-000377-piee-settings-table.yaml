@@ -1,0 +1,221 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000377-piee-settings-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000377'
+      tagDatabase:
+        tag: 'pre-000377'
+  - changeSet:
+      author: appian
+      id: '000377.1.0'
+      comment: Create piee_settings table
+      createTable:
+        tableName: piee_settings
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: client_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: client_secret
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: authorization_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: token_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: user_data_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: authentication_group_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: friendly_name
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: allow_lowercase_username
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_create_users
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_update_users
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_update_user_groups
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: grouptype_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: appian_group_attribute_name
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: first_name_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: last_name_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: nickname_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: email_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: home_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: mobile_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: office_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address1_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address2_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address3_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: city_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: state_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: zip_code_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: country_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield1_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield2_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield3_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield4_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield5_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield6_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield7_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield8_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield9_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield10_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000377.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: piee_settings_sq

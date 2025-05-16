@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000039.xml">
+
+  <changeSet author="appian" id="tag-000038">
+    <tagDatabase tag="000038"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000039.1.0">
+    <comment>Add column for original recipients</comment>
+    <addColumn tableName="tp_feed_entry">
+      <column name="original_recipients" type="${mediumStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000039.1.1">
+    <comment>Populate original recipients</comment>
+    <customChange class="com.appiancorp.tempo.rdbms.PopulateOriginalRecipients"/>
+  </changeSet>
+</databaseChangeLog>

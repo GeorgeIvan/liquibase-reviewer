@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000456-add-record-type-uuid-to-dataset-field-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000456'
+      tagDatabase:
+        tag: 'pre-000456'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000456.1.0'
+      comment: Add record_type_uuid to hold the record type uuid of the dataset field
+      changes:
+       - addColumn:
+          tableName: dataset_field
+          columns:
+            - column:
+                name: record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: true

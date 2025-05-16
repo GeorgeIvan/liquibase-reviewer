@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000437-add-uuid-to-mining-log.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000437
+      tagDatabase:
+        tag: 'pre-000437'
+  - changeSet:
+      author: appian
+      id: '000437.1.0'
+      comment: Create uuid column for mining log
+      addColumn:
+        tableName: mining_log
+        columns:
+          - column:
+              name: uuid
+              type: ${uuidType}
+              defaultValue: "0"
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: "000437.1.1"
+      comment: Remove default value
+      dropDefaultValue:
+        tableName: mining_log
+        columnName: uuid
+        columnDataType: ${uuidType}
+  - changeSet:
+      id: '000427.1.2'
+      author: appian
+      changes:
+      - addUniqueConstraint:
+          columnNames: uuid
+          tableName: mining_log
+          constraintName: mining_process_uuid_uc

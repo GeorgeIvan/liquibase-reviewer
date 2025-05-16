@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000478-add-mining-insight-finding-metrics.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000478'
+      tagDatabase:
+        tag: 'pre-000478'
+
+  - changeSet:
+      author: appian
+      id: '000478.1.0'
+      comment: Create metrics columns for mining_insight_finding
+      addColumn:
+        tableName: mining_insight_finding
+        columns:
+          - column:
+              name: snapshot_count
+              type: ${longType}
+              defaultValue: 0
+              value: 0
+              constraints:
+                nullable: false
+          - column:
+              name: snapshot_metric
+              type: ${longType}
+              defaultValue: 0
+              value: 0
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000478.2.0'
+      comment: Create metrics columns for mining_activity_finding
+      addColumn:
+        tableName: mining_activity_finding
+        columns:
+          - column:
+              name: number_of_occurrences
+              type: ${longType}
+              defaultValue: 0
+              value: 0
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000478.3.0'
+      comment: Create metrics columns for mining_direct_seq_finding
+      addColumn:
+        tableName: mining_direct_seq_finding
+        columns:
+          - column:
+              name: number_of_occurrences
+              type: ${longType}
+              defaultValue: 0
+              value: 0
+              constraints:
+                nullable: false

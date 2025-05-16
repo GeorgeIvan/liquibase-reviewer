@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000366-user-application-activity.yaml
+  - changeSet:
+      id: 'tag-pre-000366'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000366'
+  - changeSet:
+      id: '000366.1.0'
+      author: appian
+      changes:
+        comment: Create user application activity table
+        createTable:
+          tableName: user_app_activity
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: user_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: app_activity_user_uuid_uc
+            - column:
+                name: recent_activity
+                type: ${blobType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000366.1.1'
+      comment: A sequence to provide primary key values for the user_app_activity table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: user_app_activity_sq

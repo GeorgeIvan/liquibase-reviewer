@@ -1,0 +1,13 @@
+databaseChangeLog:
+    - logicalFilePath: db-changelog-000449-rename-primary-nav-render-style.yaml
+    - changeSet:
+          author: appian
+          id: tag-pre-000449
+          tagDatabase:
+              tag: 'pre-000449'
+
+    - changeSet:
+          author: appian
+          id: '000449.1.0'
+          comment: Convert PRIMARY_NAV_RENDER_STYLE to PRIMARY_NAV_LAYOUT_TYPE
+          sql: UPDATE portal_branding_cfg SET branding_key = 'PRIMARY_NAV_LAYOUT_TYPE' WHERE branding_key = 'PRIMARY_NAV_RENDER_STYLE';

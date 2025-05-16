@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000422-delete-duplicate-site-pages.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000422
+      tagDatabase:
+        tag: 'pre-000422'
+
+  - changeSet:
+      author: appian
+      id: '000422.1.0'
+      comment: Delete site pages with duplicate site_id, order_idx
+      dbms: mysql
+      sql: >-
+        DELETE FROM site_page
+        WHERE id NOT IN (
+          SELECT max_id FROM (
+            SELECT MAX(id) as max_id
+            FROM site_page
+            GROUP BY site_id, order_idx
+          ) as temp
+        )
+        AND parent_site_page_id IS NULL
+
+  - changeSet:
+      author: appian
+      id: '000422.1.1'
+      comment: Delete site pages with duplicate site_id, order_idx
+      dbms: mariadb,oracle,db2,postgresql,mssql
+      sql: >-
+        DELETE FROM site_page
+        WHERE id NOT IN (
+          SELECT MAX(id)
+          FROM site_page
+          GROUP BY site_id, order_idx
+        )
+        AND parent_site_page_id IS NULL
+
+  - changeSet:
+      author: appian
+      id: '000422.2.0'
+      comment: Add unique constraint to uuid column
+      addUniqueConstraint:
+        tableName: site_page
+        columnNames: uuid
+        constraintName: site_page_uuid_uc

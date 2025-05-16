@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000266-add-process-instance-id-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000266
+      tagDatabase:
+        tag: 'pre-000266'
+
+  - changeSet:
+      author: appian
+      id: '000266.1.0'
+      comment: Create a new column for process_instance_id
+      addColumn:
+        tableName: deployment
+        column:
+          name: process_instance_id
+          type: ${longType}

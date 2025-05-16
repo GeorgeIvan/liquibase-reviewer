@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000161-add-response-time-data.xml">
+
+  <changeSet author="appian" id="tag-000160">
+    <tagDatabase tag="000160"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000161.1.0">
+    <comment>Create response_time_data table</comment>
+    <createTable tableName="response_time_data">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="object_url_stub" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="user" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="response_time_ms" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="access_timestamp_ms" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000161.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="response_time_data_sq"/>
+  </changeSet>
+  <changeSet author="appian" id="000161.1.2">
+    <createIndex indexName="resptd_objurlstub_objtype_idx" tableName="response_time_data" unique="false">
+      <column name="object_url_stub"/>
+      <column name="object_type"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

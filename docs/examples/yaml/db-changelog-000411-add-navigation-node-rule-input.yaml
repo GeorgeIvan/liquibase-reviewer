@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000411-add-navigation-node-rule-input.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000411'
+      tagDatabase:
+        tag: 'pre-000411'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000411.1.0'
+      comment: Create navigation_node_rule_input table
+      changes:
+        - createTable:
+            tableName: navigation_node_rule_input
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: nav_node_ri_uuid_uc
+              - column:
+                  name: navigation_node_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: allow_query_parameter
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: default_value_expr
+                  type: ${expressionStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: order_idx
+                  type: ${integerType}
+                  defaultValue: 0
+                  valueNumeric: 0
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000411.1.1'
+      comment: A sequence to provide primary key values for the navigation node rule input table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: navigation_node_rule_input_sq
+  - changeSet:
+      id: '000411.1.2'
+      author: appian
+      comment: Add FK for navigation_node_rule_input.navigation_node_id to navigation_node.id
+      addForeignKeyConstraint:
+        constraintName: nav_node_ri_nav_id_fk
+        baseTableName: navigation_node_rule_input
+        baseColumnNames: navigation_node_id
+        referencedTableName: navigation_node
+        referencedColumnNames: id
+  - changeSet:
+      id: '000411.1.3'
+      author: appian
+      comment: Add index on navigation_node_rule_input.navigation_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: navigation_node_id
+          indexName: nav_node_ri_nav_node_id_idx
+          tableName: navigation_node_rule_input
+          unique: false

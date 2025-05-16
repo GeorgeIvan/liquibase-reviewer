@@ -1,0 +1,439 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000395-add-ts.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000395'
+      tagDatabase:
+        tag: 'pre-000395'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000395.1.0'
+      comment: Create ts_set table
+      changes:
+        - createTable:
+            tableName: ts_set
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    uniqueConstraintName: ts_set_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: ts_set_name_uc
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000395.1.1'
+      comment: A sequence to provide primary key values for the translation set table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_set_sq
+  - changeSet:
+      id: '000395.1.2'
+      author: appian
+      comment: Add FK for ts_set.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_set_created_by_fk
+        baseTableName: ts_set
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.1.3'
+      author: appian
+      comment: Add FK for ts_set.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_set_updated_by_fk
+        baseTableName: ts_set
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.1.4'
+      author: appian
+      comment: Add index on ts_set.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: ts_set_created_by_idx
+          tableName: ts_set
+          unique: false
+  - changeSet:
+      id: '000395.1.5'
+      author: appian
+      changes:
+        comment: Add index on ts_set.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: ts_set_updated_by_idx
+          tableName: ts_set
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000395.2.0'
+      comment: Create ts_string table
+      changes:
+        - createTable:
+            tableName: ts_string
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    uniqueConstraintName: ts_string_uuid_uc
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_set_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: context
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000395.2.1'
+      comment: A sequence to provide primary key values for the translation key table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_sq
+  - changeSet:
+      id: '000395.2.2'
+      author: appian
+      comment: Add FK for ts_string.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_created_by_fk
+        baseTableName: ts_string
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.2.3'
+      author: appian
+      comment: Add FK for ts_string.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_updated_by_fk
+        baseTableName: ts_string
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.2.4'
+      author: appian
+      comment: Add index on ts_string.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: ts_string_created_by_idx
+          tableName: ts_string
+          unique: false
+  - changeSet:
+      id: '000395.2.5'
+      author: appian
+      changes:
+        comment: Add index on ts_string.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: ts_string_updated_by_idx
+          tableName: ts_string
+          unique: false
+  - changeSet:
+      id: '000395.2.6'
+      author: appian
+      comment: Add FK for ts_string.set_id to ts_set.id
+      addForeignKeyConstraint:
+          constraintName: ts_string_set_id_fk
+          baseTableName: ts_string
+          baseColumnNames: ts_set_id
+          referencedTableName: ts_set
+          referencedColumnNames: id
+  - changeSet:
+      id: '000395.2.7'
+      author: appian
+      comment: Add index on ts_string.ts_set_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_set_id
+          indexName: ts_string_set_id_idx
+          tableName: ts_string
+          unique: false
+  - changeSet:
+      id: '000395.2.8'
+      author: appian
+      comment: add unique constraint for ts_set_id, name
+      changes:
+        - addUniqueConstraint:
+            tableName: ts_string
+            constraintName: ts_string_set_id_name_uc
+            columnNames: ts_set_id, name
+  - changeSet:
+      author: appian
+      id: '000395.3.0'
+      comment: Create ts_locale table
+      changes:
+        - createTable:
+            tableName: ts_locale
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: locale
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: ts_locale_name_uc
+  - changeSet:
+      id: '000395.3.1'
+      comment: A sequence to provide primary key values for the translation locale table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_locale_sq
+  - changeSet:
+      author: appian
+      id: '000395.4.0'
+      comment: Create ts_translated_text table
+      changes:
+        - createTable:
+            tableName: ts_translated_text
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: locale_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: translated_text
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000395.4.1'
+      comment: A sequence to provide primary key values for the translation text table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_translated_text_sq
+  - changeSet:
+      id: '000395.4.2'
+      author: appian
+      comment: Add FK for ts_translated_text.locale_id to ts_locale.id
+      addForeignKeyConstraint:
+        constraintName: ts_trans_text_locale_id_fk
+        baseTableName: ts_translated_text
+        baseColumnNames: locale_id
+        referencedTableName: ts_locale
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.4.3'
+      author: appian
+      comment: Add index on ts_translated_text.locale_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: locale_id
+          indexName: ts_translated_locale_id_idx
+          tableName: ts_translated_text
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000395.5.0'
+      comment: Create ts_string_to_ts_text table
+      changes:
+        - createTable:
+            tableName: ts_string_to_ts_text
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: ts_string_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_translated_text_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000395.5.1'
+      comment: A sequence to provide primary key values for the translation key to text table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_to_ts_text_sq
+  - changeSet:
+      id: '000395.5.2'
+      author: appian
+      comment: Add FK for ts_string_to_ts_text.ts_string_id to ts_string.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_to_text_key_id_fk
+        baseTableName: ts_string_to_ts_text
+        baseColumnNames: ts_string_id
+        referencedTableName: ts_string
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.5.3'
+      author: appian
+      comment: Add FK for ts_string_to_ts_text.ts_translated_text_id to ts_translated_text.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_to_text_id_fk
+        baseTableName: ts_string_to_ts_text
+        baseColumnNames: ts_translated_text_id
+        referencedTableName: ts_translated_text
+        referencedColumnNames: id
+  - changeSet:
+      id: '000395.5.4'
+      author: appian
+      comment: Add index on ts_string_to_ts_text.ts_string_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_id
+          indexName: ts_string_id_idx
+          tableName: ts_string_to_ts_text
+          unique: false
+  - changeSet:
+      id: '000395.5.5'
+      author: appian
+      comment: Add index on ts_string_to_ts_text.ts_translated_text_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_translated_text_id
+          indexName: ts_translated_text_id_idx
+          tableName: ts_string_to_ts_text
+          unique: false

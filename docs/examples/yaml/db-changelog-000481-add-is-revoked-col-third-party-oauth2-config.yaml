@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000481-add-is-revoked-col-third-party-oauth2-config.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000481
+      tagDatabase:
+        tag: 'pre-000481'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000481.1.0'
+      comment: Create new column is_revoked in third_party_oauth2_config
+      addColumn:
+        tableName: third_party_oauth2_config
+        column:
+          name: is_revoked
+          type: ${booleanType}
+          defaultValueBoolean: false
+          valueBoolean: false
+          constraints:
+            nullable: false

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000457-add-column-to-process-properties-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000457
+      tagDatabase:
+        tag: 'pre-000457'
+  - changeSet:
+      author: appian
+      id: '000457.1.0'
+      comment: Create error_count column for process_properties table
+      addColumn:
+        tableName: process_properties
+        columns:
+          - column:
+              name: error_count
+              type: ${integerType}
+              constraints:
+                nullable: true
+

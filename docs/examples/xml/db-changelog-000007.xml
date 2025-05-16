@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000007.xml">
+
+  <!-- Create the record detail view config table. -->
+  <changeSet author="appian" id="000007.1.0">
+    <createTable tableName="record_detail_view_cfg">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name_expr" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ui_expr" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="visibility_expr" type="${mediumStringType}" />
+      <column name="order_idx" type="${integerType}" />
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000007.1.1">
+    <preConditions onFail="MARK_RAN"><changeLogPropertyDefined property="createSequence" value="true"/></preConditions>
+    <!-- The sequence name must be "[table-name]_sq" for hibernate. -->
+    <createSequence sequenceName="record_detail_view_cfg_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000007.1.2">
+    <comment>FK from record_detail_view_cfg.record_type_id to record_type.id.</comment>
+    <addForeignKeyConstraint constraintName="rec_dtl_vw_cfg_rti_fk"
+      baseTableName="record_detail_view_cfg" baseColumnNames="record_type_id" 
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000007.1.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rec_dtl_vw_cfg_rti_idx" tableName="record_detail_view_cfg" unique="false">
+      <column name="record_type_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

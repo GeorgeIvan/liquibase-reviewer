@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000074-certificate-table.xml">
+
+  <changeSet author="appian" id="tag-000073">
+    <tagDatabase tag="000073"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000074.1.0">
+    <comment>Remove FK from client_cert.id to client_cert_chains.id in preparation for rename</comment>
+    <dropForeignKeyConstraint constraintName="ccc_ccid_fk" baseTableName="client_cert_chains"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000074.2.0">
+    <comment>Rename client_cert table to certificates table</comment>
+    <renameTable oldTableName="client_cert" newTableName="certificates"/>
+    <comment>Rename client_cert_chains to certificate_chains</comment>
+    <renameTable oldTableName="client_cert_chains" newTableName="certificate_chains"/>
+  </changeSet>
+
+  <changeSet id="000074.2.1" author="appian">
+    <renameColumn tableName="certificate_chains" oldColumnName="client_cert_id" newColumnName="certificate_id"
+      columnDataType="BIGINT"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000074.3.0">
+    <comment>Re apply FK from certificates.certificates_id to certificates.id.</comment>
+    <addForeignKeyConstraint constraintName="cc_cid_fk" baseTableName="certificate_chains"
+      baseColumnNames="certificate_id" referencedTableName="certificates" referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000074.4.0">
+    <comment>
+      Add column certificate_type to certificate table
+    </comment>
+    <addColumn tableName="certificates">
+      <column name="cert_type" type="${shortStringType}" defaultValue="CLIENT">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="000074.5.0" author="appian" dbms="oracle">
+    <sql>rename client_cert_sq to certificates_sq</sql>
+  </changeSet>
+
+</databaseChangeLog>

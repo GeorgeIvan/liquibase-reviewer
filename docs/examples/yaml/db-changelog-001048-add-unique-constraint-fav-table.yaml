@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001048-add-unique-constraint-fav-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001048'
+      tagDatabase:
+        tag: 'pre-001048'
+  - changeSet:
+      id: '001048.1.0'
+      author: appian
+      comment: Create multi column index on ssa_library_object_usr_fav
+      changes:
+        - addUniqueConstraint:
+            tableName: ssa_library_object_usr_fav
+            columnNames: ssa_library_object_id, usr_id
+            constraintName: ssa_library_object_usr_fav_uc

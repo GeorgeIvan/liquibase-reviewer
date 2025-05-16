@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000238-add-inspect-results-wrapper.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000238
+      tagDatabase:
+        tag: 'pre-000238'
+
+  - changeSet:
+      author: appian
+      id: '000238.1.0'
+      comment: Create inspect results wrapper column
+      addColumn:
+        tableName: deployment
+        column:
+          name: inspect_results_wrapper_doc
+          type: ${longType}

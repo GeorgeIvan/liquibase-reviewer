@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000186-health-check-history.xml">
+
+  <changeSet author="appian" id="tag-000186">
+    <tagDatabase tag="000185"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000186.1.0">
+    <comment>Create health check table</comment>
+    <createTable tableName="healthcheck">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="start_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="end_ts" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="server_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="run_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="requires_review" type="${booleanType}" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="reviewed_by" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="reviewed_ts" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="analysis_start_ts" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="analysis_end_ts" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="is_scheduled" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="report_doc" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="heap_size_start" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="heap_size_end" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="collectors_total" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="collectors_run" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="status_constraint" type="${longType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="only_one_running"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000186.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="healthcheck_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000186.1.2">
+    <comment>FK from healthcheck.run_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="hc_initiator_fk" baseTableName="healthcheck"
+                             baseColumnNames="run_by" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet author="appian" id="000186.1.3">
+    <comment>FK from healthcheck.approved_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="hc_reviewer_fk" baseTableName="healthcheck"
+                             baseColumnNames="reviewed_by" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+</databaseChangeLog>

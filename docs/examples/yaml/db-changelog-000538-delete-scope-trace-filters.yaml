@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000538-delete-scope-trace-filters.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000538
+      tagDatabase:
+        tag: 'pre-000538'
+
+  - changeSet:
+      id: '000538.1.0'
+      author: appian
+      comment: Drop trace filter columns in mining_scope
+      changes:
+        dropColumn:
+          tableName: mining_scope
+          columns:
+            - column:
+                name: trace_duration_unit
+            - column:
+                name: trace_max_duration
+            - column:
+                name: trace_min_duration

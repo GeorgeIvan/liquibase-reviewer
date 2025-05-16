@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000031.xml">
+
+  <changeSet author="appian" id="tag-000030">
+    <tagDatabase tag="000030"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000031.1.0">
+    <comment>Add url_stub column for Record dashboards</comment>
+    <addColumn tableName="record_detail_view_cfg">
+      <column name="url_stub" type="${shortStringType}" value="undefined"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000031.2.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or>
+        <dbms type="mysql"/>
+        <dbms type="mariadb"/>
+        <dbms type="db2"/>
+      </or>
+    </preConditions>
+  
+    <comment>
+      Fill in default values - should be "summary", but others will have generated url stubs
+      Only for mysql and db2 - the other database needed special handling
+    </comment>
+    
+    <sql>
+      UPDATE record_detail_view_cfg
+      SET url_stub = 'summary'
+      WHERE id IN ( SELECT id FROM (SELECT MIN(id) AS id FROM record_detail_view_cfg GROUP BY record_type_id) AS X)
+    </sql>
+    
+    <sql >
+      UPDATE record_detail_view_cfg
+      SET url_stub = CONCAT('dashboard', id)
+      WHERE id IN ( SELECT id FROM (SELECT id FROM record_detail_view_cfg WHERE url_stub = 'undefined') AS X)
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000031.2.1">
+    <preConditions onFail="MARK_RAN">
+      <or>
+        <dbms type="oracle" />
+      </or>
+    </preConditions>
+  
+    <comment>
+      Fill in default values - should be "summary", but others will have generated url stubs
+      Only oracle - errors if temp table has an alias (AS X)
+    </comment>
+    
+    <sql>
+      UPDATE record_detail_view_cfg
+      SET url_stub = 'summary'
+      WHERE id IN ( SELECT id FROM (SELECT MIN(id) AS id FROM record_detail_view_cfg GROUP BY record_type_id))
+    </sql>
+    
+    <sql >
+      UPDATE record_detail_view_cfg
+      SET url_stub = CONCAT('dashboard', id)
+      WHERE id IN ( SELECT id FROM (SELECT id FROM record_detail_view_cfg WHERE url_stub = 'undefined'))
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000031.2.2">
+    <preConditions onFail="MARK_RAN">
+      <dbms type="mssql" />
+    </preConditions>
+  
+    <comment>
+      Fill in default values - should be "summary", but others will have generated url stubs
+      Only sql server because it does not support CONCAT - needs to use '' + CAST(# AS CHAR)
+      It also adds whitespace which needs to be trimmed
+    </comment>
+    
+    <sql>
+      UPDATE record_detail_view_cfg
+      SET url_stub = 'summary'
+      WHERE id IN ( SELECT id FROM (SELECT MIN(id) AS id FROM record_detail_view_cfg GROUP BY record_type_id) AS X)
+    </sql>
+    
+    <sql >
+      UPDATE record_detail_view_cfg
+      SET url_stub = LTRIM(RTRIM('dashboard' + CAST(id AS CHAR)))
+      WHERE id IN ( SELECT id FROM (SELECT id FROM record_detail_view_cfg WHERE url_stub = 'undefined') AS X)
+    </sql>
+  </changeSet>
+    
+  <changeSet author="appian" id="000031.3.0">
+    <comment>Add the unique and not null constraints to the table and column</comment>
+    
+    <addNotNullConstraint tableName="record_detail_view_cfg" columnName="url_stub" columnDataType="${shortStringType}"/>
+    <addUniqueConstraint tableName="record_detail_view_cfg" columnNames="record_type_id,url_stub" constraintName="rec_dtl_vw_cfg_urlstub_uc" deferrable="false"/>
+  </changeSet>
+</databaseChangeLog>

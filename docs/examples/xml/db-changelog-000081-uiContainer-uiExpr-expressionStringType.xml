@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000081-uiContainer-uiExpr-expressionStringType.xml">
+
+  <changeSet author="appian" id="tag-000080">
+    <tagDatabase tag="000080"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000081.1.0">
+    <comment>Create new column new_ui_expr</comment>
+    <addColumn tableName="ui_container">
+      <column name="new_ui_expr" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000081.1.1">
+    <comment>Copy over the data from ui_expr to new_ui_expr</comment>
+    <sql>UPDATE ui_container SET new_ui_expr = ui_expr</sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000081.1.2">
+    <comment>Drop column ui_expr</comment>
+    <dropColumn tableName="ui_container" columnName="ui_expr"></dropColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000081.1.3">
+    <comment>Rename column new_ui_expr to ui_expr</comment>
+    <renameColumn tableName="ui_container" oldColumnName="new_ui_expr" newColumnName="ui_expr" columnDataType="${expressionStringType}"></renameColumn>
+  </changeSet>
+</databaseChangeLog>

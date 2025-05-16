@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000050.xml">
+
+  <changeSet author="appian" id="tag-000049">
+    <tagDatabase tag="000049"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000050.0.0">
+    <comment>Create a "security" column in record_type that indicates the level of security on the record type. 
+    Default Security is not public and not open which equates to: 
+    0x7FFF (Short.MAX_VALUE) - 0x4000 (RecordTypeSecurityFlags.PUBLIC) = 0x3FFF (16383)
+    </comment>
+    <addColumn tableName="record_type">
+      <column name="security" type="${shortType}" defaultValueNumeric="16383">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000157-add-k-user-uuids.xml">
+
+  <changeSet author="appian" id="tag-000156">
+    <tagDatabase tag="000156"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000157.1.0">
+    <comment>Add new empty uuid column of type string</comment>
+    <addColumn tableName="usr">
+      <column name="usr_uuid" type="${uuidType}" defaultValue="" value=""/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

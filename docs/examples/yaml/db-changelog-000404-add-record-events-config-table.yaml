@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000404-add-record-events-config-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000404
+      tagDatabase:
+        tag: 'pre-000404'
+
+  - changeSet:
+      author: appian
+      id: '000404.1.0'
+      comment: Drop the record_events_cfg table
+      changes:
+        - dropTable:
+            tableName: record_events_cfg
+            cascadeConstraints: true
+
+  - changeSet:
+      author: appian
+      id: '000404.2.0'
+      comment: Create the record_events_config table
+      changes:
+        - createTable:
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: record_events_config_uuid_uc
+              - column:
+                  name: event_record_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: event_type_record_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: event_relationship_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: event_type_relationship_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: event_timestamp_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: event_user_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: type_value_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: generate_common_events
+                  type: ${booleanType}
+                  defaultValueBoolean: false
+                  valueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: event_record_type_id_idx
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: event_record_type_id
+
+        - createIndex:
+            indexName: event_type_record_type_id_idx
+            tableName: record_events_config
+            columns:
+              - column:
+                  name: event_type_record_type_id
+
+  - changeSet:
+      author: appian
+      id: '000404.2.1'
+      comment: A sequence to provide primary key values for the record_events_config table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_events_config_sq
+
+  - changeSet:
+      author: appian
+      id: '000404.3.0'
+      comment: Add a field in the in record_type table for FK to the record_events_config table
+      addColumn:
+        tableName: record_type
+        column:
+          name: record_events_config_id
+          type: ${longType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000404.3.1'
+      comment: Add FK and index in record_type to id column in the record_events_config table
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: record_events_config_id_fk
+            baseTableName: record_type
+            baseColumnNames: record_events_config_id
+            referencedTableName: record_events_config
+            referencedColumnNames: id
+            onDelete: CASCADE

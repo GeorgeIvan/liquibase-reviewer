@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000232-populate-deployment-status-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000232
+      tagDatabase:
+        tag: 'pre-000232'
+
+  - changeSet:
+      author: appian
+      id: '000232.0.0'
+      comment: Populate the deployment status column by interpreting the related deployment events
+      customChange:
+        class: com.appiancorp.designdeployments.persistence.migration.PopulateStatusColumn
+
+  - changeSet:
+      author: appian
+      id: '000232.1.0'
+      comment: Add a not null constraint on the status column after the data migration is complete
+      addNotNullConstraint:
+        tableName: deployment
+        columnName: status
+        columnDataType: ${shortStringType}

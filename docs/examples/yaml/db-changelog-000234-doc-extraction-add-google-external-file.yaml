@@ -1,0 +1,26 @@
+---
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000234-doc-extraction-add-google-external-file.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000234'
+      tagDatabase:
+        tag: 'pre-000234'
+  - changeSet:
+      author: appian
+      id: '000234.1.0'
+      comment: Add external_filename to doc_ext_google_vendor_job table
+      addColumn:
+        tableName: doc_ext_google_vendor_job
+        column:
+          name: external_filename
+          type: ${shortStringType}
+  - changeSet:
+      author: appian
+      id: '000234.2.0'
+      comment: Add not null constraint to external_filename in doc_ext_google_vendor_job table
+      addNotNullConstraint:
+        tableName: doc_ext_google_vendor_job
+        columnName: external_filename
+        columnDataType: ${shortStringType}
+        defaultNullValue: wasNull

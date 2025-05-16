@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000051.xml">
+
+  <changeSet author="appian" id="tag-000050">
+    <tagDatabase tag="000050"/>
+  </changeSet>
+    
+  <changeSet author="appian" id="000051.0.0">
+    <createTable tableName="sail_state_cache">
+      <column name="entry_key" type="${shortStringType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="entry_value" type="${blobType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+</databaseChangeLog>

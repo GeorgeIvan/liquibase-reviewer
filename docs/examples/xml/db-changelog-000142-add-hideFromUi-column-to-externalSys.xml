@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000142-add-hideFromUi-column-to-externalSys.xml">
+
+  <changeSet author="appian" id="tag-000141">
+    <tagDatabase tag="000141"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000142.0.0">
+    <comment>Create a "hide_from_ui" column in external_sys to indicate if an external system should be hidden.</comment>
+    <addColumn tableName="external_sys">
+      <column name="hide_from_ui" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

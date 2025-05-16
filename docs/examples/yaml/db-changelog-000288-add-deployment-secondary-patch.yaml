@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000288-add-deployment-secondary-patch.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000288
+      tagDatabase:
+        tag: 'pre-000288'
+
+  - changeSet:
+      author: appian
+      id: '000288.1.0'
+      comment: Create secondary patch file doc column
+      addColumn:
+        tableName: deployment
+        column:
+          name: secondary_patch_file_doc
+          type: ${longType}
+          constraints:
+            nullable: true

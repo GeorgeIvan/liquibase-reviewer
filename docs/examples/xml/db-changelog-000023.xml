@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000023.xml">
+  
+  <changeSet author="appian" id="tag-000022">
+    <tagDatabase tag="000022"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000023.1.0">
+    <comment>Add src_lv_expr and src_data_type fields to record_type</comment>
+    <addColumn tableName="record_type">
+      <column name="src_lv_expr" type="${mediumStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="record_type">
+      <column name="src_data_type" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet author="appian" id="000023.1.1">
+    <comment>Make src_type and src_uuid nullable</comment>
+    <dropNotNullConstraint tableName="record_type" columnName="src_type" columnDataType="${shortStringType}"/>
+    <dropNotNullConstraint tableName="record_type" columnName="src_uuid" columnDataType="${shortStringType}"/>
+  </changeSet>
+  
+</databaseChangeLog>

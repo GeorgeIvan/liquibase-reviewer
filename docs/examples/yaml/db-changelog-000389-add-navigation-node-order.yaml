@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000389-add-navigation-node-order.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000389
+      tagDatabase:
+        tag: 'pre-000389'
+
+  - changeSet:
+      author: appian
+      id: '000389.1.0'
+      comment: Create a column for storing the order of navigation nodes
+      addColumn:
+        tableName: navigation_node
+        column:
+          name: order_idx
+          type: ${integerType}
+          defaultValue: 0
+          valueNumeric: 0
+          constraints:
+            nullable: true

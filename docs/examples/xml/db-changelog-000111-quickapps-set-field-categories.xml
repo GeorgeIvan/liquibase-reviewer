@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000111-quickapps-set-field-categories.xml">
+
+  <changeSet author="appian" id="tag-000110">
+    <tagDatabase tag="000110"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000111.1.0">
+    <comment>Add the category column</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="category" type="${byteType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000111.1.1">
+      <comment>Set index 0 to TITLE</comment>
+      <update tableName="quickapp_fld">
+          <column name="category" value="1"/>
+          <where>order_idx = '0'</where>
+      </update>
+  </changeSet>
+
+  <changeSet author="appian" id="000111.1.2">
+      <comment>Set index 1 to STATUS</comment>
+      <update tableName="quickapp_fld">
+          <column name="category" value="2"/>
+          <where>order_idx = '1'</where>
+      </update>
+  </changeSet>
+
+  <changeSet author="appian" id="000111.1.3">
+      <comment>Set index 2 to PRIORITY</comment>
+      <update tableName="quickapp_fld">
+          <column name="category" value="3"/>
+          <where>order_idx = '2'</where>
+      </update>
+  </changeSet>
+
+  <changeSet author="appian" id="000111.1.4">
+      <comment>Set index 3 and above to USER</comment>
+      <update tableName="quickapp_fld">
+          <column name="category" value="4"/>
+          <where>order_idx &gt; '2'</where>
+      </update>
+  </changeSet>
+
+</databaseChangeLog>

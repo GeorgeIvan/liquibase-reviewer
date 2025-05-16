@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000502-add-rolling_sync_enabled-to-replica_load_event.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000502'
+      tagDatabase:
+        tag: 'pre-000502'
+  - changeSet:
+      author: appian
+      id: '000502.1.0'
+      comment: Add rolling_sync_enabled to replica_load_event table
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: rolling_sync_enabled
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: false

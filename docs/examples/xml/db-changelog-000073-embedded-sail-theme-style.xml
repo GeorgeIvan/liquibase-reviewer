@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000073-embedded-sail-theme-style.xml">
+
+  <changeSet author="appian" id="tag-000072">
+    <tagDatabase tag="000072"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.1.0">
+    <comment>Add embedded_sail_theme table</comment>
+    <createTable tableName="embedded_sail_theme">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="theme_identifier" type="${shortStringType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="theme_identifier_uc"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="embedded_sail_theme_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.2.0">
+    <comment>Add embedded_sail_style table</comment>
+    <createTable tableName="embedded_sail_style">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="theme_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="embedded_sail_style_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.2.2">
+    <comment>FK from embedded_sail_style.theme_id to embedded_sail_theme.id</comment>
+    <addForeignKeyConstraint constraintName="embedded_sail_style_themeid_fk" baseTableName="embedded_sail_style"
+      baseColumnNames="theme_id" referencedTableName="embedded_sail_theme" referencedColumnNames="id" 
+      onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000073.2.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <createIndex indexName="embed_sail_style_themeid_idx" tableName="embedded_sail_style" unique="false">
+      <column name="theme_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

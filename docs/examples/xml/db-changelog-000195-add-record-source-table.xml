@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000195-add-record-source-table.xml">
+
+  <changeSet author="appian" id="tag-0000194">
+    <tagDatabase tag="000194"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000195.1.0">
+    <comment>Create record_type_sources table</comment>
+    <createTable tableName="record_type_sources">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="record_type_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="friendly_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}" />
+    </createTable>
+  </changeSet>
+
+  <changeSet id="000195.2.0" author="appian">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="record_type_sources_sq"/>
+  </changeSet>
+
+  <changeSet id="000195.3.0" author="appian">
+    <comment>Create record_type_source_relationships table</comment>
+    <createTable tableName="record_source_relationships">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="join_type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="precedent_source_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="precedent_source_field_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="dependent_source_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="dependent_source_field_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="joinOperator" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000195.4.0">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="record_source_relationships_sq"/>
+  </changeSet>
+
+  <changeSet id="000195.5.0" author="appian">
+    <comment>Create record_source_fields</comment>
+    <createTable tableName="record_source_fields">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_field_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="field_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_record_id" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000195.6.0">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="record_source_fields_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000195.7.0">
+    <comment>Add relevant foreign keys</comment>
+    <addForeignKeyConstraint constraintName="rt_sources_record_type_id_fk"
+       baseTableName="record_type_sources" baseColumnNames="record_type_id"
+       referencedTableName="record_type" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rtsr_prec_source_id_fk"
+       baseTableName="record_source_relationships" baseColumnNames="precedent_source_id"
+       referencedTableName="record_type_sources" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rtsr_rt_source_id_fk"
+       baseTableName="record_source_relationships" baseColumnNames="dependent_source_id"
+       referencedTableName="record_type_sources" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rtsr_prec_source_field_id_fk"
+       baseTableName="record_source_relationships" baseColumnNames="precedent_source_field_id"
+       referencedTableName="record_source_fields" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rtsr_source_field_id_fk"
+       baseTableName="record_source_relationships" baseColumnNames="dependent_source_field_id"
+       referencedTableName="record_source_fields" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rt_field_source_id_fk"
+       baseTableName="record_source_fields" baseColumnNames="source_id"
+       referencedTableName="record_type_sources" referencedColumnNames="id"/>
+  </changeSet>
+
+</databaseChangeLog>

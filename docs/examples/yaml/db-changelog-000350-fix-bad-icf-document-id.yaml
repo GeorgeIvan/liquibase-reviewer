@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000350-fix-bad-icf-document-id.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000350
+      tagDatabase:
+        tag: 'pre-000350'
+
+  - changeSet:
+      author: appian
+      id: '000350.1.0'
+      comment: Fix icf_document_id values that are INTEGER.MIN_VALUE to be null
+      update:
+        tableName: dpkg
+        column:
+          name: icf_document_id
+          value: null
+        where: icf_document_id = -2147483648

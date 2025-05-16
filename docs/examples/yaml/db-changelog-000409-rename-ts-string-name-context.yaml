@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000409-rename-ts-string-name-context.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000409'
+      tagDatabase:
+        tag: 'pre-000409'
+  - changeSet:
+      author: appian
+      id: '000409.1.0'
+      comment: Rename ts_string.name to description and ts_string.context to translator_notes
+      changes:
+        - dropUniqueConstraint:
+            constraintName: ts_string_set_id_name_uc
+            tableName: ts_string
+            columnNames: ts_set_id, name
+        - dropColumn:
+            tableName: ts_string
+            column:
+              name: name
+        - dropColumn:
+            tableName: ts_string
+            column:
+              name: context
+        - addColumn:
+            tableName: ts_string
+            column:
+              name: description
+              type: ${mediumStringType}
+              constraints:
+                nullable: true
+        - addColumn:
+            tableName: ts_string
+            column:
+              name: translator_notes
+              type: ${mediumStringType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '000409.2.0'
+      comment: Rename ts_string_history.name to description and ts_string_history.context to translator_notes
+      changes:
+        - dropColumn:
+            tableName: ts_string_history
+            column:
+              name: name
+        - dropColumn:
+            tableName: ts_string_history
+            column:
+              name: context
+        - addColumn:
+            tableName: ts_string_history
+            column:
+              name: description
+              type: ${mediumStringType}
+              constraints:
+                nullable: true
+        - addColumn:
+            tableName: ts_string_history
+            column:
+              name: translator_notes
+              type: ${mediumStringType}
+              constraints:
+                nullable: true

@@ -1,0 +1,121 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000450-edit-mining-schema-post-dataset.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000450'
+      tagDatabase:
+        tag: 'pre-000450'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000450.1.0'
+      comment: remove unique constraint on mining_process_provider.provider_uuid
+      changes:
+        - dropUniqueConstraint:
+            tableName: mining_process_provider
+            constraintName: mining_prcss_prv_prcss_prv_uc
+  - changeSet:
+      author: appian
+      id: '000450.2.0'
+      comment: drop mining_process_provider.provider_uuid
+      changes:
+        - dropColumn:
+            tableName: mining_process_provider
+            columnName: provider_uuid
+  - changeSet:
+      author: appian
+      id: '000450.3.0'
+      comment: drop mining_process_field.field_path
+      changes:
+        - dropColumn:
+            tableName: mining_process_field
+            columnName: field_path
+  - changeSet:
+      author: appian
+      id: '000450.4.0'
+      comment: add non-nullable constraint to mining_process_provider.dataset_id
+      # Drop FK, index, and column and then re-add for clean column with non-null constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process_provider
+            constraintName: mnng_prcss_prov_dataset_id_fk
+        - dropIndex:
+            tableName: mining_process_provider
+            indexName: mnng_prcss_prov_ds_id_idx
+        - dropColumn:
+            tableName: mining_process_provider
+            columnName: dataset_id
+        - addColumn:
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: dataset_id
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: mnng_prcss_prov_dataset_id_fk
+            baseTableName: mining_process_provider
+            baseColumnNames: dataset_id
+            referencedTableName: dataset
+            referencedColumnNames: id
+        - createIndex:
+            tableName: mining_process_provider
+            columns:
+              - column:
+                  name: dataset_id
+            indexName: mnng_prcss_prov_ds_id_idx
+  - changeSet:
+      author: appian
+      id: "000450.4.1"
+      comment: Remove default value on dataset_id
+      dropDefaultValue:
+        tableName: mining_process_provider
+        columnName: dataset_id
+        columnDataType: ${longType}
+  - changeSet:
+      author: appian
+      id: '000450.5.0'
+      comment: add non-nullable constraint to mining_process_field.dataset_field_id
+      # Drop FK, index, and column and then re-add for clean column with non-null constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process_field
+            constraintName: mnng_prcss_fld_ds_fld_id_fk
+        - dropIndex:
+            tableName: mining_process_field
+            indexName: mnng_prcss_fld_ds_fld_id_idx
+        - dropColumn:
+            tableName: mining_process_field
+            columnName: dataset_field_id
+        - addColumn:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: dataset_field_id
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: mnng_prcss_fld_ds_fld_id_fk
+            baseTableName: mining_process_field
+            baseColumnNames: dataset_field_id
+            referencedTableName: dataset_field
+            referencedColumnNames: id
+        - createIndex:
+            tableName: mining_process_field
+            columns:
+              - column:
+                  name: dataset_field_id
+            indexName: mnng_prcss_fld_ds_fld_id_idx
+  - changeSet:
+      author: appian
+      id: "000450.5.1"
+      comment: Remove default value on dataset_field_id
+      dropDefaultValue:
+        tableName: mining_process_field
+        columnName: dataset_field_id
+        columnDataType: ${longType}
+

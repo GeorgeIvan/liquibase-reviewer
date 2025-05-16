@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000345-add-has-export-errors-to-deployment.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000345
+      tagDatabase:
+        tag: 'pre-000345'
+
+  - changeSet:
+      author: appian
+      id: '000345.1.0'
+      comment: Create has export error column
+      addColumn:
+        tableName: deployment
+        column:
+          name: has_export_errors
+          type: ${booleanType}
+          defaultValueBoolean: false
+          constraints:
+            nullable: false

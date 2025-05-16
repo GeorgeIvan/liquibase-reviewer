@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000291-add-deployment-indexes.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000291'
+      tagDatabase:
+        tag: 'pre-000291'
+
+  - changeSet:
+      author: appian
+      id: '000291.1.0'
+      comment: Add missing index on deployment_app.deployment_id for foreign key
+      createIndex:
+        tableName: deployment_app
+        columns:
+          - column:
+              name: deployment_id
+        indexName: dpl_app_dpl_id_fk_idx
+        unique: false
+
+  - changeSet:
+      author: appian
+      id: '000291.2.0'
+      comment: Add missing index on deployment_db_script.deployment_id for foreign key
+      createIndex:
+        tableName: deployment_db_script
+        columns:
+          - column:
+              name: deployment_id
+        indexName: dpl_db_script_dpl_id_fk_idx
+        unique: false

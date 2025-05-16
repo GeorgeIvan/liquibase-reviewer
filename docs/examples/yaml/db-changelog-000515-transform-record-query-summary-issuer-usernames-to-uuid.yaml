@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000515-transform-record-query-summary-issuer-usernames-to-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000515
+      tagDatabase:
+        tag: 'pre-000515'
+
+  - changeSet:
+      author: appian
+      id: '000515.1.0'
+      comment: Transform the usernames to uuids
+      changes:
+        - customChange:
+            class: com.appiancorp.rdbms.common.schema.UpdateUsernameToUuidForExistingTable
+            params:
+              - param:
+                  name: tableName
+                  value: record_query_summary
+              - param:
+                  name: columnName
+                  value: issuer
+              - param:
+                  name: confirmationMessage
+                  value: Done transforming record_query_summary issuer usernames to UUIDs.

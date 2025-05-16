@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000338-add-record-importance-score.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000338'
+      tagDatabase:
+        tag: 'pre-000338'
+  - changeSet:
+      author: appian
+      id: '000338.1.0'
+      comment: Add importance_score column to record_type
+      addColumn:
+        tableName: record_type
+        column:
+          name: importance_score
+          type: ${integerType}
+          defaultValueNumeric: 0
+          valueNumeric: 0
+          constraints:
+            nullable: false

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000471-add-version-column-to-process-properties.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000471
+      tagDatabase:
+        tag: 'pre-000471'
+  - changeSet:
+      author: appian
+      id: '000471.1.0'
+      comment: Create version column for process_properties table
+      addColumn:
+        tableName: process_properties
+        columns:
+          - column:
+              name: model_version
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+

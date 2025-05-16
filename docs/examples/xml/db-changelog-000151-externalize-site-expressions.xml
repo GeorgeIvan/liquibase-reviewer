@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000151-externalize-site-expressions.xml">
+
+  <changeSet author="appian" id="tag-000149">
+    <tagDatabase tag="000149"/>
+  </changeSet>
+
+  <!-- We have to create a new column because conversion of a column from
+       text to expressionStringType is not supported for all of our databases. -->
+
+  <changeSet author="appian" id="000151.1.0">
+    <comment>Add new name column called name_copy of type expressionStringType</comment>
+    <addColumn tableName="site_page">
+      <column name="name_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000151.1.1">
+    <comment>Copy over original site_page name column into name_copy</comment>
+    <sql>update site_page set name_copy = name</sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000151.1.2">
+    <comment>Drop original site_page.name column</comment>
+    <dropColumn tableName="site_page" columnName="name"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000151.1.3">
+    <comment>Rename site_page name_copy column to name</comment>
+    <renameColumn tableName="site_page" oldColumnName="name_copy" newColumnName="name" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000151.2.0">
+    <comment>Update expressions in sites and site pages to be based on UUID instead of name</comment>
+    <customChange class="com.appiancorp.sites.backend.migration.SiteExpressionsExternalizationChange"/>
+  </changeSet>
+
+</databaseChangeLog>

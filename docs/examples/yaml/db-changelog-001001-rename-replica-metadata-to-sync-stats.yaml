@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001001-rename-replica-metadata-to-sync-stats.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001001'
+      tagDatabase:
+        tag: 'pre-001001'
+  - changeSet:
+      author: appian
+      id: '001001.1.0'
+      comment: Drop foreign key constraint for record_type
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_replica_metadata
+            constraintName: rrm_record_type_uuid_fk
+  - changeSet:
+      author: appian
+      id: '001001.2.0'
+      comment: Drop unique constraint for record_type
+      changes:
+        - dropUniqueConstraint:
+            tableName: record_replica_metadata
+            constraintName: rrm_record_type_uuid_uc
+            uniqueColumns: record_type_uuid
+  - changeSet:
+      author: appian
+      id: '001001.3.0'
+      comment: Drop columns for the record_replica_metadata table
+      author: appian
+      changes:
+        dropColumn:
+          tableName: record_replica_metadata
+          columns:
+            - column:
+                name: attributes_metadata
+            - column:
+                name: shadow_attributes_metadata
+            - column:
+                name: replica_view_uuid
+            - column:
+                name: security_policy_uuid
+            - column:
+                name: detect_load_running_row_id
+            - column:
+                name: detect_load_running_row_uuid
+            - column:
+                name: updated_primary_keys_queue
+            - column:
+                name: last_load_duration_ms
+            - column:
+                name: shadow_replica_view_uuid
+  - changeSet:
+      author: appian
+      id: '001001.4.0'
+      comment: Rename table record_replica_metadata to record_sync_stats
+      changes:
+        - renameTable:
+            newTableName: record_sync_stats
+            oldTableName: record_replica_metadata
+  - changeSet:
+      author: appian
+      id: '001001.5.0'
+      comment: Add foreign key for record_type
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: record_sync_stats
+            baseColumnNames: record_type_uuid
+            constraintName: rss_record_type_uuid_fk
+            referencedTableName: record_type
+            referencedColumnNames: uuid
+  - changeSet:
+      author: appian
+      id: '001001.6.0'
+      comment: Add unique constraint for record_type
+      changes:
+        - addUniqueConstraint:
+            tableName: record_sync_stats
+            columnNames: record_type_uuid
+            constraintName: rss_record_type_uuid_uc
+  - changeSet:
+      author: appian
+      id: '001001.7.0'
+      comment: Rename the replica_last_updated_ms column for the record_sync_stats table
+      author: appian
+      changes:
+        renameColumn:
+          columnDataType: ${longType}
+          newColumnName: last_updated_ms
+          oldColumnName: replica_last_updated_ms
+          tableName: record_sync_stats

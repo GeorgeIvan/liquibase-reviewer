@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000468-update-fk-and-indexes-for-process-properties.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000468'
+      tagDatabase:
+        tag: 'pre-000468'
+
+  - changeSet:
+      id: '000468.1.0'
+      author: appian
+      comment: drop process_properties_fk FK
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: process_error
+            constraintName: process_properties_fk
+
+  - changeSet:
+      id: '000468.1.1'
+      author: appian
+      comment: add FK back with cascade deletion
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: process_properties_fk
+            baseTableName: process_error
+            baseColumnNames: process_uuid
+            referencedTableName: process_properties
+            referencedColumnNames: process_uuid
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000468.1.2'
+      comment: Create recent_error_ts column for process_properties table
+      addColumn:
+        tableName: process_properties
+        columns:
+          - column:
+              name: recent_error_ts
+              type: ${longType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000468.1.3'
+      comment: Add index on recent_error_ts of process_properties table
+      createIndex:
+        tableName: process_properties
+        columns:
+          - column:
+              name: recent_error_ts
+        indexName: recent_error_ts_idx
+        unique: false

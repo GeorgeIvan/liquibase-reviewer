@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000559-create-doc-chat-comp-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000559'
+      tagDatabase:
+        tag: 'pre-000559'
+  - changeSet:
+      id: '000559.1.1'
+      author: appian
+      comment: Create dcc_processed_document table
+      changes:
+        - createTable:
+            tableName: dcc_processed_document
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: appian_document_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: appian_document_version_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_chatted_on
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000559.1.2'
+      author: appian
+      comment: Add sequence to dcc_processed_document
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dcc_processed_document_sq
+  - changeSet:
+      author: appian
+      id: '000559.1.3'
+      comment: Create indices for dcc_processed_document
+      changes:
+        - createIndex:
+            indexName: appian_document_id_idx
+            tableName: dcc_processed_document
+            unique: false
+            columns:
+              - column:
+                  name: appian_document_id
+        - createIndex:
+            indexName: appian_document_version_id_idx
+            tableName: dcc_processed_document
+            unique: false
+            columns:
+              - column:
+                  name: appian_document_version_id
+        - createIndex:
+            indexName: last_chatted_on_idx
+            tableName: dcc_processed_document
+            unique: false
+            columns:
+              - column:
+                  name: last_chatted_on

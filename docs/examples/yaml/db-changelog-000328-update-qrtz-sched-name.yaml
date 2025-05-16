@@ -1,0 +1,176 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000328-update-qrtz-sched-name.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000328
+      tagDatabase:
+        tag: 'pre-000328'
+
+  # db-changelog-000327-remove-duplicate-rows-qrtz removed duplicate rows from QRTZ tables so that we can safely rename the SCHED_NAME
+  # column in all tables to 'RecordSyncScheduler' to match the configuration we set in ReplicaSchedulerProperties
+
+  - changeSet:
+      id: '000328.1.0'
+      author: appian
+      comment: Drop QRTZ_BLOB_T_SCHED_NAME_FKEY constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: QRTZ_BLOB_TRIGGERS
+            constraintName: QRTZ_BLOB_T_SCHED_NAME_FKEY
+
+  - changeSet:
+      id: '000328.1.1'
+      author: appian
+      comment: Drop QRTZ_CRON_T_SCHED_NAME_FKEY constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: QRTZ_CRON_TRIGGERS
+            constraintName: QRTZ_CRON_T_SCHED_NAME_FKEY
+
+  - changeSet:
+      id: '000328.1.2'
+      author: appian
+      comment: Drop QRTZ_SIMPLE_T_SCHED_NAME_FKEY constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: QRTZ_SIMPLE_TRIGGERS
+            constraintName: QRTZ_SIMPLE_T_SCHED_NAME_FKEY
+
+  - changeSet:
+      id: '000328.1.3'
+      author: appian
+      comment: Drop QRTZ_SIMPROP_T_SCHED_NAME_FKEY constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: QRTZ_SIMPROP_TRIGGERS
+            constraintName: QRTZ_SIMPROP_T_SCHED_NAME_FKEY
+
+  - changeSet:
+      id: '000328.1.4'
+      author: appian
+      comment: Drop QRTZ_TRIGGERS_SCHED_NAME_FKEY constraint
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: QRTZ_TRIGGERS
+            constraintName: QRTZ_TRIGGERS_SCHED_NAME_FKEY
+
+  - changeSet:
+      author: appian
+      id: '000328.2.0'
+      comment: Update SCHED_NAME to RecordSyncScheduler in all QRTZ tables
+      changes:
+        - update:
+            tableName: QRTZ_BLOB_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_CRON_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_SIMPLE_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_SIMPROP_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_JOB_DETAILS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_CALENDARS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_FIRED_TRIGGERS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_LOCKS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_PAUSED_TRIGGER_GRPS
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+        - update:
+            tableName: QRTZ_SCHEDULER_STATE
+            column:
+              name: SCHED_NAME
+              value: RecordSyncScheduler
+
+  - changeSet:
+      id: '000328.3.0'
+      author: appian
+      comment: Add QRTZ_BLOB_T_SCHED_NAME_FKEY back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: QRTZ_BLOB_T_SCHED_NAME_FKEY
+            baseTableName: QRTZ_BLOB_TRIGGERS
+            baseColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+            referencedTableName: QRTZ_TRIGGERS
+            referencedColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+
+  - changeSet:
+      id: '000328.3.1'
+      author: appian
+      comment: Add QRTZ_CRON_T_SCHED_NAME_FKEY back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: QRTZ_CRON_T_SCHED_NAME_FKEY
+            baseTableName: QRTZ_CRON_TRIGGERS
+            baseColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+            referencedTableName: QRTZ_TRIGGERS
+            referencedColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+
+  - changeSet:
+      id: '000328.3.2'
+      author: appian
+      comment: Add QRTZ_SIMPLE_T_SCHED_NAME_FKEY back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: QRTZ_SIMPLE_T_SCHED_NAME_FKEY
+            baseTableName: QRTZ_SIMPLE_TRIGGERS
+            baseColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+            referencedTableName: QRTZ_TRIGGERS
+            referencedColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+
+  - changeSet:
+      id: '000328.3.3'
+      author: appian
+      comment: Add QRTZ_SIMPROP_T_SCHED_NAME_FKEY back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: QRTZ_SIMPROP_T_SCHED_NAME_FKEY
+            baseTableName: QRTZ_SIMPROP_TRIGGERS
+            baseColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+            referencedTableName: QRTZ_TRIGGERS
+            referencedColumnNames: SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP
+
+  - changeSet:
+      id: '000328.3.4'
+      author: appian
+      comment: Add QRTZ_TRIGGERS_SCHED_NAME_FKEY back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: QRTZ_TRIGGERS_SCHED_NAME_FKEY
+            baseTableName: QRTZ_TRIGGERS
+            baseColumnNames: SCHED_NAME,JOB_NAME,JOB_GROUP
+            referencedTableName: QRTZ_JOB_DETAILS
+            referencedColumnNames: SCHED_NAME,JOB_NAME,JOB_GROUP

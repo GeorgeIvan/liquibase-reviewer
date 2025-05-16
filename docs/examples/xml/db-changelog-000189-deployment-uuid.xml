@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000189-deployment-uuid.xml">
+
+  <changeSet author="appian" id="tag-000188">
+    <tagDatabase tag="000188"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000189.1.0">
+    <comment>Create new column uuid</comment>
+    <addColumn tableName="deployment">
+      <column name="uuid" type="${uuidType}" defaultValue="">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000189.1.1">
+    <addUniqueConstraint columnNames="uuid" tableName="deployment" constraintName="uuid_uc"/>
+  </changeSet>
+
+</databaseChangeLog>

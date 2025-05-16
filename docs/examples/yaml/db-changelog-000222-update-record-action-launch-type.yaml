@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000222-update-record-action-launch-type.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000222
+      tagDatabase:
+        tag: 'pre-000222'
+
+  - changeSet:
+      author: appian
+      id: '000222.1.0'
+      comment: Create a new column for record_detail_view_cfg
+      addColumn:
+        tableName: record_detail_view_cfg
+        column:
+          name: record_action_launch_type
+          type: ${byteType}
+          valueNumeric: 0
+          defaultValueNumeric: 2
+          constraints:
+            nullable: 'false'
+
+  - changeSet:
+      author: appian
+      id: '000222.2.0'
+      comment: Create a new column for record_type
+      addColumn:
+        tableName: record_type
+        column:
+          name: record_action_launch_type
+          type: ${byteType}
+          valueNumeric: 0
+          defaultValueNumeric: 2
+          constraints:
+            nullable: 'false'

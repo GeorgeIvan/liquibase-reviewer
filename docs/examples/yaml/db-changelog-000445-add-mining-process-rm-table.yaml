@@ -1,0 +1,116 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000445-add-mining-process-rm-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000445'
+      tagDatabase:
+        tag: 'pre-000445'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000445.1.0'
+      changes:
+        comment: Create mining process role map table
+        createTable:
+          tableName: mining_process_rm
+          columns:
+            - column:
+                name: mining_process_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+            - column:
+                name: rm_entry_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+                  primaryKey: true
+  - changeSet:
+      id: '000445.3.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_process_rm to rm_entry.id
+        addForeignKeyConstraint:
+          constraintName: mining_process_rm_entry_id_fk
+          baseTableName: mining_process_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+  - changeSet:
+      id: '000445.4.0'
+      author: appian
+      changes:
+      comment: Add FK from mining_process_rm to mining_process.id
+      addForeignKeyConstraint:
+        constraintName: mining_process_rm_min_proc_fk
+        baseTableName: mining_process_rm
+        baseColumnNames: mining_process_id
+        referencedTableName: mining_process
+        referencedColumnNames: id
+  - changeSet:
+      id: '000445.5.0'
+      author: appian
+      changes:
+        comment: Add index on mining_process_rm.mining_process_id
+        createIndex:
+          columns:
+            - column:
+                name: mining_process_id
+          indexName: mining_process_rm_min_proc_idx
+          tableName: mining_process_rm
+          unique: false
+  - changeSet:
+      id: '000445.6.0'
+      author: appian
+      comment: Add index on mining_process_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: mining_process_rm_entry_id_idx
+          tableName: mining_process_rm
+          unique: false
+  - changeSet:
+      id: '000445.7.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Mining Process Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 35
+            - column:
+                name: name
+                value: mining_process_administrator
+  - changeSet:
+      id: '000445.8.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Mining Process Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 36
+            - column:
+                name: name
+                value: mining_process_editor
+  - changeSet:
+      id: '000445.9.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Mining Process Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 37
+            - column:
+                name: name
+                value: mining_process_viewer

@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000416-add-display-name-description-to-record-field.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000416
+      tagDatabase:
+        tag: 'pre-000416'
+  - changeSet:
+      author: appian
+      id: '000416.1.0'
+      comment: Create column for display_name, description
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: display_name
+              type: ${expressionStringType} #Potentially supporting expressionable display names in the future
+              constraints:
+                nullable: true
+          - column:
+              name: description
+              type: ${mediumStringType}
+              constraints:
+                nullable: true

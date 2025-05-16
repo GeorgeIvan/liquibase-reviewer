@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000263-add-replica-source-field-type-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000263
+      tagDatabase:
+        tag: 'pre-000263'
+  - changeSet:
+      author: appian
+      id: '000263.0.0'
+      comment: Create a new column for source_field_type
+      addColumn:
+        tableName: record_source_fields
+        column:
+          name: source_field_type
+          type: ${shortStringType}

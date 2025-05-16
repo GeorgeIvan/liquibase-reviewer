@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000387-add-show-navigation-to-portal.yaml
+  - changeSet:
+      id: 'tag-pre-000387'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000387'
+  - changeSet:
+      author: appian
+      id: '000387.1.0'
+      comment: Add show_navigation column to portal
+      addColumn:
+        tableName: portal
+        columns:
+          - column:
+              name: show_navigation
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false

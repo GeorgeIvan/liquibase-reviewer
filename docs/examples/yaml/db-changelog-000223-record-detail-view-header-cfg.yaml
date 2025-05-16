@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000223-record-detail-view-header-cfg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000223'
+      tagDatabase:
+        tag: 'pre-000223'
+  - changeSet:
+      author: appian
+      id: '000223.1.0'
+      createTable:
+        tableName: record_header_cfg
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: header_type
+              type: ${byteType}
+          - column:
+              name: header_config
+              type: ${expressionStringType}
+  - changeSet:
+     author: appian
+     id: '000223.1.1'
+     preConditions:
+       onFail: MARK_RAN
+       changeLogPropertyDefined:
+         property: createSequence
+         value: true
+     createSequence:
+       sequenceName: record_header_cfg_sq
+  - changeSet:
+      author: appian
+      id: '000223.2.0'
+      createTable:
+        tableName: record_dvc_hc
+        columns:
+          - column:
+              name: record_detail_view_cfg_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: record_header_cfg_id
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '000223.2.1'
+      addPrimaryKey:
+        tableName: record_dvc_hc
+        columnNames: record_detail_view_cfg_id, record_header_cfg_id
+  - changeSet:
+      author: appian
+      id: '000223.2.2'
+      addForeignKeyConstraint:
+        constraintName: record_dvc_hc_rdvcid_fk
+        baseTableName: record_dvc_hc
+        baseColumnNames: record_detail_view_cfg_id
+        referencedTableName: record_detail_view_cfg
+        referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000223.2.3'
+      addForeignKeyConstraint:
+        constraintName: record_dvc_hc_rhcid_fk
+        baseTableName: record_dvc_hc
+        baseColumnNames: record_header_cfg_id
+        referencedTableName: record_header_cfg
+        referencedColumnNames: id

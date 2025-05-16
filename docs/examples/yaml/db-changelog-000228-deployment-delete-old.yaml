@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000228-deployment-delete-old.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000228'
+      tagDatabase:
+        tag: 'pre-000228'
+  - changeSet:
+      author: appian
+      id: '000228.1.0'
+      comment: Delete deployments older than 30 days
+      customChange:
+        class: com.appiancorp.designdeployments.persistence.migration.DeleteOldDeploymentsChange
+  - changeSet:
+      author: appian
+      id: '000228.2.0'
+      comment: Rename the index on deployment_app.app_uuid
+      changes:
+        - dropIndex:
+            tableName: deployment_app
+            indexName: idx_app_uuid
+        - createIndex:
+            tableName: deployment_app
+            indexName: dpl_app_app_uuid_idx
+            columns:
+              - column:
+                  name: app_uuid

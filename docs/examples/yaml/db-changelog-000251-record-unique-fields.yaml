@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000251-record-unique-fields.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000251'
+      tagDatabase:
+        tag: 'pre-000251'
+  - changeSet:
+      author: appian
+      id: '000251.0.0'
+      comment: Create column for is_unique
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: is_unique
+              type: ${booleanType}
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'
+  - changeSet:
+      author: appian
+      id: '000251.1.0'
+      comment: Set is_unique to true for all primary keys
+      dbms: oracle,db2,mssql,mariadb,mysql
+      sql: UPDATE record_source_fields SET is_unique = 1 WHERE is_record_id = 1;
+  - changeSet:
+      author: appian
+      id: '000251.2.0'
+      comment: Set is_unique to true for all primary keys
+      dbms: postgresql
+      sql: UPDATE record_source_fields SET is_unique = 'true' WHERE is_record_id = 'true';

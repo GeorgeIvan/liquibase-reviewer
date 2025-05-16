@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000463-add-user-field-id.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000463'
+      tagDatabase:
+        tag: 'pre-000463'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000463.1.0'
+      comment: Add user_field_id to hold the mining process field id of the user field
+      changes:
+        addColumn:
+          tableName: mining_process
+          columns:
+            - column:
+                name: user_field_id
+                type: ${longType}
+  - changeSet:
+      author: appian
+      id: '000463.1.1'
+      comment: Add index on the user_field_id column
+      changes:
+        createIndex:
+          indexName: mnng_prcss_usr_fld_id_idx
+          tableName: mining_process
+          columns:
+            - column:
+                name: user_field_id
+  - changeSet:
+      author: appian
+      id: '000463.1.2'
+      comment: FK from mining_process.user_field_id to mining_process_field.id
+      addForeignKeyConstraint:
+        constraintName: mnng_prcss_usr_fld_id_fk
+        baseTableName: mining_process
+        baseColumnNames: user_field_id
+        referencedTableName: mining_process_field
+        referencedColumnNames: id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION

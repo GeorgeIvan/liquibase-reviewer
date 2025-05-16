@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000300-oauth2-config-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000300'
+      tagDatabase:
+        tag: 'pre-000300'
+  - changeSet:
+      author: appian
+      id: '000300.1.0'
+      comment: Create oauth2_config table
+      createTable:
+        tableName: oauth2_config
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: created_by
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: alias
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: is_active
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: false
+          - column:
+              name: is_revoked
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: false
+          - column:
+              name: client_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: oauth2_config_client_id_uc
+          - column:
+              name: client_secret
+              type: ${mediumStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: serv_acct_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: created_date
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: last_used_date
+              type: ${longType}
+              constraints:
+                nullable: true
+  - changeSet:
+      id: '000300.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: oauth2_config_sq
+  - changeSet:
+      id: '000300.1.2'
+      author: appian
+      comment: FK from oauth2_config.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: oauth2_config_created_by_fk
+        baseTableName: oauth2_config
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000300.1.3'
+      author: appian
+      comment: FK from oauth2_config.serv_acct_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: oauth2_config_serv_acct_id_fk
+        baseTableName: oauth2_config
+        baseColumnNames: serv_acct_id
+        referencedTableName: usr
+        referencedColumnNames: id

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000271-add-deployment-audit-uuid-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000271
+      tagDatabase:
+        tag: 'pre-000271'
+  - changeSet:
+      author: appian
+      id: '000271.1.0'
+      comment: Add deployment audit_uuid column
+      addColumn:
+        tableName: deployment
+        column:
+          name: audit_uuid
+          type: ${uuidType}
+          defaultValue: UNSPECIFIED_AUDIT_UUID
+          value: UNSPECIFIED_AUDIT_UUID
+          constraints:
+            nullable: false

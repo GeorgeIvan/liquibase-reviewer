@@ -1,0 +1,147 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000460-edit-dataset-delete-acf.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000460'
+      tagDatabase:
+        tag: 'pre-000460'
+
+  # Permanently drop mnng_prcss_fld_ds_fld_id_fk FK b/c it causes SQLIntegrityConstraintViolationException
+  # when a dataset_field record is deleted in the same transaction:
+  # Cannot delete or update a parent row: a foreign key constraint fails
+  # (`AppianDB`.`mining_process_field`, CONSTRAINT `mnng_prcss_fld_ds_fld_id_fk`
+  # FOREIGN KEY (`dataset_field_id`) REFERENCES `dataset_field` (`id`))
+  - changeSet:
+      id: '000460.0.0'
+      author: appian
+      comment: Drop FK constraints and columns
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process_field
+            constraintName: mining_process_field_cfid_fk
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process_field
+            constraintName: mnng_prcss_fld_ds_fld_id_fk
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process_provider
+            constraintName: mnng_prcss_prov_dataset_id_fk
+        - dropForeignKeyConstraint:
+            baseTableName: dataset_field
+            constraintName: dataset_field_dataset_id_fk
+        - dropColumn:
+            tableName: mining_process_field
+            columnName: custom_field_id
+
+  - changeSet:
+      author: appian
+      id: '000460.1.0'
+      comment: Drop analyst_custom_field table
+      changes:
+        - dropTable:
+            tableName: analyst_custom_field
+            cascadeConstraints: true
+
+  - changeSet:
+      author: appian
+      id: '000460.2.0'
+      comment: Recreate FK constraints of dataset tables
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mnng_prcss_prov_dataset_id_fk
+            baseTableName: mining_process_provider
+            baseColumnNames: dataset_id
+            referencedTableName: dataset
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: dataset_field_dataset_id_fk
+            baseTableName: dataset_field
+            baseColumnNames: dataset_id
+            referencedTableName: dataset
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  # Add a new field to dataset_custom_field_info in order to reverse the foreign key
+  # between dataset_field and dataset_custom_field_info tables.
+  - changeSet:
+      author: appian
+      id: '000460.4.0'
+      comment: Add dataset_field_id column to dataset_custom_field_info table
+      changes:
+        - addColumn:
+            tableName: dataset_custom_field_info
+            columns:
+              - column:
+                  name: dataset_field_id
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: dataset_custom_field_info
+            columns:
+              - column:
+                  name: dataset_field_id
+            indexName: ds_cust_fld_dataset_field_idx
+        - dropForeignKeyConstraint:
+            baseTableName: dataset_field
+            constraintName: dataset_field_ds_cust_fld_fk
+
+  - changeSet:
+      author: appian
+      id: '000460.5.0'
+      comment: Migrate records of dataset_custom_field_info to use the new foreign key
+      dbms: mariadb,mysql
+      sql: UPDATE dataset_custom_field_info
+           JOIN dataset_field
+           ON dataset_custom_field_info.id = dataset_field.dataset_custom_field_info_id
+           SET dataset_custom_field_info.dataset_field_id = dataset_field.id;
+
+  - changeSet:
+      author: appian
+      id: '000460.5.1'
+      comment: Migrate records of dataset_custom_field_info to use the new foreign key
+      dbms: oracle,db2,postgresql,mssql
+      sql: UPDATE dataset_custom_field_info
+           SET dataset_field_id = (
+              SELECT id 
+              FROM dataset_field
+              WHERE dataset_field.dataset_custom_field_info_id = dataset_custom_field_info.id
+           );
+
+  - changeSet:
+      author: appian
+      id: '000460.6.0'
+      comment: Remove the default value for dataset_field_id
+      dropDefaultValue:
+        tableName: dataset_custom_field_info
+        columnName: dataset_field_id
+        columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000460.6.1'
+      comment: Add FK from dataset_custom_field_info to dataset_field.id
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: ds_cust_fld_dataset_field_fk
+            baseTableName: dataset_custom_field_info
+            baseColumnNames: dataset_field_id
+            referencedTableName: dataset_field
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: '000460.6.2'
+      author: appian
+      comment: Drop existing dataset_custom_field_info_id and extension_owner_uuid columns
+      changes:
+        - dropIndex:
+            tableName: dataset_field
+            indexName: dataset_field_ds_cust_fld_idx
+        - dropColumn:
+            tableName: dataset_field
+            columnName: dataset_custom_field_info_id
+        - dropColumn:
+            tableName: dataset_custom_field_info
+            columnName: extension_owner_uuid

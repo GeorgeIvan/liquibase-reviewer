@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000249-record-custom-fields.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000249
+      tagDatabase:
+        tag: 'pre-000249'
+  - changeSet:
+      author: appian
+      id: '000249.0.0'
+      comment: Create column for is_custom_field
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: is_custom_field
+              type: ${booleanType}
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'
+  - changeSet:
+      author: appian
+      id: '000249.1.0'
+      comment: Create column for custom_field_expr
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: custom_field_expr
+              type: ${expressionStringType}
+              constraints:
+                nullable: 'true'
+  - changeSet:
+      author: appian
+      id: '000249.2.0'
+      comment: Drop not-null constraint on source_field_name
+      changes:
+        dropNotNullConstraint:
+          tableName: record_source_fields
+          columnName: source_field_name
+          columnDataType: ${shortStringType}

@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000474-add-record-type-prod-data-steward-rm.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000474'
+      tagDatabase:
+        tag: 'pre-000474'
+  - changeSet:
+      id: '000474.1.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Record Type Prod Data Steward
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 39
+            - column:
+                name: name
+                value: record_type_prod_data_steward

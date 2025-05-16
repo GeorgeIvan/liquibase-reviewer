@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000384-add-autoreactivateusers-column-to-samlsettings.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000384
+      tagDatabase:
+        tag: 'pre-000384'
+
+  - changeSet:
+      author: appian
+      id: '000384.1.0'
+      comment: Create a column for auto-reactivate users in SamlSettings
+      addColumn:
+        tableName: saml_settings
+        column:
+          name: auto_reactivate_users
+          type: ${booleanType}
+          valueBoolean: 'false'
+          defaultValueBoolean: 'false'

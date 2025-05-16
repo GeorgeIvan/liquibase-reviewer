@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000428-mining-log-name-unique.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000428
+      tagDatabase:
+        tag: 'pre-000428'
+
+  - changeSet:
+      id: '000428.0.0'
+      author: appian
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            tableName: mining_log
+            constraintName: mining_log_name_uc

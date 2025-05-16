@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000292-document-understanding-migrate-existing-jobs.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000292'
+      tagDatabase:
+        tag: 'pre-000292'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      id: '000292.1.0'
+      author: appian
+      comment: Migrate existing job data to the new Google batching entities
+      customChange:
+        class: com.appiancorp.documentunderstanding.persistence.migration.MigrateInProgressGoogleJobsToBatches

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000487-remove-uc-ssa-recentlyviewed.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000487'
+      tagDatabase:
+        tag: 'pre-000487'
+  - changeSet:
+      id: '000487.1.0'
+      author: appian
+      comment: drop unique constraint on object_uuid column in recently viewed
+      changes:
+        - dropUniqueConstraint:
+            tableName: ssa_recently_viewed
+            constraintName: ssa_object_uuid_uc
+            uniqueColumns: object_uuid

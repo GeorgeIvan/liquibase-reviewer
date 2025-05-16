@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000410-add-oauth-inbound-token-family-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000410'
+      tagDatabase:
+        tag: 'pre-000410'
+  - changeSet:
+      author: appian
+      id: '000410.1.0'
+      comment: Create oauth_inbound_token_family table
+      createTable:
+        tableName: oauth_inbound_token_family
+        columns:
+          - column:
+              name: id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: auth_code_hash
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: auth_code_expiration_ts
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: scopes
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: code_challenge
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: redirect_uri
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: session_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: user_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: is_auth_code_used
+              type: ${booleanType}
+              constraints:
+                nullable: true
+          - column:
+              name: refresh_token_id
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: refresh_token_expiration_ts
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: created_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: updated_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000410.1.1'
+      author: appian
+      comment: Add index on oauth_inbound_token_family.auth_code_hash
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: auth_code_hash
+            tableName: oauth_inbound_token_family
+            indexName: oauth_ib_tkn_fam_auth_code_idx
+  - changeSet:
+      id: '000410.1.2'
+      author: appian
+      comment: Add index on oauth_inbound_token_family.refresh_token_expiration_ts
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: refresh_token_expiration_ts
+            tableName: oauth_inbound_token_family
+            indexName: oauth_ib_tkn_fam_rfsh_exp_idx

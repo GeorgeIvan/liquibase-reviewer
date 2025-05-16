@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000091-config-audit-info.xml">
+
+    <changeSet author="appian" id="tag-000090">
+        <tagDatabase tag="000090"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000091.0.0">
+        <comment>Add is_default, updated_by, and updated_ts to cfg table</comment>
+        <addColumn tableName="cfg">
+            <column name="is_default" type="${booleanType}" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="cfg">
+            <column name="updated_by" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="cfg">
+            <column name="updated_ts" type="${longType}"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

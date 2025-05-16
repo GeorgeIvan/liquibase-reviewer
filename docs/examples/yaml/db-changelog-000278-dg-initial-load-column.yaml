@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000278-dg-initial-load-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000278'
+      tagDatabase:
+        tag: 'pre-000278'
+  - changeSet:
+      author: appian
+      id: '000278.1.0'
+      comment: Add from_initial_load column to dg_object
+      addColumn:
+        tableName: dg_object
+        column:
+          name: from_initial_load
+          type: ${booleanType}
+          defaultValueBoolean: false
+          valueBoolean: false
+          constraints:
+            nullable: false

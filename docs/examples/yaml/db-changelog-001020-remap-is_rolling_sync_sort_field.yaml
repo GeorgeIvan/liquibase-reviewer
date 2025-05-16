@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001020-remap-is_rolling_sync_sort_field.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001020'
+      tagDatabase:
+        tag: 'pre-001020'
+  - changeSet:
+      author: appian
+      id: '001020.1.0'
+      comment: create rt_source_field_attribute table
+      createTable:
+        tableName: rt_source_field_attribute
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: source_field_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: attribute_type
+              type: ${byteType}
+              constraints:
+                nullable: false
+  - changeSet:
+      author: appian
+      id: '001020.1.1'
+      comment: Add foreign key constraint to rt_source_field_attribute
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rsfa_rsf_id_fk
+            baseTableName: rt_source_field_attribute
+            baseColumnNames: source_field_id
+            referencedTableName: record_source_fields
+            referencedColumnNames: id
+  - changeSet:
+      id: '001020.1.2'
+      comment: Create a sequence for oracle
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: rt_source_field_attribute_sq
+  - changeSet:
+      id: '001020.2.0'
+      comment: remap is_rolling_sync_sort_field from record_source_fields to rt_source_field_attribute
+      author: appian
+      changes:
+        - customChange:
+            class: com.appiancorp.record.persistence.migration.RecordSyncLatestDataFieldChange
+  - changeSet:
+      author: appian
+      id: '001020.3.0'
+      comment: drop old column
+      changes:
+      - dropColumn:
+          columns:
+            - column:
+                name: is_rolling_sync_sort_field
+          tableName: record_source_fields

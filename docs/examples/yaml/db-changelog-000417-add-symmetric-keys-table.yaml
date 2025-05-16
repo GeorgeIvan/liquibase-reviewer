@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000417-add-symmetric-keys-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000417'
+      tagDatabase:
+        tag: 'pre-000417'
+  - changeSet:
+      author: appian
+      id: '000417.1.0'
+      comment: Create symmetric_keys table
+      changes:
+        - createTable:
+            tableName: symmetric_keys
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: key_name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key_version
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: originator_use_end_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: recipient_use_end_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: serialized_key
+                  type: ${blobType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000417.1.1'
+      author: appian
+      comment: A sequence to provide primary key values for the symmetric keys table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: symmetric_keys_sq
+  - changeSet:
+      id: '000417.1.2'
+      author: appian
+      comment: Add constraint on symmetric_keys.key_name and symmetric_keys.key_version
+      changes:
+        - addUniqueConstraint:
+            tableName: symmetric_keys
+            columnNames: key_name, key_version
+            constraintName: symmetric_keys_kn_kv_uc

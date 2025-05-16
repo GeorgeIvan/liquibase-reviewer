@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000090-quickapps.xml">
+
+  <changeSet author="appian" id="tag-000089">
+    <tagDatabase tag="000089"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.0">
+    <comment>Add quickapp table</comment>
+    <createTable tableName="quickapp">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="prefix" type="${shortStringType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="qa_prefix_uc"/>
+      </column>
+      <column name="description" type="${mediumStringType}"/>
+      <column name="app_uuid" type="${uuidType}">
+        <constraints nullable="false" unique="true" uniqueConstraintName="qa_uuid_uc"/>
+      </column>
+      <column name="collab_grp_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="record_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="record_plural_name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_by" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="quickapp_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.2">
+    <comment>FK from quickapp.collab_grp_id to grp.id.</comment>
+    <addForeignKeyConstraint constraintName="qa_clb_grp_id_fk" baseTableName="quickapp"
+                             baseColumnNames="collab_grp_id" referencedTableName="grp"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.3">
+    <comment>FK from quickapp.created_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="qa_cby_uid_fk" baseTableName="quickapp"
+                             baseColumnNames="created_by" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.4">
+    <comment>FK from quickapp.updated_by to usr.id.</comment>
+    <addForeignKeyConstraint constraintName="qa_uby_uid_fk" baseTableName="quickapp"
+                             baseColumnNames="updated_by" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.5">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <comment>Create an index for the FK column quickapp.collab_grp_id</comment>
+    <createIndex indexName="qa_clb_grp_id_fk_idx" tableName="quickapp" unique="false">
+      <column name="collab_grp_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.6">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <comment>Create an index for the column quickapp.created_by</comment>
+    <createIndex indexName="qa_cby_uid_fk_idx" tableName="quickapp" unique="false">
+      <column name="created_by"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.1.7">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <comment>Create an index for the column quickapp.updated_by</comment>
+    <createIndex indexName="qa_uby_uid_fk_idx" tableName="quickapp" unique="false">
+      <column name="updated_by"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.2.0">
+    <comment>Create quickapps field table</comment>
+    <createTable tableName="quickapp_fld">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="quickapp_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="instructions" type="${mediumStringType}"/>
+      <column name="type" type="${byteType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="required" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="help_tooltip" type="${mediumStringType}"/>
+      <column name="placeholder_text" type="${mediumStringType}"/>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="quickapp_fld_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.2.2">
+    <comment>Add FK from quickapp_fld to quickapp.id.</comment>
+    <addForeignKeyConstraint constraintName="qa_fld_id_fk" baseTableName="quickapp_fld"
+                             baseColumnNames="quickapp_id" referencedTableName="quickapp"
+                             referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.2.3">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <comment>Create an index for the FK column quickapp_fld.quickapp_id</comment>
+    <createIndex indexName="qa_fld_qa_id_idx" tableName="quickapp_fld" unique="false">
+      <column name="quickapp_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.3.0">
+    <comment>Add quickapp field configuration table</comment>
+    <createTable tableName="quickapp_fld_cfg">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="quickapp_fld_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="data" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.3.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="quickapp_fld_cfg_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.3.2">
+    <comment>FK from quickapp_fld_cfg.quickapp_fld_id to quickapp_fld.id</comment>
+    <addForeignKeyConstraint constraintName="qa_fld_cfg_qa_fld_id_fk" baseTableName="quickapp_fld_cfg"
+                             baseColumnNames="quickapp_fld_id" referencedTableName="quickapp_fld"
+                             referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000090.3.3">
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not>
+    </preConditions>
+    <comment>Create an index for the FK column quickapp_fld_cfg.quickapp_fld_id</comment>
+    <createIndex indexName="qa_fld_cfg_qa_fld_id_fk_idx" tableName="quickapp_fld_cfg" unique="false">
+      <column name="quickapp_fld_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

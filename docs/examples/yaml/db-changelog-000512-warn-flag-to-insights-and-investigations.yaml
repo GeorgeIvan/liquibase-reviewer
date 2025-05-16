@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000512-warn-flag-to-insights-and-investigations.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000512'
+      tagDatabase:
+        tag: 'pre-000512'
+
+  - changeSet:
+      author: appian
+      id: '000512.1.0'
+      comment: Add a warn option and warnTs columns to the mining_insight table
+      changes:
+        - addColumn:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: warn_option
+                  type: ${byteType}
+              - column:
+                  name: warn_ts
+                  type: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000512.2.0'
+      comment: Add a warn flag and warnTs columns to the mining_investigation table
+      changes:
+        - addColumn:
+            tableName: mining_investigation
+            columns:
+              - column:
+                  name: warn_option
+                  type: ${byteType}
+              - column:
+                  name: warn_ts
+                  type: ${longType}

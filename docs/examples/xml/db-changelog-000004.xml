@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000004.xml">
+
+  <!-- MySQL automatically creates indexes for FK columns, but other DBs don't, so we have to do it ourselves. -->
+  <changeSet author="appian" id="000004.1.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="tp_feed_usr_subs_uid_fk" tableName="tp_feed_usr_subs" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000004.2.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="tp_feed_entry_usr_favs_uid_fk" tableName="tp_feed_entry_usr_favs" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000004.3.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="tp_feed_rm_rmeid_fk" tableName="tp_feed_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000004.4.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="rm_entry_users_uid_fk" tableName="rm_entry_users" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

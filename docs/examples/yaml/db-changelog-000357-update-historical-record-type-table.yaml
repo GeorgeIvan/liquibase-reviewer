@@ -1,0 +1,120 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000357-update-historical-record-type-table.yaml
+  - changeSet:
+      id: 'tag-pre-000357'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000357'
+
+  - changeSet:
+      id: '000357.1.0'
+      author: appian
+      comment: Create the uuid column
+      changes:
+        -  addColumn:
+             tableName: record_type_history
+             column:
+               name: uuid
+               type: ${uuidType}
+               defaultValue: "defaultUuid"
+               constraints:
+                 nullable: false
+
+  - changeSet:
+      id: '000357.2.0'
+      author: appian
+      comment: Remove the default value for the uuid column
+      dropDefaultValue:
+        - tableName: record_type_history
+        - columnName: uuid
+        - columnDataType: ${uuidType}
+
+  - changeSet:
+      id: '000357.3.0'
+      author: appian
+      comment: Create the created_ts column
+      changes:
+        - addColumn:
+            tableName: record_type_history
+            column:
+              name: created_ts
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+
+  - changeSet:
+      id: '000357.4.0'
+      author: appian
+      comment: Remove the default value for the created_ts column
+      dropDefaultValue:
+        - tableName: record_type_history
+        - columnName: created_ts
+        - columnDataType: ${longType}
+
+  - changeSet:
+      id: '000357.5.0'
+      author: appian
+      comment: Create the created_by column
+      changes:
+        - addColumn:
+            tableName: record_type_history
+            column:
+              name: created_by
+              type: ${longType}
+              defaultValue: 0
+              constraints:
+                nullable: false
+
+  - changeSet:
+      id: '000357.6.0'
+      author: appian
+      comment: Remove the default value for the created_by column
+      dropDefaultValue:
+        - tableName: record_type_history
+        - columnName: created_by
+        - columnDataType: ${longType}
+
+  - changeSet:
+      id: '000357.7.0'
+      author: appian
+      comment: Add a foreign key constraint to the created_by column
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rt_history_created_usr_id_fk
+            baseTableName: record_type_history
+            baseColumnNames: created_by
+            referencedTableName: usr
+            referencedColumnNames: id
+
+  - changeSet:
+      id: '000357.8.0'
+      author: appian
+      comment: Drop the foreign key constraint on the updated by user column before renaming
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: record_type_history
+            constraintName: record_type_history_usr_id_fk
+
+  - changeSet:
+      id: '000357.9.0'
+      author: appian
+      comment: Rename updated by user column
+      changes:
+        - renameColumn:
+            tableName: record_type_history
+            oldColumnName: updated_by_user_id
+            newColumnName: updated_by
+            columnDataType: ${longType}
+
+  - changeSet:
+      id: '000357.10.0'
+      author: appian
+      comment: Add the foreign key constraint back to the renamed updated by column
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rt_history_updated_usr_id_fk
+            baseTableName: record_type_history
+            baseColumnNames: updated_by
+            referencedTableName: usr
+            referencedColumnNames: id

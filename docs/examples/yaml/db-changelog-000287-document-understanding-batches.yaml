@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000287-document-understanding-batches.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000287'
+      tagDatabase:
+        tag: 'pre-000287'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.1.0'
+      comment: Create doc_ext_google_input_docs table
+      createTable:
+        tableName: doc_ext_google_input_docs
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: job_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: external_filename
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: batch_id
+              type: ${longType}
+              constraints:
+                nullable: true
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.2.0'
+      comment: Create doc_ext_google_batch table
+      createTable:
+        tableName: doc_ext_google_batch
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: google_job_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: source_bucket
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: destination_bucket
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.3.0'
+      comment: FK from doc_ext_google_input_docs.batch_id to doc_ext_google_batch.id
+      addForeignKeyConstraint:
+        constraintName: doc_ext_google_batch_id_fk
+        baseTableName: doc_ext_google_input_docs
+        baseColumnNames: batch_id
+        referencedTableName: doc_ext_google_batch
+        referencedColumnNames: id
+        onDelete: CASCADE
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.4.0'
+      comment: FK from doc_ext_google_input_docs.job_id to doc_extract_job.id
+      addForeignKeyConstraint:
+        constraintName: doc_ext_google_job_id_v2_fk
+        baseTableName: doc_ext_google_input_docs
+        baseColumnNames: job_id
+        referencedTableName: doc_extract_job
+        referencedColumnNames: id
+        onDelete: CASCADE
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.5.0'
+      comment: Add index on doc_ext_google_input_docs.job_id column for foreign key
+      preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+        onFail: MARK_RAN
+        not:
+          or:
+            - dbms:
+              type: mysql
+            - dbms:
+              type: mariadb
+      createIndex:
+        columns:
+          - column:
+              name: job_id
+        indexName: doc_ext_google_job_id_v2_idx
+        tableName: doc_ext_google_input_docs
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000287.6.0'
+      comment: Add index on doc_ext_google_input_docs.batch_id column for foreign key
+      preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+        onFail: MARK_RAN
+        not:
+          or:
+            - dbms:
+              type: mysql
+            - dbms:
+              type: mariadb
+      createIndex:
+        columns:
+          - column:
+              name: batch_id
+        indexName: doc_ext_google_batch_id_idx
+        tableName: doc_ext_google_input_docs

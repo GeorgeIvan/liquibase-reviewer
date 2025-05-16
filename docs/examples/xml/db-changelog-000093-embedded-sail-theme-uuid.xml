@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000093-embedded-sail-theme-uuid.xml">
+
+    <changeSet author="appian" id="tag-000092">
+        <tagDatabase tag="000092"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000093.0.0">
+      <comment>Add uuid column to 'embedded_sail_theme' table</comment>
+      <addColumn tableName="embedded_sail_theme">
+        <column name="uuid" type="${uuidType}"/>
+      </addColumn>
+    </changeSet>
+
+    <changeSet author="appian" id="000093.1.0">
+        <comment>Populate the uuids</comment>
+        <customChange class="com.appiancorp.embedded.backend.PopulateEmbeddedSailThemeUUID"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000093.2.0">
+      <comment>Make uuid not nullable</comment>
+      <addNotNullConstraint tableName="embedded_sail_theme"
+          columnName="uuid"
+          columnDataType="${uuidType}"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000093.3.0">
+    <comment>Add unique constraint for uuid</comment>
+    <addUniqueConstraint tableName="embedded_sail_theme"
+          columnNames="uuid"
+          constraintName="embedded_sail_theme_uuid_uc"/>
+  </changeSet>
+
+</databaseChangeLog>

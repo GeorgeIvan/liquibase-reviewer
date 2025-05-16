@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000049.xml">
+
+  <changeSet author="appian" id="tag-000048">
+    <tagDatabase tag="000048"/>
+  </changeSet>
+
+    <!-- ADDING EXPRESSIONABLE FIELDS TO RECORD TYPE -->
+
+  <changeSet author="appian" id="000049.0.0">
+    <comment>Create a "data_src_expr" column in record_type for use as Data Source expression in expression-backed record types</comment>
+    <addColumn tableName="record_type">
+      <column name="data_src_expr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000049.0.1">
+    <comment>Create a "facets_list_expr" column in record_type for use as the Facets defining expression in expression-backed record types</comment>
+    <addColumn tableName="record_type">
+      <column name="facets_list_expr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000049.0.2">
+    <comment>Create a "default_filters_expr" column in record_type for use as the Filter defining expression in expression-backed record types</comment>
+    <addColumn tableName="record_type">
+      <column name="default_filters_expr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

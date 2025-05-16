@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000237-add-index-for-deployment-foreign-keys.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000237
+      tagDatabase:
+        tag: 'pre-000237'
+
+#  The original version of this migration became incompatible with Liquibase 4.x -- the precondition
+#  was malformed. The index added by this migration was incorrectly named as well, and was revised in
+#  db-changelog-000291-add-deployment-indexes.yaml. This caused failures on Oracle databases, which
+#  forbade two differently-named indexes that refer to the same column list. To resolve this, I'm just
+#  deleting the index declaration from this file and letting it get handled by the later migration.
+
+  - changeSet:
+      author: appian
+      id: '000237.0.0'
+      comment: Superceded by db-changelog-000291-add-deployment-indexes.yaml
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494
+
+  - changeSet:
+      author: appian
+      id: '000237.1.0'
+      comment: Superceded by db-changelog-000291-add-deployment-indexes.yaml
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494

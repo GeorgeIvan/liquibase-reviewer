@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001016-add-modified-date-columns-to-requirements-capture.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001016'
+      tagDatabase:
+        tag: 'pre-001016'
+  - changeSet:
+      id: '001016.1.0'
+      author: appian
+      comment: Add req_capture_last_modified_ts column and data_model_last_modified_ts to requirements_capture
+      changes:
+        - addColumn:
+            tableName: requirements_capture
+            columns:
+              - column:
+                  name: req_capture_last_modified_ts
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data_model_last_modified_ts
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001016.1.1'
+      author: appian
+      comment: Remove the default values for last_modified columns
+      changes:
+        - dropDefaultValue:
+            tableName: requirements_capture
+            columnName: req_capture_last_modified_ts
+            columnDataType: ${longType}
+        - dropDefaultValue:
+            tableName: requirements_capture
+            columnName: data_model_last_modified_ts
+            columnDataType: ${longType}

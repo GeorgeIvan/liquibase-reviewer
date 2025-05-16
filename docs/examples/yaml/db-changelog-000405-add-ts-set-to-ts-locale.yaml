@@ -1,0 +1,128 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000405-add-ts-set-to-ts-locale.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000405'
+      tagDatabase:
+        tag: 'pre-000405'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000405.1.0'
+      comment: Create ts_set_to_ts_locale table
+      changes:
+        - createTable:
+            tableName: ts_set_to_ts_locale
+            columns:
+              - column:
+                  name: ts_set_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_locale_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000405.1.1'
+      author: appian
+      changes:
+        comment: Add composite PK for ts_set_to_ts_locale
+        addPrimaryKey:
+          columnNames: ts_set_id, ts_locale_id
+          tableName: ts_set_to_ts_locale
+  - changeSet:
+      id: '000405.1.2'
+      author: appian
+      comment: Add FK for ts_set_to_ts_locale.ts_set_id to ts_set.id
+      addForeignKeyConstraint:
+        constraintName: ts_set_to_locale_set_id_fk
+        baseTableName: ts_set_to_ts_locale
+        baseColumnNames: ts_set_id
+        referencedTableName: ts_set
+        referencedColumnNames: id
+  - changeSet:
+      id: '000405.1.3'
+      author: appian
+      comment: Add FK for ts_set_to_ts_locale.ts_locale_id to ts_locale.id
+      addForeignKeyConstraint:
+        constraintName: ts_set_to_locale.locale_id_fk
+        baseTableName: ts_set_to_ts_locale
+        baseColumnNames: ts_locale_id
+        referencedTableName: ts_locale
+        referencedColumnNames: id
+  - changeSet:
+      id: '000405.1.4'
+      author: appian
+      comment: Add index on ts_set_to_ts_locale.ts_set_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_set_id
+          indexName: ts_set_to_ts_locale_set_id_idx
+          tableName: ts_set_to_ts_locale
+          unique: false
+  - changeSet:
+      id: '000405.1.5'
+      author: appian
+      comment: Add index on ts_set_to_ts_locale.ts_locale_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_locale_id
+          indexName: ts_set_to_ts_locale_locale_idx
+          tableName: ts_set_to_ts_locale
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000405.2.0'
+      comment: Add new columns version_uuid, default_locale_id for ts_set table
+      changes:
+        - addColumn:
+            tableName: ts_set
+            columns:
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: default_locale_id
+                  type: ${longType}
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000405.2.1'
+      author: appian
+      comment: Add FK for ts_set.default_locale_id to ts_locale.id
+      addForeignKeyConstraint:
+        constraintName: ts_set_default_locale_id_fk
+        baseTableName: ts_set
+        baseColumnNames: default_locale_id
+        referencedTableName: ts_locale
+        referencedColumnNames: id
+  - changeSet:
+      id: '000405.2.2'
+      author: appian
+      comment: Add index on ts_set.default_locale_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: default_locale_id
+          indexName: ts_set_default_locale_id_idx
+          tableName: ts_set
+          unique: false
+  - changeSet:
+      id: '000405.2.3'
+      author: appian
+      comment: Remove default value on default_locale_id column
+      changes:
+        - dropDefaultValue:
+            tableName: ts_set
+            columnName: default_locale_id
+            columnDataType: ${longType}

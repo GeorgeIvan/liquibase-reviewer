@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001041-create-req-capture-ux-plan-screen-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001041
+      tagDatabase:
+        tag: 'pre-001041'
+  - changeSet:
+      author: appian
+      id: '001041.0.0'
+      comment: Create req_capture_ux_plan_screen table
+      changes:
+        - createTable:
+            tableName: req_capture_ux_plan_screen
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: ux_plan_screen_uuid_uc
+              - column:
+                  name: requirements_capture_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: screen_value_json
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001041.0.1'
+      author: appian
+      comment: Create a sequence to provide primary key values for the ux_plan_screen table
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      changes:
+        createSequence:
+          sequenceName: req_capture_ux_plan_screen_sq
+
+  - changeSet:
+      id: '001041.0.2'
+      author: appian
+      comment: Add foreign key constraint to requirements_capture_id field in ux_plan_screen table
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: ux_plan_screen_rcid_fk
+            baseTableName: req_capture_ux_plan_screen
+            baseColumnNames: requirements_capture_id
+            referencedTableName: requirements_capture
+            referencedColumnNames: id
+            onDelete: CASCADE

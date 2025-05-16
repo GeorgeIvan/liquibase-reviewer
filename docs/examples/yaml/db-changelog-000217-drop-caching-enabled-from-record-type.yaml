@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000217-drop-caching-enabled-from-record-type.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000217'
+      tagDatabase:
+        tag: 'pre-000217'
+  - changeSet:
+      author: appian
+      id: '000217.1.0'
+      comment: Drop default value on is_caching_enabled
+      dropDefaultValue:
+        tableName: record_type
+        columnName: is_caching_enabled
+        columnDataType: ${booleanType}
+  - changeSet:
+      author: appian
+      id: '000217.1.1'
+      comment: Drop column is_caching_enabled
+      dropColumn:
+        tableName: record_type
+        columnName: is_caching_enabled

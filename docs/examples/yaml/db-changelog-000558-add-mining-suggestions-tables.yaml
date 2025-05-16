@@ -1,0 +1,139 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000558-add-mining-suggestions-tables.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000558
+      tagDatabase:
+        tag: 'pre-000558'
+  - changeSet:
+      author: appian
+      id: '000558.0.0'
+      comment: Create mining_suggestions_scope table
+      changes:
+        - createTable:
+            tableName: mining_suggestions_scope
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: suggestions_json
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000558.0.1'
+      comment: Create sequence for mining_suggestions_scope
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_suggestions_scope_sq
+  - changeSet:
+      author: appian
+      id: '000558.0.2'
+      comment: Create index for process id in mining_suggestions_scope
+      changes:
+        - createIndex:
+            indexName: mining_suggests_scope_pid_idx
+            tableName: mining_suggestions_scope
+            unique: false
+            columns:
+              - column:
+                  name: process_id
+  - changeSet:
+      author: appian
+      id: '000558.0.3'
+      comment: Add fk for base table mining_suggestions_scope
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_suggests_scope_pid_fk
+            baseTableName: mining_suggestions_scope
+            baseColumnNames: process_id
+            referencedTableName: mining_process
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000558.1.0'
+      comment: Create mining_suggestions_kpi table
+      changes:
+        - createTable:
+            tableName: mining_suggestions_kpi
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: scope_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: suggestions_json
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000558.1.1'
+      comment: Create sequence for mining_suggestions_kpi
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_suggestions_kpi_sq
+  - changeSet:
+      author: appian
+      id: '000558.1.2'
+      comment: Create index for scope id in mining_suggestions_kpi
+      changes:
+        - createIndex:
+            indexName: mining_suggests_kpi_sid_idx
+            tableName: mining_suggestions_kpi
+            unique: false
+            columns:
+              - column:
+                  name: scope_id
+  - changeSet:
+      author: appian
+      id: '000558.1.3'
+      comment: Add fk for base table mining_suggestions_kpi
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_suggests_kpi_sid_fk
+            baseTableName: mining_suggestions_kpi
+            baseColumnNames: scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+            onDelete: CASCADE

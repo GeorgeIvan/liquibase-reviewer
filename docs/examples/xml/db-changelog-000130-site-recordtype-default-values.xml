@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000130-site-recordtype-default-values.xml">
+
+    <!-- See https://issues.appian.com/browse/AN-86624 -->
+
+    <changeSet author="appian" id="tag-000129">
+        <tagDatabase tag="000129"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000130.0.0">
+        <comment>Update null values for site.show_name</comment>
+        <update tableName="site">
+            <column name="show_name" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false"/>
+            <where>show_name IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000130.1.0">
+        <comment>Update null values for site.tempo_link_visibility</comment>
+        <update tableName="site">
+            <column name="tempo_link_visibility" type="${byteType}" defaultValueNumeric="1" valueNumeric="1"/>
+            <where>tempo_link_visibility IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000130.2.0">
+        <comment>Update null values for record_type.hide_latest_news</comment>
+        <update tableName="record_type">
+            <column name="hide_latest_news" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false"/>
+            <where>hide_latest_news IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="appian" id="000130.3.0">
+        <comment>Update null values for site.page_width</comment>
+        <update tableName="site_page">
+            <column name="page_width" type="${byteType}" defaultValueNumeric="2" valueNumeric="2"/>
+            <where>page_width IS NULL</where>
+        </update>
+    </changeSet>
+    
+</databaseChangeLog>

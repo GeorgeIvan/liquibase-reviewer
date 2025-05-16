@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000040.xml">
+
+  <changeSet author="appian" id="tag-000039">
+    <tagDatabase tag="000039"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000040.1.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mssql"/><dbms type="mysql"/></or></not></preConditions>
+    <comment>Update category of Open Messages to Posts to Followers</comment>
+    <update tableName="tp_feed_entry">
+      <column name="type" value="7"/> <!-- type=7 is post to followers -->
+      <where>type=5 AND is_unsecured='true' AND is_targeted='true'</where> <!--  type=5 is message -->
+    </update>
+  </changeSet>
+
+  <!-- Backwards compatibility with Liquibase 2.0.1 -->
+  <!-- This should only run on NEW sites that are initialized with Liquibase 3.5.5 -->
+  <!--  We use tinyint for booleans in MSSQL, and need to use "0"/"1" as literal values -->
+  <!--  This matches the original behavior of 000040.1.0 -->
+  <changeSet author="appian" id="000040.1.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or>
+        <dbms type="mssql"/>
+        <dbms type="mysql"/>
+      </or>
+      <not><changeSetExecuted id="000041.1.0" author="appian" changeLogFile="db-changelog-000041.xml"/></not>
+    </preConditions>
+    <comment>Update category of Open Messages to Posts to Followers</comment>
+    <update tableName="tp_feed_entry">
+      <column name="type" value="7"/> <!-- type=7 is post to followers -->
+      <where>type=5 AND is_unsecured='1' AND is_targeted='1'</where> <!--  type=5 is message -->
+    </update>
+  </changeSet>
+
+  <changeSet author="appian" id="000040.1.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mssql"/><dbms type="mysql"/></or></not></preConditions>
+    <comment>Update locked rolemap value for locked messages</comment>
+    <update tableName="tp_feed_entry">
+      <column name="is_rolemap_locked" valueBoolean="true"/>
+      <where>is_unsecured='false'</where>
+    </update>
+  </changeSet>
+
+  <!-- Backwards compatibility with Liquibase 2.0.1 -->
+  <!-- This should only run on NEW sites that are initialized with Liquibase 3.5.5 -->
+  <!--  We use tinyint for booleans in MSSQL, and need to use "0"/"1" as literal values -->
+  <!--  This matches the original behavior of 000040.1.2 -->
+  <changeSet author="appian" id="000040.1.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <or>
+        <dbms type="mssql"/>
+        <dbms type="mysql"/>
+      </or>
+      <not><changeSetExecuted id="000041.1.0" author="appian" changeLogFile="db-changelog-000041.xml"/></not>
+    </preConditions>
+    <comment>Update locked rolemap value for locked messages</comment>
+    <update tableName="tp_feed_entry">
+      <column name="is_rolemap_locked" valueBoolean="true"/>
+      <where>is_unsecured='0'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

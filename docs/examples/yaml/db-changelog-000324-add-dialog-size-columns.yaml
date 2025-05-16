@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000324-add-dialog-size-columns.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000324
+      tagDatabase:
+        tag: 'pre-000324'
+
+  - changeSet:
+      author: appian
+      id: '000324.1.0'
+      comment: Create a dialog_size column in record_related_action_cfg
+      addColumn:
+        tableName: record_related_action_cfg
+        column:
+          name: dialog_size
+          type: ${byteType}
+          valueNumeric: 0
+          defaultValueNumeric: 0
+          constraints:
+            nullable: 'false'
+
+  - changeSet:
+      author: appian
+      id: '000324.2.0'
+      comment: Create a dialog_size column in record_list_action_cfg
+      addColumn:
+        tableName: record_list_action_cfg
+        column:
+          name: dialog_size
+          type: ${byteType}
+          valueNumeric: 0
+          defaultValueNumeric: 0
+          constraints:
+            nullable: 'false'

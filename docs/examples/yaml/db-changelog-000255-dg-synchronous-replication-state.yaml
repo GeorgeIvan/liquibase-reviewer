@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000255-dg-synchronous-replication-state.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000255
+      tagDatabase:
+        tag: 'pre-000255'
+  - changeSet:
+      author: appian
+      id: '000255.0.0'
+      comment: Create dg_sync_replication_trans table
+      createTable:
+        tableName: dg_sync_replication_trans
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: source_key
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: txn_id
+              type: ${longType}
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000255.1.0'
+      comment: Create sequence for dg_sync_replication_trans
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dg_sync_replication_trans_sq

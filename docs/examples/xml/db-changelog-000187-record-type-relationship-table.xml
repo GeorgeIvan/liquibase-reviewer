@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000187-record-type-relationships-table.xml">
+
+  <!--  Added "-0" to match changeSet id with the tag in the database. -->
+  <changeSet author="appian" id="tag-000186-0">
+    <tagDatabase tag="000186"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000187.1.0">
+    <comment>Create record_type_relationships table</comment>
+    <createTable tableName="record_type_relationships">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="src_rt_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="target_rt_uuid" type="${uuidType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="relationship_type" type="${byteType}" defaultValueNumeric="1">
+        <constraints nullable="false"/>
+      </column>
+      <column name="relationship_data" type="${largeStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000187.2.0">
+    <comment>Add relevant foreign keys</comment>
+    <addForeignKeyConstraint constraintName="rt_relationships_src_rt_id_fk"
+      baseTableName="record_type_relationships" baseColumnNames="src_rt_id"
+      referencedTableName="record_type" referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000187.3.0">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="record_type_relationships_sq"/>
+  </changeSet>
+</databaseChangeLog>

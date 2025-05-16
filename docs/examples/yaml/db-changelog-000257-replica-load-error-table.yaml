@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000257-replica-load-error-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000257'
+      tagDatabase:
+        tag: 'pre-000257'
+
+  - changeSet:
+      author: appian
+      id: '000257.1.0'
+      comment: Create replica_load_error table
+      createTable:
+        tableName: replica_load_error
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: replica_load_event_id
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: record_type_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: error_code
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: error_msg_params
+              type: ${mediumStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: time_ms
+              type: ${longType}
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000257.2.0'
+      comment: Add index on replica_load_error.replica_load_event_id
+      createIndex:
+        tableName: replica_load_error
+        columns:
+          - column:
+              name: replica_load_event_id
+        indexName: rpl_ld_err_rpl_ld_evnt_idx
+        unique: false
+
+  - changeSet:
+      author: appian
+      id: '000257.3.0'
+      comment: Add index on replica_load_error.record_type_uuid
+      createIndex:
+        tableName: replica_load_error
+        columns:
+          - column:
+              name: record_type_uuid
+        indexName: rpl_ld_err_rc_type_uuid_idx
+        unique: false
+
+  - changeSet:
+      id: '000257.4.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: replica_load_error_sq

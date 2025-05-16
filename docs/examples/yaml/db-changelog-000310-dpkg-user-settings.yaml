@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000310-dpkg-user-settings.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000310'
+      tagDatabase:
+        tag: 'pre-000310'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000310.1.0'
+      comment: Create dpkg_usr_settings table
+      changes:
+        - createTable:
+            tableName: dpkg_usr_settings
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: usr_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: app_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: package_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            constraintName: dpkg_user_app_uc
+            tableName: dpkg_usr_settings
+            columnNames: usr_id, app_uuid
+        # Note that Appian has historically used special MySQL- and MariaDB-specific logic to try to
+        # avoid making indexes on FK columns like the one below. However, those historical attempts
+        # were all flawed by YAML typos and actually had no DB-specific effects! So we'll simply be
+        # unconditional and take advantage of the fact that MariaDB/MySQL will automatically use an
+        # existing index OR drop their own auto-created index if we explicitly make an equivalent
+        # one on the same column.
+        - createIndex:
+            indexName: dpkg_usr_setngs_pkg_id_idx
+            tableName: dpkg_usr_settings
+            columns:
+              - column:
+                  name: package_id
+        - addForeignKeyConstraint:
+            constraintName: dpkg_usr_setngs_pkg_id_fk
+            baseTableName: dpkg_usr_settings
+            baseColumnNames: package_id
+            referencedTableName: dpkg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000310.1.1'
+      comment: A sequence to provide primary key values for the dpkg table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_usr_settings_sq

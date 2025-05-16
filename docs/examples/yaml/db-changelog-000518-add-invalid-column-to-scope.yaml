@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000518-add-invalid-column-to-scope.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000518
+      tagDatabase:
+        tag: 'pre-000518'
+
+  - changeSet:
+      author: appian
+      id: '000518.1.0'
+      comment: Add invalid column to mining scope
+      changes:
+        - addColumn:
+            tableName: mining_scope
+            columns:
+              - column:
+                  name: invalid
+                  type: ${booleanType}
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000518.2.0'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: mining_scope
+        columnName: invalid
+        columnDataType: ${booleanType}

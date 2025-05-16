@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000054.xml">
+
+  <changeSet author="appian" id="tag-000053">
+    <tagDatabase tag="000053"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000054.0.0">
+    <comment>Add client_cert table</comment>
+
+    <createTable tableName="client_cert">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="alias" type="${shortStringType}">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="common_name" type="${mediumStringType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="issuer" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="key_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="issue_date" type="${longType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="expiration_date" type="${longType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="thumbprint" type="${shortStringType}">
+        <constraints nullable="false" />
+      </column>
+      <column name="serial_num" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="serialized_key" type="${blobType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  
+  <changeSet author="appian" id="000054.0.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="client_cert_sq"/>
+  </changeSet>  
+ 
+  <!-- Add new table client_cert_chains -->
+  
+  <changeSet  author="appian" id="000054.1.0">  
+    <comment>Create table to hold the certificate chains that are used for clients certificate authentication</comment>
+    <createTable tableName="client_cert_chains">
+      <column name="client_cert_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="cert" type="${blobType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000054.2.0">
+    <comment>FK from client_cert.client_cert_id to client_cert.id.</comment>
+    <addForeignKeyConstraint 
+      constraintName="ccc_ccid_fk"
+      baseTableName="client_cert_chains"
+      baseColumnNames="client_cert_id"
+      referencedTableName="client_cert"
+      referencedColumnNames="id"
+      onDelete="CASCADE"
+      />
+  </changeSet>
+</databaseChangeLog>

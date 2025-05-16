@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-00118-related-action-icon.xml">
+
+  <changeSet author="appian" id="tag-0000117">
+    <tagDatabase tag="000117"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000118.1.0">
+    <comment>Create new column icon_id</comment>
+    <addColumn tableName="record_related_action_cfg">
+      <column name="icon_id" type="${shortStringType}" value="f0e7" defaultValue="f0e7">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

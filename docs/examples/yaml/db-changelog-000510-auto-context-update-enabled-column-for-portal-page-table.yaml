@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000510-auto-context-update-enabled-column-for-portal-page-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000510
+      tagDatabase:
+        tag: 'pre-000510'
+  - changeSet:
+      author: appian
+      id: '000510.1.0'
+      comment: Add boolean 'auto context update enabled' column to navigation_node table
+      addColumn:
+        tableName: navigation_node
+        columns:
+          - column:
+              name: auto_context_update_enabled
+              type: ${booleanType}
+              valueBoolean: false
+              constraints:
+                nullable: false

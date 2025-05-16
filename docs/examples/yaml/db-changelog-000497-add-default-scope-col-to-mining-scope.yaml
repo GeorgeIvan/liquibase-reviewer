@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000497-add-default-scope-col-to-mining-scope.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000497
+      tagDatabase:
+        tag: 'pre-000497'
+
+  - changeSet:
+      author: appian
+      id: '000497.1.0'
+      comment: Add default view col to mining scope
+      changes:
+        - addColumn:
+            tableName: mining_process_analysis_cfg
+            columns:
+              - column:
+                  name: default_scope_id
+                  type: ${longtype}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000497.2.0'
+      comment: Create the analysis config if it doesn't exist
+      dbms: '!oracle'
+      sql: INSERT INTO mining_process_analysis_cfg (mining_process_id)
+          SELECT mining_process.id
+          FROM mining_process
+          WHERE NOT EXISTS (
+          SELECT mining_process_id from mining_process_analysis_cfg WHERE mining_process_analysis_cfg.mining_process_id = mining_process.id
+        )
+
+  - changeSet:
+      author: appian
+      id: '000497.2.1'
+      comment: Create the analysis config if it doesn't exist
+      dbms: 'oracle'
+      sql: INSERT INTO mining_process_analysis_cfg (id,mining_process_id)
+            SELECT mining_process_analysis_cfg_sq.nextval,mining_process.id FROM mining_process
+            WHERE NOT EXISTS ( 
+              SELECT mining_process_id from mining_process_analysis_cfg WHERE
+              mining_process_analysis_cfg.mining_process_id = mining_process.id 
+            )
+
+  - changeSet:
+      author: appian
+      id: '000497.2.2'
+      comment: Update the default scope to the minimal Id scope for all processes
+      customChange:
+        class: com.appiancorp.processHq.persistence.migration.SetProcessMiningAnalysisConfigDefaultScope
+
+  - changeSet:
+      author: appian
+      id: '000497.3.0'
+      comment: Add fk for default scope
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mpac_cfg_dflt_scp_to_scp_id_fk
+            baseTableName: mining_process_analysis_cfg
+            baseColumnNames: default_scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+
+  - changeSet:
+      author: appian
+      id: '000497.4.0'
+      comment: Remove the default value for default_scope_id
+      dropDefaultValue:
+        tableName: mining_process_analysis_cfg
+        columnName: default_scope_id
+        columnDataType: ${longtype}

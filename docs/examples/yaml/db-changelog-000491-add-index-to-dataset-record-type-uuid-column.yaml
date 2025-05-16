@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000491-add-index-to-dataset-record-type-uuid-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000491
+      tagDatabase:
+        tag: 'pre-000491'
+
+  - changeSet:
+      author: appian
+      id: '000491.1.0'
+      comment: Create index for root_record_type_uuid on dataset
+      changes:
+        - createIndex:
+            indexName: dataset_record_type_uuid_idx
+            tableName: dataset
+            unique: false
+            columns:
+              - column:
+                  name: root_record_type_uuid

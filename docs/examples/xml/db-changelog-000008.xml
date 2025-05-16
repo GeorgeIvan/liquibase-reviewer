@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000008.xml">
+
+  <!-- Create the admin configs table. -->
+  <changeSet author="appian" id="000008.1.0">
+    <createTable tableName="cfg">
+      <column name="prop_key" type="${shortStringType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="prop_value" type="${mediumStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  
+</databaseChangeLog>

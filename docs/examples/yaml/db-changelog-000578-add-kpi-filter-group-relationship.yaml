@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000578-add-kpi-filter-group-relationship.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000578'
+      tagDatabase:
+        tag: 'pre-000578'
+  - changeSet:
+      author: appian
+      id: '000578.1.0'
+      comment: Add new column to mining_filter_group table
+      changes:
+        - addColumn:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000578.2.0'
+      comment: Make existing mining_scope_id column nullable
+      changes:
+        - dropNotNullConstraint:
+            tableName: mining_filter_group
+            columnName: mining_scope_id
+            columnDataType: ${longType}
+
+  - changeSet:
+      author: appian
+      id: '000578.2.1'
+      comment: Add foreign key for miningKpi, without explicit cascade
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_filter_group_kpi_fk
+            baseTableName: mining_filter_group
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+
+  - changeSet:
+      author: appian
+      id: '000578.3.0'
+      comment: Add index for the new foreign key
+      changes:
+        - createIndex:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: mining_kpi_id
+            indexName: mining_fltr_group_kpi_id_idx

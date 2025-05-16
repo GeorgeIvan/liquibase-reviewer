@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000524-add-number-of-events-to-mining.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000524'
+      tagDatabase:
+        tag: 'pre-000524'
+
+  - changeSet:
+      author: appian
+      id: '000524.1.0'
+      comment: Add new column 'number_of_events' to mining_process
+      changes:
+        - addColumn:
+            tableName: mining_process
+            columns:
+              - column:
+                  name: number_of_events
+                  type: ${longType}
+                  constraints:
+                    nullable: true

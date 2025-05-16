@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000095-datasource-uuid.xml">
+
+    <changeSet author="appian" id="tag-000094">
+        <tagDatabase tag="000094"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000095.0.0">
+      <comment>Add uuid column to 'datasource' table</comment>
+      <addColumn tableName="datasource">
+        <column name="uuid" type="${uuidType}"/>
+      </addColumn>
+    </changeSet>
+
+    <changeSet author="appian" id="000095.1.0">
+        <comment>Populate the uuids</comment>
+        <customChange class="com.appiancorp.rdbms.common.schema.PopulateUuidForExistingTable">
+            <param name="tableName" value="datasource"/>
+            <param name="confirmationMessage" value="Done populating Data Source UUIDs."/>
+        </customChange>
+    </changeSet>
+
+    <changeSet author="appian" id="000095.2.0">
+      <comment>Make uuid not nullable</comment>
+      <addNotNullConstraint tableName="datasource"
+          columnName="uuid"
+          columnDataType="${uuidType}"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000095.3.0">
+    <comment>Add unique constraint for uuid</comment>
+    <addUniqueConstraint tableName="datasource"
+          columnNames="uuid"
+          constraintName="datasource_uuid_uc"/>
+  </changeSet>
+
+</databaseChangeLog>

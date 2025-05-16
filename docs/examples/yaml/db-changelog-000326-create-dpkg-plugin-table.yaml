@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000326-create-dpkg-plugin-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000326'
+      tagDatabase:
+        tag: 'pre-000326'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000326.1.0'
+      comment: Create dpkg_plugin table
+      changes:
+        - createTable:
+            tableName: dpkg_plugin
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: package_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: plugin_key
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: dpkg_plugin_package_id_fk
+            baseTableName: dpkg_plugin
+            baseColumnNames: package_id
+            referencedTableName: dpkg
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: dpkg_plugin_package_id_idx
+            tableName: dpkg_plugin
+            columns:
+              - column:
+                  name: package_id
+  - changeSet:
+      id: '000326.1.1'
+      comment: A sequence to provide primary key values for the dpkg_plugin table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dpkg_plugin_sq

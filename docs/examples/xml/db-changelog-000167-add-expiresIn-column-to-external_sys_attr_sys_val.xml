@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000167-add-expiresIn-column-to-external_sys_attr_sys_val.xml">
+  <changeSet author="appian" id="tag-000166">
+    <tagDatabase tag="000166"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000167.0.0">
+    <comment>Create an "expires_in" column in external_sys_attr_sys_val to indicate the expiration time for an access token.</comment>
+    <addColumn tableName="external_sys_attr_sys_val">
+      <column name="expires_in" type="${shortStringType}" defaultValue="">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

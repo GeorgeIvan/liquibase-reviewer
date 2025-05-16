@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000462-change-mining-editor-to-analyst.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000462'
+      tagDatabase:
+        tag: 'pre-000462'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      id: '000462.1.0'
+      author: appian
+      changes:
+        comment: Change mining_process_editor row to be mining_process_analyst
+        update:
+          tableName: rm_role
+          columns:
+            - column:
+                name: name
+                value: mining_process_analyst
+          where: id = 36
+

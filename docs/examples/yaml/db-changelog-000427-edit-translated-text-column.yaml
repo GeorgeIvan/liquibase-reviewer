@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000427-edit-translated-text-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000427'
+      tagDatabase:
+        tag: 'pre-000427'
+  - changeSet:
+      author: appian
+      id: '000427.1.0'
+      comment: Dropping existing ts_translated_text.translated_text column of type largeStringType
+      dropColumn:
+        tableName: ts_translated_text
+        columnName: translated_text
+  - changeSet:
+      author: appian
+      id: '000427.1.1'
+      comment: Adding new ts_translated_text.translated_text column of type mediumStringType
+      addColumn:
+        tableName: ts_translated_text
+        columns:
+          - column:
+              name: translated_text
+              type: ${mediumStringType}
+              constraints:
+                nullable: true

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000452-add-index-for-replica-load-event-type-start-time-ms.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000452
+      tagDatabase:
+        tag: 'pre-000452'
+
+  - changeSet:
+      author: appian
+      id: '000452.0.0'
+      comment: Add index on replica_load_event.start_time_ms
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-248462
+      createIndex:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: start_time_ms
+        indexName: rpl_ld_evnt_start_time_ms_idx

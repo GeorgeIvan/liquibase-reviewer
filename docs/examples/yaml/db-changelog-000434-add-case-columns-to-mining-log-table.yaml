@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000434-add-case-columns-to-mining-log-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000434
+      tagDatabase:
+        tag: 'pre-000434'
+  - changeSet:
+      author: appian
+      id: '000434.1.0'
+      comment: Create columns for case statistics
+      addColumn:
+        tableName: mining_log
+        columns:
+          - column:
+              name: average_case_duration_ms
+              type: ${doubleType}
+              constraints:
+                nullable: true
+          - column:
+              name: median_case_duration_ms
+              type: ${doubleType}
+              constraints:
+                nullable: true
+          - column:
+              name: number_of_cases
+              type: ${longType}
+              constraints:
+                nullable: true

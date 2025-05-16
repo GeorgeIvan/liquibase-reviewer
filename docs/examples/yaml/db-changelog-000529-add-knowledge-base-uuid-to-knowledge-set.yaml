@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000529-add-knowledge-base-uuid-to-knowledge-set.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000529'
+      tagDatabase:
+        tag: 'pre-000529'
+  - changeSet:
+      id: '000529.1.0'
+      author: appian
+      comment: Update document_chat_knowledge_set table to store the knowledge base uuid
+      changes:
+        - addColumn:
+            tableName: document_chat_knowledge_set
+            columns:
+              - column:
+                  name: knowledge_base_uuid
+                  type: ${uuidType}
+  - changeSet:
+      id: '000529.1.1'
+      author: appian
+      comment: Update document_chat_knowledge_set table to set knowledge_base_uuid to never be null
+      changes:
+        - addNotNullConstraint:
+            columnDataType: ${uuidType}
+            columnName: knowledge_base_uuid
+            tableName: document_chat_knowledge_set

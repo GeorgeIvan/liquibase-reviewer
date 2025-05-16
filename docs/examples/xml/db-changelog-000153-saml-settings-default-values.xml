@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000153-saml-settings-default-values.xml">
+
+  <!-- See https://issues.appian.com/browse/AN-100221 -->
+
+  <changeSet author="appian" id="tag-000152">
+    <tagDatabase tag="000152"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000153.0.0">
+    <comment>Update null values for saml_settings.remember_idp</comment>
+    <update tableName="saml_settings">
+      <column name="remember_idp" type="${booleanType}" valueBoolean="false"/>
+      <where>remember_idp IS NULL</where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

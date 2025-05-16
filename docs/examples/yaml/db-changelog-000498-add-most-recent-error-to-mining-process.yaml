@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000498-add-most-recent-error-to-mining-process.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000498'
+      tagDatabase:
+        tag: 'pre-000498'
+
+  - changeSet:
+      author: appian
+      id: '000498.1.0'
+      comment: Add a most_recent_error column to the mining_process table
+      changes:
+        - addColumn:
+            tableName: mining_process
+            columns:
+              - column:
+                  name: most_recent_error
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000108-txn-log-cascading-deletes.xml">
+
+  <changeSet author="appian" id="tag-000107">
+    <tagDatabase tag="000107"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000108.1.1">
+    <comment>Drop foreign key constraint between tx and tx_data so that we can add cascading deletes</comment>
+    <dropForeignKeyConstraint baseTableName="tx_data" constraintName="tx_data_tx_id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000108.1.2">
+    <comment>Add foreign key constraint between tx and tx_data with cascading deletes</comment>
+    <addForeignKeyConstraint constraintName="tx_data_tx_id"
+                             baseTableName="tx_data" baseColumnNames="tx_id"
+                             referencedTableName="tx" referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+</databaseChangeLog>

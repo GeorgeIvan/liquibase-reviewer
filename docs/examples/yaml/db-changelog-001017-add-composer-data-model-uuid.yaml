@@ -1,0 +1,134 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001017-add-composer-data-model-uuid.yaml
+    
+  - changeSet:
+      author: appian
+      id: tag-pre-001017
+      tagDatabase:
+        tag: 'pre-001017'
+
+  - changeSet:
+      author: appian
+      id: '001017.1.0'
+      comment: Add uuid column to req_capture_entity table
+      changes:
+        - addColumn:
+            tableName: req_capture_entity
+            columns:
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '001017.1.1'
+      comment: Populate existing req_capture_entity rows with uuid
+      changes:
+        - customChange:
+            class: com.appiancorp.requirementscapture.migration.EntityUuidAdditionMigration
+
+  - changeSet:
+      author: appian
+      id: '001017.1.2'
+      comment: Add not null constraint to req_capture_entity uuid column
+      changes:
+        - addNotNullConstraint:
+            tableName: req_capture_entity
+            columnName: uuid
+            columnDataType: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '001017.1.3'
+      comment: Add unique constraint to req_capture_entity uuid column
+      changes:
+        - addUniqueConstraint:
+            tableName: req_capture_entity
+            columnNames: uuid
+            constraintName: req_capture_entity_uuid_uc
+
+  - changeSet:
+      author: appian
+      id: '001017.1.4'
+      comment: Add uuid column to req_cap_entity_attribute table
+      changes:
+        - addColumn:
+            tableName: req_cap_entity_attribute
+            columns:
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '001017.1.5'
+      comment: Populate existing req_cap_entity_attribute rows with uuid
+      changes:
+        - customChange:
+            class: com.appiancorp.requirementscapture.migration.AttributeUuidAdditionMigration
+
+  - changeSet:
+      author: appian
+      id: '001017.1.6'
+      comment: Add not null constraint to req_cap_entity_attribute uuid column
+      changes:
+        - addNotNullConstraint:
+            tableName: req_cap_entity_attribute
+            columnName: uuid
+            columnDataType: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '001017.1.7'
+      comment: Add unique constraint to req_cap_entity_attribute uuid column
+      changes:
+        - addUniqueConstraint:
+            tableName: req_cap_entity_attribute
+            columnNames: uuid
+            constraintName: rc_entity_attribute_uuid_uc
+
+  - changeSet:
+      author: appian
+      id: '001017.1.8'
+      comment: Add uuid column to req_cap_entity_relationship table
+      changes:
+        - addColumn:
+            tableName: req_cap_entity_relationship
+            columns:
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '001017.1.9'
+      comment: Populate existing req_cap_entity_relationship rows with uuid
+      changes:
+        - customChange:
+            class: com.appiancorp.requirementscapture.migration.RelationshipUuidAdditionMigration
+
+  - changeSet:
+      author: appian
+      id: '001017.1.10'
+      comment: Add not null constraint to req_cap_entity_relationship uuid column
+      changes:
+        - addNotNullConstraint:
+            tableName: req_cap_entity_relationship
+            columnName: uuid
+            columnDataType: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '001017.1.11'
+      comment: Add unique constraint to req_cap_entity_relationship uuid column
+      changes:
+        - addUniqueConstraint:
+            tableName: req_cap_entity_relationship
+            columnNames: uuid
+            constraintName: rc_entity_relationship_uuid_uc

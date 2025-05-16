@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000414-add-ts-uc.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000414'
+      tagDatabase:
+        tag: 'pre-000414'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      id: '000414.1.0'
+      author: appian
+      comment: add unique constraint for ts_set.uuid because the unique flag was previously left off
+      changes:
+        - addUniqueConstraint:
+            tableName: ts_set
+            constraintName: ts_set_uuid_uc
+            columnNames: uuid
+  - changeSet:
+      id: '000414.1.1'
+      author: appian
+      comment: add unique constraint for ts_tring.uuid because the unique flag was previously left off
+      changes:
+        - addUniqueConstraint:
+            tableName: ts_string
+            constraintName: ts_string_uuid_uc
+            columnNames: uuid

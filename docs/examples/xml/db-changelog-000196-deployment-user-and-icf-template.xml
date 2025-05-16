@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000195-deployment-user-and-icf-template.xml">
+
+  <changeSet author="appian" id="tag-000195">
+    <tagDatabase tag="000195"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000196.1.0">
+    <comment>Add Requester Username to deployment</comment>
+    <addColumn tableName="deployment">
+      <column name="requester_user" type="${shortStringType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000196.1.1">
+    <comment>Add ICF Template to deployment</comment>
+    <addColumn tableName="deployment">
+      <column name="icf_template_doc" type="${longType}"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000196.1.2">
+    <comment>Drop null constraint from description</comment>
+    <dropNotNullConstraint tableName="deployment" columnName="description" columnDataType="${mediumStringType}"/>
+  </changeSet>
+
+</databaseChangeLog>

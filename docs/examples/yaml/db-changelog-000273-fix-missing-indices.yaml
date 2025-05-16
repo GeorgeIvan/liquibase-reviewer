@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000273-fix-missing-indices.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000273
+      tagDatabase:
+        tag: 'pre-000273'
+
+  - changeSet:
+      author: appian
+      id: '000273.1.0'
+      comment: Add index on replica_load_event.record_type_uuid
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            tableName: replica_load_event
+            indexName: rpl_ld_evnt_rc_type_uuid_idx
+      createIndex:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: record_type_uuid
+        indexName: rpl_ld_evnt_rc_type_uuid_idx
+        unique: false
+
+  - changeSet:
+      author: appian
+      id: '000273.2.0'
+      comment: Add index on record_type_sources.refresh_schedule_id
+      validCheckSum: ANY # https://issues.appian.com/browse/AN-182494
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          indexExists:
+            tableName: record_type_sources
+            indexName: record_type_sources_rs_id_idx
+      createIndex:
+        tableName: record_type_sources
+        columns:
+          - column:
+              name: refresh_schedule_id
+        indexName: record_type_sources_rs_id_idx

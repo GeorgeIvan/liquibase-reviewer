@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000290-design-guidance-foreign-key-relationship.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000290'
+      tagDatabase:
+        tag: 'pre-000290'
+  - changeSet:
+      author: appian
+      id: '000290.1.0'
+      comment: drop dg_object_info table, we need to update the primary key and don't need to keep the data
+      changes:
+        - dropTable:
+            tableName: dg_object_info
+            cascadeConstraints: true
+  - changeSet:
+      author: appian
+      id: '000290.2.0'
+      comment: Create new dg_object_info table
+      createTable:
+        tableName: dg_object_info
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: object_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: false
+          - column:
+              name: object_type_id
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: object_name
+              type: ${stringType}(512)  #some design objects (such as interface and rule)'s names can be as long as 500 characters
+              constraints:
+                nullable: false
+          - column:
+              name: modifier
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: modified_at
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000290.2.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: dg_object_info_sq
+  - changeSet:
+      id: '000290.2.2'
+      author: appian
+      comment: add unique constraint for object_uuid, object_type_id
+      changes:
+        - addUniqueConstraint:
+            tableName: dg_object_info
+            constraintName: dg_object_info_uuid_type_id_uc
+            columnNames: object_uuid, object_type_id
+  - changeSet:
+      author: appian
+      id: '000290.3.0'
+      comment: Add object_info_id column in dg_object table
+      addColumn:
+        tableName: dg_object
+        column:
+          name: object_info_id
+          type: ${longtype}
+          constraints:
+            nullable: true
+  - changeSet:
+      id: '000290.3.1'
+      author: appian
+      changes:
+        comment: Add FK from dg_object to dg_object_info.id
+        addForeignKeyConstraint:
+          constraintName: dg_object_object_info_id_fk
+          baseTableName: dg_object
+          baseColumnNames: object_info_id
+          referencedTableName: dg_object_info
+          referencedColumnNames: id

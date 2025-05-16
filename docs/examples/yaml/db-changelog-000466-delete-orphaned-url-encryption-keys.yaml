@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000466-delete-orphaned-url-encryption-keys.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000466
+      tagDatabase:
+        tag: 'pre-000466'
+
+  - changeSet:
+      author: appian
+      id: '000466.1.0'
+      comment: Delete url encryption keys for portals and sites that have been deleted
+      changes:
+        delete:
+          tableName: symmetric_keys
+          where: NOT EXISTS (
+                  (SELECT 1 FROM site WHERE site.uuid = symmetric_keys.key_name)
+                  UNION
+                  (SELECT 1 FROM portal WHERE portal.uuid = symmetric_keys.key_name)
+                )

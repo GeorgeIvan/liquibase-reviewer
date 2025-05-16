@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000188-add-caching-enabled-to-record-type.xml">
+
+  <changeSet author="appian" id="tag-0000187">
+    <tagDatabase tag="000187"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000188.1.0">
+    <comment>Create new column is_caching_enabled</comment>
+    <addColumn tableName="record_type">
+      <column name="is_caching_enabled" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

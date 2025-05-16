@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000543-add-process-filters-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000543'
+      tagDatabase:
+        tag: 'pre-000543'
+
+  - changeSet:
+      id: '000543.1.0'
+      author: appian
+      comment: Create mining_prc_prv_filters_cfg table
+      changes:
+        - createTable:
+            tableName: mining_prc_prv_filters_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: mining_process_provider_id
+                  type: ${longtype}
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: filters_cfg_json
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000543.2.0'
+      author: appian
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_prc_prv_filters_cfg_sq
+  - changeSet:
+      id: '000543.3.0'
+      author: appian
+      comment: Add FK for mining_prc_prv_filters_cfg.mining_process_provider_id to mining_process_provider.id
+      addForeignKeyConstraint:
+        constraintName: mpp_filter_mpp_id_fk
+        baseTableName: mining_prc_prv_filters_cfg
+        baseColumnNames: mining_process_provider_id
+        referencedTableName: mining_process_provider
+        referencedColumnNames: id
+        onDelete: CASCADE

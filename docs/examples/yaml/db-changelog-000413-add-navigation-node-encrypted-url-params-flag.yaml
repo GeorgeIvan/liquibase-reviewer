@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000413-add-navigation-node-encrypted-url-params-flag.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000413'
+      tagDatabase:
+        tag: 'pre-000413'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000413.1.0'
+      comment: Add are url params encrypted flag
+      addColumn:
+        tableName: navigation_node
+        columns:
+          - column:
+              name: are_url_params_encrypted
+              type: ${booleanType}
+              defaultValueBoolean: true
+              constraints:
+                nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000413.1.1'
+      comment: Remove the default value for future new rows
+      dropDefaultValue:
+        tableName: navigation_node
+        columnName: are_url_params_encrypted
+        columnDataType: ${booleanType}

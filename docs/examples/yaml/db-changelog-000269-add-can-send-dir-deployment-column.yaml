@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000269-add-can-send-dir-deployment-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000269'
+      tagDatabase:
+        tag: 'pre-000269'
+
+  - changeSet:
+      author: appian
+      id: '000269.1.0'
+      comment: Create a new column for can_send_dir_deployment
+      addColumn:
+        tableName: connected_env
+        columns:
+          - column:
+              name: can_send_dir_deployment
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: 'false'
+
+  - changeSet:
+      author: appian
+      id: '000269.1.1'
+      comment: Populate the original value of can_send_dir_deployment to the value of the trusted deployment config
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          onError: MARK_RAN
+          and:
+            - sqlCheck:
+                expectedResult: 1
+                sql: "SELECT count(*) FROM cfg WHERE prop_key = 'conf.designDeployment.TRUSTED_DEPLOYMENT'"
+            - sqlCheck:
+                expectedResult: true
+                sql: "SELECT prop_value FROM cfg WHERE prop_key = 'conf.designDeployment.TRUSTED_DEPLOYMENT'"
+        update:
+          tableName: connected_env
+          columns:
+            - column:
+                name: can_send_dir_deployment
+                valueBoolean: true
+                type: ${booleanType}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000174-user-response-times-table.xml">
+
+  <changeSet author="appian" id="tag-000173">
+    <tagDatabase tag="000173"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000174.1.0">
+    <comment>Create user_response_time table</comment>
+    <createTable tableName="user_response_time">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="object_type" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="object_url_stub" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="view_url_stub" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="response_time_ms" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="metrics" type="${blobType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000174.1.1">
+    <createIndex indexName="created_ts_idx" tableName="user_response_time" unique="false">
+      <column name="created_ts"/>
+    </createIndex>
+
+    <createIndex indexName="object_created_ts_idx" tableName="user_response_time" unique="false">
+      <column name="object_type"/>
+      <column name="object_url_stub"/>
+      <column name="view_url_stub"/>
+      <column name="created_ts"/>
+    </createIndex>
+
+    <createIndex indexName="object_response_time_ms_idx" tableName="user_response_time" unique="false">
+      <column name="object_type"/>
+      <column name="object_url_stub"/>
+      <column name="view_url_stub"/>
+      <column name="response_time_ms"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000174.1.2">
+    <comment>Foreign Key FROM user_response_time.usr_id TO usr.id</comment>
+    <addForeignKeyConstraint constraintName="user_response_time_usrid_fk"
+                             baseTableName="user_response_time" baseColumnNames="usr_id" referencedTableName="usr"
+                             referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000174.1.3">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="user_response_time_sq"/>
+  </changeSet>
+
+</databaseChangeLog>

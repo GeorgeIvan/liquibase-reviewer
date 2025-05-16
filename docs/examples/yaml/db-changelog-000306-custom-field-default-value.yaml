@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000306-custom-field-default-value.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000306
+      tagDatabase:
+        tag: 'pre-000306'
+  - changeSet:
+      author: appian
+      id: '000306.1.0'
+      comment: Create column for custom_field_default_value
+      addColumn:
+        tableName: record_source_fields
+        columns:
+          - column:
+              name: custom_field_default_value
+              type: ${mediumStringType}
+              constraints:
+                nullable: true

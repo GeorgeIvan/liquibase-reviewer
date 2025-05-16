@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000097-quickapps-table-and-column-names.xml">
+
+  <changeSet author="appian" id="tag-000096">
+    <tagDatabase tag="000096"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.1.0">
+    <comment>Create new column main_tbl_name</comment>
+    <addColumn tableName="quickapp">
+      <column name="main_tbl_name" type="${shortStringType}" defaultValue="">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.2.0">
+    <comment>Create new column change_tbl_name</comment>
+    <addColumn tableName="quickapp">
+      <column name="change_tbl_name" type="${shortStringType}" defaultValue="">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <!-- This changeset used to declared a uniqueConstraintName for uuid called `qa_db_prefix_uc`.
+  Liquibase ignored this uniqueConstraintName before 3.6.0, so we dropped it as part of the upgrade
+  to 3.6.2 to maintain backwards schema compatibility. -->
+  <changeSet author="appian" id="000097.3.0">
+    <validCheckSum></validCheckSum>
+    <comment>Create new column db_prefix</comment>
+    <addColumn tableName="quickapp">
+      <column name="db_prefix" type="${shortStringType}" defaultValue="">
+        <constraints nullable="false" unique="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.4.0">
+    <comment>Create new column col_name</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="col_name" type="${shortStringType}" defaultValue="">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.5.0">
+    <comment>Create new column join_tbl_name</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="join_tbl_name" type="${shortStringType}">
+        <constraints nullable="true" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.6.0">
+    <comment>Create new column inv_join_col_name</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="inv_join_col_name" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.7.0">
+    <comment>Create new column lookup_tbl_name</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="lookup_tbl_name" type="${shortStringType}">
+        <constraints nullable="true" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000097.8.0">
+    <comment>Create new column active</comment>
+    <addColumn tableName="quickapp_fld">
+      <column name="is_deleted" type="${booleanType}" valueBoolean="false" defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

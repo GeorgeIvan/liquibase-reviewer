@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000011.xml">
+  
+  <changeSet author="appian" id="tag-000010">
+    <tagDatabase tag="000010"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000011.1.0">
+    <comment>Create the usr_followers table</comment>
+    <createTable tableName="usr_followers">
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="follower_usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000011.1.1">
+    <addPrimaryKey columnNames="usr_id, follower_usr_id" tableName="usr_followers"/>
+  </changeSet>
+  <changeSet author="appian" id="000011.1.2">
+    <addForeignKeyConstraint baseColumnNames="usr_id" baseTableName="usr_followers"
+      constraintName="usr_followers_uid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000011.1.3">
+    <addForeignKeyConstraint baseColumnNames="follower_usr_id" baseTableName="usr_followers"
+      constraintName="usr_followers_fid_fk" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="usr"
+      referencesUniqueColumn="false"/>
+  </changeSet>
+  
+  <!-- MySQL automatically creates indexes for FK columns, but other DBs don't, so we have to do it ourselves. -->
+  <changeSet author="appian" id="000011.2.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="usr_followers_uid_fk" tableName="usr_followers" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="appian" id="000011.2.1">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="usr_followers_fid_fk" tableName="usr_followers" unique="false">
+      <column name="follower_usr_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

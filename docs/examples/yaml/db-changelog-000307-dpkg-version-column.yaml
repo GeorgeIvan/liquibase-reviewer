@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000307-dpkg-version-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000307'
+      tagDatabase:
+        tag: 'pre-000307'
+
+  - changeSet:
+      author: appian
+      id: '000307.1.0'
+      comment: Add version column
+      addColumn:
+        tableName: dpkg
+        column:
+          name: version
+          type: ${longType}
+          defaultValue: 0
+          valueNumeric: 0
+          constraints:
+            nullable: false

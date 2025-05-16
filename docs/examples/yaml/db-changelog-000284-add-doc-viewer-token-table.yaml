@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000284-add-doc-viewer-token-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000284'
+      tagDatabase:
+        tag: 'pre-000284'
+  - changeSet:
+      author: appian
+      id: '000284.1.0'
+      comment: Create doc_viewer_token table
+      createTable:
+        tableName: doc_viewer_token
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: token_hash
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: token_hash_uc
+          - column:
+              name: creation_time
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000284.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: doc_viewer_token_sq

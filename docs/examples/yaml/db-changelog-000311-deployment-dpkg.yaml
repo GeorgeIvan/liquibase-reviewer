@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000311-deployment-dpkg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000311'
+      tagDatabase:
+        tag: 'pre-000311'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000311.1.0'
+      comment: Create deployment_dpkg table
+      changes:
+        - createTable:
+            tableName: deployment_dpkg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: deployment_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: proj_mgmt_url
+                  type: ${urlType}
+                  constraints:
+                    nullable: true
+        - createIndex:
+            indexName: dpl_dpkg_id_idx
+            tableName: deployment_dpkg
+            columns:
+              - column:
+                  name: deployment_id
+        - addForeignKeyConstraint:
+            constraintName: dpl_dpkg_dpl_id_fk
+            baseTableName: deployment_dpkg
+            baseColumnNames: deployment_id
+            referencedTableName: deployment
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '000311.1.1'
+      comment: Create sequence for deployment_dpkg
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: deployment_dpkg_sq

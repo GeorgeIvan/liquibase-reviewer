@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001033-add-record-index-event-table.yaml
+
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001033'
+      tagDatabase:
+        tag: 'pre-001033'
+
+  - changeSet:
+      id: '001033.1.0'
+      author: appian
+      comment: Create record_index_event table
+      createTable:
+        tableName: record_index_event
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: status
+              type: ${byteType}
+              constraints:
+                nullable: false
+          - column:
+              name: start_time_ms
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: end_time_ms
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: success_count
+              type: ${integerType}
+              constraints:
+                nullable: true
+          - column:
+              name: in_progress_count
+              type: ${integerType}
+              constraints:
+                nullable: true
+          - column:
+              name: failed_count
+              type: ${integerType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '001033.2.0'
+      comment: Add record_index_event_id column to replica_load_event table
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: record_index_event_id
+              type: ${longType}
+              constraints:
+                nullable: true
+  - changeSet:
+      author: appian
+      id: '001033.3.0'
+      comment: Add foreign key constraint to replica_load_event
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: rle_rie_id_fk
+            baseTableName: replica_load_event
+            baseColumnNames: record_index_event_id
+            referencedTableName: record_index_event
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      id: '001033.4.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_index_event_sq

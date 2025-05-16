@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000575-create-mining-kpi-subscriber.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000575'
+      tagDatabase:
+        tag: 'pre-000575'
+
+  - changeSet:
+      id: '000575.1.0'
+      author: appian
+      comment: Create mining_kpi_subscriber table
+      changes:
+        - createTable:
+            tableName: mining_kpi_subscriber
+            columns:
+              - column:
+                  name: mining_kpi_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: usr_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+  - changeSet:
+      id: '000575.2.0'
+      author: appian
+      comment: Add FK for mining_kpi_subscriber.mining_kpi_id to mining_kpi.id
+      addForeignKeyConstraint:
+        constraintName: kpi_subscriber_kpi_id_fk
+        baseTableName: mining_kpi_subscriber
+        baseColumnNames: mining_kpi_id
+        referencedTableName: mining_kpi
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      id: '000575.3.0'
+      author: appian
+      comment: Add FK for mining_kpi_subscriber.usr_id to usr.id
+      addForeignKeyConstraint:
+        constraintName: kpi_subscriber_usr_id_fk
+        baseTableName: mining_kpi_subscriber
+        baseColumnNames: usr_id
+        referencedTableName: usr
+        referencedColumnNames: id
+        onDelete: CASCADE
+  - changeSet:
+      id: '000575.4.0'
+      author: appian
+      comment: Add index on mining_kpi_subscriber.mining_kpi_id
+      changes:
+        - createIndex:
+            tableName: mining_kpi_subscriber
+            columns:
+              - column:
+                  name: mining_kpi_id
+            indexName: kpi_subscriber_kpi_id_idx
+            unique: false
+  - changeSet:
+      id: '000575.5.0'
+      author: appian
+      comment: Add index on mining_kpi_subscriber.usr_id
+      changes:
+        - createIndex:
+            tableName: mining_kpi_subscriber
+            columns:
+              - column:
+                  name: usr_id
+            indexName: kpi_subscriber_usr_id_idx
+            unique: false
+

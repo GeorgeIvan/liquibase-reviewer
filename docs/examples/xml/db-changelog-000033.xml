@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000033.xml">
+
+  <changeSet author="appian" id="tag-000032">
+    <tagDatabase tag="000032"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000033.1.0">
+    <comment>Change record dashboard name expression field to 4000 chars</comment>
+     <modifyDataType tableName="record_detail_view_cfg" columnName="name_expr" newDataType="${mediumStringType}"/>
+  </changeSet>
+</databaseChangeLog>

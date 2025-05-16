@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000364-add-portals-branding-cfg.yaml
+  - changeSet:
+      id: 'tag-pre-000364'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000364'
+  - changeSet:
+      author: appian
+      id: '000364.1.0'
+      comment: Create portal_branding_cfg table
+      changes:
+        - createTable:
+            tableName: portal_branding_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: portal_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: branding_key
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: branding_source
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: branding_value
+                  type: ${expressionStringType}
+
+        - addForeignKeyConstraint:
+            constraintName: prtl_branding_cfg_prtl_id_fk
+            baseTableName: portal_branding_cfg
+            baseColumnNames: portal_id
+            referencedTableName: portal
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: prtl_branding_cfg_prtl_id_idx
+            tableName: portal_branding_cfg
+            columns:
+              - column:
+                  name: portal_id
+  - changeSet:
+      author: appian
+      comment: A sequence to provide primary key values for the portal branding cfg table
+      id: '000364.2.0'
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      createSequence:
+        sequenceName: portal_branding_cfg_sq

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000224-add-record-fld-cfg-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000224
+      tagDatabase:
+        tag: 'pre-000224'
+
+  - changeSet:
+      author: appian
+      id: '000224.0.0'
+      comment: Create UUID column for record_fld_cfg
+      addColumn:
+        tableName: record_fld_cfg
+        column:
+          name: uuid
+          type: ${uuidType}
+          constraints:
+            nullable: 'true'

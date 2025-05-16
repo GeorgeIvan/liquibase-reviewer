@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000353-add-historical-record-type-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000353
+      tagDatabase:
+        tag: 'pre-000353'
+
+  - changeSet:
+      author: appian
+      id: '000353.1.0'
+      comment: Create record_type_history table
+      changes:
+        - createTable:
+            tableName: record_type_history
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: record_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+              - column:
+                  name: record_type_definition
+                  type: ${blobType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by_user_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: record_type_history_rt_id_fk
+            baseTableName: record_type_history
+            baseColumnNames: record_type_id
+            referencedTableName: record_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: record_type_history_usr_id_fk
+            baseTableName: record_type_history
+            baseColumnNames: updated_by_user_id
+            referencedTableName: usr
+            referencedColumnNames: id
+
+        - createIndex:
+            indexName: record_type_history_rt_id_idx
+            tableName: record_type_history
+            columns:
+              - column:
+                  name: record_type_id
+
+  - changeSet:
+      id: '000353.2.0'
+      comment: A sequence to provide primary key values for the record_type_history table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_type_history_sq

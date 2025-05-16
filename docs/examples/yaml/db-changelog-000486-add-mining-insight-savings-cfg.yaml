@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000486-add-mining-insight-savings-cfg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000486'
+      tagDatabase:
+        tag: 'pre-000486'
+
+  - changeSet:
+      author: appian
+      id: '000486.1.0'
+      comment: Add mining_insight_savings_cfg table
+      changes:
+        - createTable:
+            tableName: mining_insight_savings_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_insight_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: insight_savings_insight_id_uc
+              - column:
+                  name: comparison_basis_type
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: potential_percentage
+                  type: ${doubleType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: savings_timeframe
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: snapshot_savings
+                  type: ${doubleType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000486.2.0'
+      comment: Add foreign key to insight
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_insight_s_cfg_ins_id_fk
+            baseTableName: mining_insight_savings_cfg
+            baseColumnNames: mining_insight_id
+            referencedTableName: mining_insight
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      author: appian
+      id: '000486.3.0'
+      comment: Create sequence to provide primary key value for savings config
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_insight_savings_cfg_sq

@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000566-add-is-deleted-to-kpi-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000566'
+      tagDatabase:
+        tag: 'pre-000566'
+  - changeSet:
+      id: '000566.1.0'
+      author: appian
+      comment: Add is_deleted field to mining_scope_kpis
+      changes:
+        - addColumn:
+            tableName: mining_scope_kpis
+            column:
+              name: is_deleted
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000566.1.1'
+      author: appian
+      comment: Add is_deleted field to mining_kpi
+      changes:
+        - addColumn:
+            tableName: mining_kpi
+            column:
+              name: is_deleted
+              type: ${booleanType}
+              defaultValueBoolean: false
+              valueBoolean: false
+              constraints:
+                nullable: false

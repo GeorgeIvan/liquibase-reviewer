@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000392-add-autopublish-to-portal-publish-info.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000392'
+      tagDatabase:
+        tag: 'pre-000392'
+
+  - changeSet:
+      author: appian
+      id: '000392.1.0'
+      comment: Add columns to portal_publish_info to support autopublish
+      changes:
+        - addColumn:
+            tableName: portal_publish_info
+            columns:
+              - column:
+                  name: target_tag
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: applied_tag
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: ${longType}
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: most_recent_error
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000392.1.1'
+      comment: Remove the default values from the new columns, now that migration of old rows is complete
+      changes:
+        - dropDefaultValue:
+            tableName: portal_publish_info
+            columnName: target_tag
+            columnDataType: ${longType}
+        - dropDefaultValue:
+            tableName: portal_publish_info
+            columnName: applied_tag
+            columnDataType: ${longType}
+        - dropDefaultValue:
+            tableName: portal_publish_info
+            columnName: version
+            columnDataType: ${longType}

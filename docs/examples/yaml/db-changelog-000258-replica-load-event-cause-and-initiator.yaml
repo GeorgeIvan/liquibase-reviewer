@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000258-replica-load-event-cause-and-initiator.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000258'
+      tagDatabase:
+        tag: 'pre-000258'
+  - changeSet:
+      author: appian
+      id: '000258.1.0'
+      comment: Add cause and initiator columns to replica_load_event table, defaulting the cause to SCHEDULED (byte code 1)
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: cause
+              type: ${byteType}
+              valueNumeric: 1
+              constraints:
+                nullable: 'true'
+          - column:
+              name: initiator_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: 'true'

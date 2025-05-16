@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000425-add-name-to-mining-log.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000425
+      tagDatabase:
+        tag: 'pre-000425'
+  - changeSet:
+      author: appian
+      id: '000425.1.0'
+      comment: Create column for name
+      addColumn:
+        tableName: mining_log
+        column:
+          name: name
+          type: ${shortStringType}
+          defaultValue: ""
+          constraints:
+            nullable: false
+
+  - changeSet:
+      author: appian
+      id: '000425.1.1'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: mining_log
+        columnName: name
+        columnDataType: ${shortStringType}

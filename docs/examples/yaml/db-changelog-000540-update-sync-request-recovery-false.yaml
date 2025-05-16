@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000540-update-sync-request-recovery-false.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000540'
+      tagDatabase:
+        tag: 'pre-000540'
+
+  - changeSet:
+      author: appian
+      id: '000540.1.0'
+      comment: Set column REQUESTS_RECOVERY to false in QRTZ_JOB_DETAILS table for sync jobs
+      update:
+        tableName: QRTZ_JOB_DETAILS
+        column:
+          name: REQUESTS_RECOVERY
+          valueBoolean: 'false'
+        where: JOB_GROUP = 'record_load_group'

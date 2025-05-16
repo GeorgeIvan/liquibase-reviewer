@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000313-add-related_record_field_uuid-column-to-record_fld_cfg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000313'
+      tagDatabase:
+        tag: 'pre-000313'
+  - changeSet:
+      author: appian
+      id: '000313.1.0'
+      comment: Add related_record_field_uuid column to record_fld_cfg table
+      addColumn:
+        tableName: record_fld_cfg
+        columns:
+          - column:
+              name: related_record_field_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

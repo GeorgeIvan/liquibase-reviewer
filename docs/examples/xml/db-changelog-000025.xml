@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000025.xml">
+
+  <changeSet author="appian" id="tag-000024">
+    <tagDatabase tag="000024"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000025.1.0">
+    <comment>Create role map table for ui_container.</comment>
+    <createTable tableName="ui_container_rm">
+      <column name="ui_container_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000025.1.1">
+    <comment>Add PK for ui_container_rm.</comment>
+    <addPrimaryKey columnNames="ui_container_id, rm_entry_id" tableName="ui_container_rm"/>
+  </changeSet>
+  <changeSet author="appian" id="000025.1.2">
+    <comment>Add FK from ui_container_rm to rm_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="ui_container_rm_rmeid_fk"
+      baseTableName="ui_container_rm" baseColumnNames="rm_entry_id"
+      referencedTableName="rm_entry" referencedColumnNames="id"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000025.1.3">
+    <comment>Add FK from ui_container_rm to ui_container.id.</comment>
+    <addForeignKeyConstraint constraintName="ui_container_rm_uicid_fk"
+      baseTableName="ui_container_rm" baseColumnNames="ui_container_id"
+      referencedColumnNames="id" referencedTableName="ui_container"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000025.1.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create an index for the FK column ui_container_rm.rm_entry_id</comment>
+    <createIndex indexName="ui_container_rm_rmei_idx" tableName="ui_container_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000025.2.0">
+    <comment>Add a system role (in rm_role) for Report Administrator.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="10"/>
+      <column name="name" value="report_administrator"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000025.2.1">
+    <comment>Add a system role (in rm_role) for Report Editor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="11"/>
+      <column name="name" value="report_editor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000025.2.2">
+    <comment>Add a system role (in rm_role) for Report Auditor.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="12"/>
+      <column name="name" value="report_auditor"/>
+    </insert>
+  </changeSet>
+  <changeSet author="appian" id="000025.2.3">
+    <comment>Add a system role (in rm_role) for Report Viewer.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="13"/>
+      <column name="name" value="report_viewer"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>
+

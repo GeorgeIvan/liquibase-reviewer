@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000241-reused-version-deployment-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000241
+      tagDatabase:
+        tag: 'pre-000241'
+
+  - changeSet:
+      author: appian
+      id: '000241.0.0'
+      comment: Add reused deployment column to deployment
+      addColumn:
+        tableName: deployment
+        column:
+          name: reused_deployment_uuid
+          type: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '000241.1.0'
+      comment: Create a new column for deployment version
+      addColumn:
+        tableName: deployment
+        column:
+          name: version_id
+          type: ${integerType}
+          constraints:
+            nullable: false
+          defaultValueNumeric: 1
+
+  - changeSet:
+      author: appian
+      id: '000241.2.0'
+      comment: Create a new column for deployment event version
+      addColumn:
+        tableName: deployment_event
+        column:
+          name: version_id
+          type: ${integerType}
+          constraints:
+            nullable: false
+          defaultValueNumeric: 1

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000110-quickapps-admin-group.xml">
+
+  <changeSet author="appian" id="tag-000109">
+    <tagDatabase tag="000109"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000110.1.0">
+    <comment>Add the administrator group column</comment>
+    <addColumn tableName="quickapp">
+      <column name="admin_grp_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

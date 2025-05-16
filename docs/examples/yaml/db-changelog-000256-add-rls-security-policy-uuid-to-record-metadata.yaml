@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000256-add-rls-security-policy-uuid-to-record-metadata.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000256'
+      tagDatabase:
+        tag: 'pre-000256'
+  - changeSet:
+      author: appian
+      id: '000256.1.0'
+      comment: Add security policy uuid to replica metadata table
+      addColumn:
+        tableName: record_replica_metadata
+        columns:
+          - column:
+              name: security_policy_uuid
+              type: ${uuidType}

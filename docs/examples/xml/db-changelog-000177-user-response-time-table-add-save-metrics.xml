@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000177-user-response-time-table-add-save-metrics.xml">
+
+  <changeSet author="appian" id="tag-000176">
+    <tagDatabase tag="000176"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000177.0.0">
+    <comment>Add columns for save metrics, and save metrics size</comment>
+    <addColumn tableName="user_response_time">
+      <column name="save_metrics" type="${blobType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="user_response_time">
+      <column name="save_metrics_size" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

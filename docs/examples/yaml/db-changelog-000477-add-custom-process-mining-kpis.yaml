@@ -1,0 +1,352 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000477-add-custom-process-mining-kpis.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000477'
+      tagDatabase:
+        tag: 'pre-000477'
+  - changeSet:
+      author: appian
+      id: '000477.1.0'
+      comment: Create table for mining_kpi
+      changes:
+        - createTable:
+            tableName: mining_kpi
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_type
+                  type: ${byteType}
+              - column:
+                  name: visualization_style
+                  type: ${byteType}
+  - changeSet:
+      author: appian
+      id: '000477.1.1'
+      comment: Create indicies for mining_kpi
+      changes:
+        - createIndex:
+            indexName: mining_kpi_process_id_idx
+            tableName: mining_kpi
+            unique: false
+            columns:
+              - column:
+                  name: mining_process_id
+        - createIndex:
+            indexName: mining_kpi_name_un_idx
+            tableName: mining_kpi
+            unique: true
+            columns:
+              - column:
+                  name: name
+  - changeSet:
+      author: appian
+      id: '000477.1.2'
+      comment: Create sequence to provide primary key values for mining_kpi
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_sq
+  - changeSet:
+      author: appian
+      id: '000477.2.0'
+      comment: Create table for mining_kpi_type
+      changes:
+        - createTable:
+            tableName: mining_kpi_type
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000477.2.1'
+      comment: Create index for mining_kpi_type
+      changes:
+        - createIndex:
+            indexName: mining_kpi_type_kpi_id_idx
+            tableName: mining_kpi_type
+            columns:
+              - column:
+                  name: mining_kpi_id
+  - changeSet:
+      author: appian
+      id: '000477.2.2'
+      comment: Create sequence to provide primary key values mining_kpi_type
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_type_sq
+  - changeSet:
+      author: appian
+      id: '000477.3.0'
+      comment: Create table for mining_kpi_count_type
+      changes:
+        - createTable:
+            tableName: mining_kpi_count_type
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: kpi_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count_option
+                  type: ${byteType}
+  - changeSet:
+      author: appian
+      id: '000477.3.1'
+      comment: Create index for mining_kpi_count_type
+      changes:
+        - createIndex:
+            indexName: kpi_count_type_kpi_type_id_idx
+            tableName: mining_kpi_count_type
+            columns:
+              - column:
+                  name: kpi_type_id
+  - changeSet:
+      author: appian
+      id: '000477.4.0'
+      comment: Create table for mining_kpi_count_cfg
+      changes:
+        - createTable:
+            tableName: mining_kpi_count_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_count_type_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '000477.4.1'
+      comment: Create index for mining_kpi_count_cfg
+      changes:
+        - createIndex:
+            indexName: kpi_count_cfg_type_id_idx
+            tableName: mining_kpi_count_cfg
+            columns:
+              - column:
+                  name: mining_kpi_count_type_id
+  - changeSet:
+      author: appian
+      id: '000477.4.2'
+      comment: Create sequence to provide primary key values for mining_kpi_count_cfg
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_kpi_count_cfg_sq
+  - changeSet:
+      author: appian
+      id: '000477.5.0'
+      comment: Create table for kpi_count_attribute
+      changes:
+        - createTable:
+            tableName: kpi_count_attribute
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_count_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attributeCategory
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: attributeValue
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000477.5.1'
+      comment: Create index for kpi_count_attribute
+      changes:
+        - createIndex:
+            indexName: kpi_count_attribute_cfg_id_idx
+            tableName: kpi_count_attribute
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_count_cfg_id
+  - changeSet:
+      author: appian
+      id: '000477.6.0'
+      comment: Create table for mining_scope_kpis
+      changes:
+        - createTable:
+            tableName: mining_scope_kpis
+            columns:
+              - column:
+                 name: mining_scope_id
+                 type: ${longType}
+                 constraints:
+                   nullable: false
+                   primaryKey: true
+              - column:
+                 name: mining_kpi_id
+                 type: ${longType}
+                 constraints:
+                   nullable: false
+                   primaryKey: true
+  - changeSet:
+      author: appian
+      id: '000477.6.1'
+      comment: Create indicies for mining_scope_kpis
+      changes:
+        - createIndex:
+            indexName: mining_scope_kpis_kpi_id_idx
+            tableName: mining_scope_kpis
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_id
+        - createIndex:
+            indexName: mining_scope_kpis_scope_id_idx
+            tableName: mining_scope_kpis
+            unique: false
+            columns:
+              - column:
+                  name: mining_scope_id
+  - changeSet:
+      author: appian
+      id: '000477.7.0'
+      comment: Add fk for base table mining_kpi
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_process_id_fk
+            baseTableName: mining_kpi
+            baseColumnNames: mining_process_id
+            referencedTableName: mining_process
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000477.7.1'
+      comment: Add fks for base table mining_scope_kpis
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_scope_kpis_kpi_id_fk
+            baseTableName: mining_scope_kpis
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: mining_scope_kpis_scope_id_fk
+            baseTableName: mining_scope_kpis
+            baseColumnNames: mining_scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+  - changeSet:
+      author: appian
+      id: '000477.7.2'
+      comment: Add fk for base table mining_kpi_type
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_kpi_type_kpi_id_fk
+            baseTableName: mining_kpi_type
+            baseColumnNames: mining_kpi_id
+            referencedTableName: mining_kpi
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000477.7.3'
+      comment: Add fk for base table mining_kpi_count_type
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_count_type_kpi_type_id_fk
+            baseTableName: mining_kpi_count_type
+            baseColumnNames: kpi_type_id
+            referencedTableName: mining_kpi_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000477.7.4'
+      comment: Add fk for base table mining_kpi_count_cfg
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_count_cfg_count_type_id_fk
+            baseTableName: mining_kpi_count_cfg
+            baseColumnNames: mining_kpi_count_type_id
+            referencedTableName: mining_kpi_count_type
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000477.7.5'
+      comment: Add fk for base table kpi_count_attribute
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_count_attribute_cfg_id_fk
+            baseTableName: kpi_count_attribute
+            baseColumnNames: mining_kpi_count_cfg_id
+            referencedTableName: mining_kpi_count_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE

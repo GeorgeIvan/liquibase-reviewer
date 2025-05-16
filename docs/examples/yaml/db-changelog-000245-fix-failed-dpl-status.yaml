@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000245-fix-failed-dpl-status.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000245
+      tagDatabase:
+        tag: 'pre-000245'
+
+  - changeSet:
+      author: appian
+      id: '000245.0.0'
+      comment: Fixes the deployment status column migration by recalculating failed deployments
+      customChange:
+        class: com.appiancorp.designdeployments.persistence.migration.FixFailedDeploymentStatus

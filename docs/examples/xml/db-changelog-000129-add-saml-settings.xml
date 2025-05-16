@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000129-add-saml-settings.xml">
+
+  <changeSet author="appian" id="tag-000128">
+    <tagDatabase tag="000128"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000129.1.0">
+    <comment>Create saml_settings table</comment>
+    <createTable tableName="saml_settings">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="idp_entity_id" type="${stringType}(1024)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="friendly_name" type="${shortStringType}">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="description" type="${shortStringType}">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="idp_metadata_uuid" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sp_certificate" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sp_certificate_filename" type="${stringType}(1000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sp_req_signature_hash_method" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sp_entity_id" type="${stringType}(1024)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sp_name" type="${stringType}(1000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="group_uuid" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+      <column name="auto_create_users" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="use_username_attr" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="username_attr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="first_name_attr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="last_name_attr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="email_attr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="allow_lowercase_username" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="min_authn_method" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="mobile_auth_popup" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="priority" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="appian" id="000129.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="saml_settings_sq"/>
+  </changeSet>
+
+</databaseChangeLog>

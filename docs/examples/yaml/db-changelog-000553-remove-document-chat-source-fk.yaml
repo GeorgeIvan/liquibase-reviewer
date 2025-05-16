@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000553-remove-document-chat-source-fk.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000553'
+      tagDatabase:
+        tag: 'pre-000553'
+  - changeSet:
+      id: '000553.1.0'
+      author: appian
+      comment: Remove dc_chat_source_document_id_fk FK
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: document_chat_source
+            constraintName: dc_chat_source_document_id_fk

@@ -1,0 +1,243 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000265-add-feature-flag.yaml
+  - changeSet:
+      id: 'tag-pre-000265'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000265'
+  - changeSet:
+      id: '000265.1.0'
+      author: appian
+      changes:
+        comment: Create feature_flag table
+        createTable:
+          tableName: feature_flag
+          columns:
+            - column:
+                name: id
+                type: ${longtype}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: feature_flag_uuid_uc
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: feature_flag_name_uc
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: state
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: conditions
+                type: ${largeStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: version_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000265.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: feature_flag_sq
+  - changeSet:
+      id: '000265.1.2'
+      author: appian
+      comment: FK from feature_flag.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: feature_flag_created_by_fk
+        baseTableName: feature_flag
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000265.1.3'
+      author: appian
+      comment: FK from feature_flag.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: feature_flag_updated_by_fk
+        baseTableName: feature_flag
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000265.1.4'
+      author: appian
+      comment: Add index on created by
+      changes:
+        preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+          onFail: MARK_RAN
+          not:
+            or:
+              - dbms:
+                type: mysql
+              - dbms:
+                type: mariadb
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: feature_flag_created_by_idx
+          tableName: feature_flag
+          unique: false
+  - changeSet:
+      id: '000265.1.5'
+      author: appian
+      changes:
+        comment: Add index on updated by
+        preConditions: # DO NOT COPY THIS PRECONDITION PATTERN. It's not necessary any more, and we can/should treat all DBs the same when creating indexes
+          onFail: MARK_RAN
+          not:
+            or:
+              - dbms:
+                type: mysql
+              - dbms:
+                type: mariadb
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: feature_flag_updated_by_idx
+          tableName: feature_flag
+          unique: false
+  - changeSet:
+      id: '000265.2.0'
+      author: appian
+      changes:
+        comment: Create role map table for feature flags
+        createTable:
+          tableName: feature_flag_rm
+          columns:
+            - column:
+                name: feature_flag_id
+                type: ${longtype}
+                constraints:
+                  nullable: false
+            - column:
+                name: rm_entry_id
+                type: ${longtype}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000265.2.1'
+      author: appian
+      changes:
+        comment: Add PK for feature_flag_rm
+        addPrimaryKey:
+          columnNames: feature_flag_id, rm_entry_id
+          tableName: feature_flag_rm
+  - changeSet:
+      id: '000265.2.2'
+      author: appian
+      changes:
+        comment: Add FK from feature_flag_rm to rm_entry.id
+        addForeignKeyConstraint:
+          constraintName: feature_flag_rm_entry_id_fk
+          baseTableName: feature_flag_rm
+          baseColumnNames: rm_entry_id
+          referencedTableName: rm_entry
+          referencedColumnNames: id
+          deferrable: false
+          initiallyDeferred: false
+          referencesUniqueColumn: false
+  - changeSet:
+      id: '000265.2.3'
+      author: appian
+      changes:
+        comment: Add FK from feature_flag_rm to feature_flag.id
+        addForeignKeyConstraint:
+          constraintName: feature_flag_rm_ff_id_fk
+          baseTableName: feature_flag_rm
+          baseColumnNames: feature_flag_id
+          referencedTableName: feature_flag
+          referencedColumnNames: id
+          deferrable: false
+          initiallyDeferred: false
+          referencesUniqueColumn: false
+  - changeSet:
+      id: '000265.3.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Feature Flag Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 26
+            - column:
+                name: name
+                value: feature_flag_administrator
+  - changeSet:
+      id: '000265.3.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Feature Flag Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 27
+            - column:
+                name: name
+                value: feature_flag_editor
+  - changeSet:
+      id: '000265.3.2'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Feature Flag Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 28
+            - column:
+                name: name
+                value: feature_flag_viewer

@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000489-add-used_rolling_sync-to-replica_load_event.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000489'
+      tagDatabase:
+        tag: 'pre-000489'
+  - changeSet:
+      author: appian
+      id: '000489.1.0'
+      comment: Add used_rolling_sync to replica_load_event table
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: used_rolling_sync
+              type: ${booleanType}
+              valueBoolean: 'false'
+              defaultValueBoolean: 'false'
+              constraints:
+                nullable: false

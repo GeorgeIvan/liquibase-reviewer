@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000221-health-check-last-step.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000221'
+      tagDatabase:
+        tag: 'pre-000221'
+  - changeSet:
+      author: appian
+      id: '000221.1.0'
+      comment: Create new column for last step start time of health check
+      addColumn:
+        tableName: healthcheck
+        column:
+          name: last_step_start_time
+          type: ${longType}
+          constraints:
+            nullable: 'true'

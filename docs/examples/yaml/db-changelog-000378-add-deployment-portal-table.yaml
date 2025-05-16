@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000378-add-deployment-portal-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000378
+      tagDatabase:
+        tag: 'pre-000378'
+
+  - changeSet:
+      author: appian
+      id: '000378.1.0'
+      comment: Create deployment portal info table
+      changes:
+        - createTable:
+            tableName: deployment_portal
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: deployment_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: portal_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: full_url
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: portal_deployment_status
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: deployment_portal_dpl_id_fk
+            baseTableName: deployment_portal
+            baseColumnNames: deployment_id
+            referencedTableName: deployment
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: deployment_portal_dpl_id_idx
+            tableName: deployment_portal
+            columns:
+              - column:
+                  name: deployment_id
+
+  - changeSet:
+      author: appian
+      id: '000378.2.0'
+      comment: A sequence to provide primary key values for the deployment portal table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: deployment_portal_sq

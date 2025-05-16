@@ -1,0 +1,328 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000390-add-oidc-settings-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000390'
+      tagDatabase:
+        tag: 'pre-000390'
+  - changeSet:
+      author: appian
+      id: '000390.1.0'
+      comment: Create oidc_settings table
+      createTable:
+        tableName: oidc_settings
+        columns:
+          - column:
+              name: id
+              type: ${longType}
+              autoIncrement: ${autoIncrement}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: client_id
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: client_secret
+              type: ${mediumStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: issuer_uri
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+          - column:
+              name: username_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: is_dynamic
+              type: ${booleanType}
+              defaultValueBoolean: true
+              constraints:
+                nullable: false
+          - column:
+              name: has_jwt_based_claims
+              type: ${booleanType}
+              constraints:
+                nullable: true
+          - column:
+              name: authorization_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: discovery_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: token_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: userinfo_endpoint
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: jwks_uri
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: last_fetched_ts
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: authentication_group_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: friendly_name
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: friendly_name_uc
+          - column:
+              name: allow_lowercase_username
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_create_users
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_update_users
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: auto_update_user_groups
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: true
+          - column:
+              name: grouptype_uuid
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: appian_group_attribute_name
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: group_mapping_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: first_name_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: last_name_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: nickname_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: email_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: home_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: mobile_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: office_phone_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address1_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address2_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: address3_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: city_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: state_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: zip_code_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: country_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield1_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield2_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield3_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield4_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield5_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield6_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield7_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield8_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield9_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: customfield10_attr
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+          - column:
+              name: created_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: updated_ts
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: ${longType}
+              constraints:
+                nullable: false
+  - changeSet:
+      id: '000390.1.1'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: oidc_settings_sq
+  - changeSet:
+      id: '000390.1.2'
+      author: appian
+      comment: Add FK for oidc_settings.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: oidc_settings_created_by_fk
+        baseTableName: oidc_settings
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000390.1.3'
+      author: appian
+      comment: Add FK for oidc_settings.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: oidc_settings_updated_by_fk
+        baseTableName: oidc_settings
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000390.1.4'
+      author: appian
+      comment: Add index on oidc_settings.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: oidc_settings_created_by_idx
+          tableName: oidc_settings
+          unique: false
+  - changeSet:
+      id: '000390.1.5'
+      author: appian
+      changes:
+        comment: Add index on oidc_settings.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: oidc_settings_updated_by_idx
+          tableName: oidc_settings
+          unique: false

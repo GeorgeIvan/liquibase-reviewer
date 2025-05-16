@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000117-design-object-lock-remove-version-id-columns.xml">
+
+  <changeSet author="appian" id="tag-000116">
+    <tagDatabase tag="000116"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000117.1.0">
+    <comment>Remove latest_version_id_when_locked column from design_object_lock table.</comment>
+    <dropColumn tableName="design_object_lock" columnName="latest_version_id_when_locked"/>
+  </changeSet>
+  <changeSet author="appian" id="000117.1.1">
+    <comment>Remove locked_version_id column from design_object_lock table.</comment>
+    <dropColumn tableName="design_object_lock" columnName="locked_version_id"/>
+  </changeSet>
+</databaseChangeLog>

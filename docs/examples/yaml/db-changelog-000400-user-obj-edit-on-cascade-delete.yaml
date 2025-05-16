@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000400-user-obj-edit-on-cascade-delete.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000400'
+      tagDatabase:
+        tag: 'pre-000400'
+  - changeSet:
+      id: '000400.1.0'
+      author: appian
+      comment: drop usr_obj_edit_usr_id_fk FK
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: user_obj_edit
+            constraintName: usr_obj_edit_usr_id_fk
+  - changeSet:
+      id: '000400.2.0'
+      author: appian
+      comment: add FK back
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: usr_obj_edit_usr_id_fk
+            baseTableName: user_obj_edit
+            baseColumnNames: usr_id
+            referencedTableName: usr
+            referencedColumnNames: id
+            onDelete: CASCADE

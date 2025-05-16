@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000585-update-threshold-kpi-value.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000585
+      tagDatabase:
+        tag: 'pre-000585'
+  - changeSet:
+      author: appian
+      id: '000585.1.0'
+      comment: Change threshold value to double
+      changes:
+        - modifyDataType:
+            tableName: mining_kpi_threshold
+            columnName: threshold_value
+            newDataType: ${doubleType}
+  - changeSet:
+      author: appian
+      id: '000585.2.0'
+      comment: Make the threshold_value column non-nullable, as changing type resets nullability
+      dbms: mariadb,mysql,mssql
+      # Because of http://liquibase.jira.com/browse/CORE-670, on MySQL and SqlServer (even though the ticket doesn't mention SqlServer)
+      # modifying the column type removes the NOT NULL constraint so we have to add it back.
+      addNotNullConstraint:
+        tableName: mining_kpi_threshold
+        columnName: threshold_value
+        columnDataType: ${doubleType}

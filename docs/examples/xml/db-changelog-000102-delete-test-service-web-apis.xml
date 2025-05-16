@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000102-delete-test-service-web-apis.xml">
+
+    <changeSet author="appian" id="tag-000101">
+        <tagDatabase tag="000101"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000102.0.0">
+        <comment>Delete System Test Service WebApis' Rolemaps</comment>
+        <delete tableName="web_api_rm">
+            <where>web_api_id IN (SELECT id FROM web_api WHERE uuid in ('SYSTEM_WEBAPI_startAllTests', 'SYSTEM_WEBAPI_startApplicationTests'))</where>
+        </delete>
+    </changeSet>
+
+    <changeSet author="appian" id="000102.1.0">
+        <comment>Delete System Test Service WebApis</comment>
+        <delete tableName="web_api">
+            <where>uuid in ('SYSTEM_WEBAPI_startAllTests', 'SYSTEM_WEBAPI_startApplicationTests')</where>
+        </delete>
+    </changeSet>
+
+    <changeSet author="appian" id="000102.2.0">
+        <comment>Delete System Test Service WebApis' History</comment>
+        <delete tableName="web_api_history">
+            <where>uuid in ('SYSTEM_WEBAPI_startAllTests', 'SYSTEM_WEBAPI_startApplicationTests')</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>

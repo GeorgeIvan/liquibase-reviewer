@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000215-relationship-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000215
+      tagDatabase:
+        tag: 'pre-000215'
+
+  - changeSet:
+      author: appian
+      id: '000215.0.0'
+      comment: Create a new column for relationship UUIDs
+      addColumn:
+        tableName: record_type_relationships
+        column:
+          name: uuid
+          type: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '000215.1.0'
+      comment: Populate the uuids
+      changes:
+        - customChange:
+            class: com.appiancorp.rdbms.common.schema.PopulateUuidForExistingTable
+            params:
+              - param:
+                  name: tableName
+                  value: record_type_relationships
+              - param:
+                  name: confirmationMessage
+                  value: Done populating relationship UUIDs.
+
+  - changeSet:
+      author: appian
+      id: '000215.2.0'
+      comment: Make uuid not nullable
+      changes:
+        - addNotNullConstraint:
+            tableName: record_type_relationships
+            columnName: uuid
+            columnDataType: ${uuidType}

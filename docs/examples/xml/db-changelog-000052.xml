@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000052.xml">
+
+  <changeSet author="appian" id="tag-000051">
+    <tagDatabase tag="000051"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000052.0.0">
+    <comment>Create a header_expr column on record_detail_view_cfg, for storing the record detail header SAIL expression.</comment>
+    <addColumn tableName="record_detail_view_cfg">
+      <column name="header_expr" type="${stringType}(1000)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

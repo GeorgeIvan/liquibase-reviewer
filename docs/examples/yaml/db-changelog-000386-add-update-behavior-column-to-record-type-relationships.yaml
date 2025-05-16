@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000386-add-update-behavior-column-to-record-type-relationships.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000386
+      tagDatabase:
+        tag: 'pre-000386'
+
+  - changeSet:
+      author: appian
+      id: '000386.1.0'
+      comment: Add nullable update_behavior column to record_type_relationships
+      addColumn:
+        tableName: record_type_relationships
+        column:
+          name: update_behavior
+          type: ${byteType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000386.1.1'
+      comment: Set update_behavior 1 (non-cascading) for all relationship_types
+      sql: UPDATE record_type_relationships SET update_behavior = 1
+
+  - changeSet:
+      author: appian
+      id: '000386.1.2'
+      comment: Add non-null constraint to update_behavior
+      addNotNullConstraint:
+        tableName: record_type_relationships
+        columnName: update_behavior
+        columnDataType: ${byteType}

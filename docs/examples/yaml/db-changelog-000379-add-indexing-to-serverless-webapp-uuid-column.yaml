@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000379-add-indexing-to-serverless-webapp-uuid-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000379
+      tagDatabase:
+        tag: 'pre-000379'
+
+  - changeSet:
+      author: appian
+      id: '000379.1.0'
+      comment: Add indexing to serverless_webapp_uuid column and portal_publish_info
+      createIndex:
+        tableName: portal_publish_info
+        columns:
+          - column:
+              name: serverless_webapp_uuid
+        indexName: portal_publish_info_svrls_idx

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000505-remove-mining-process-administrator.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000505'
+      tagDatabase:
+        tag: 'pre-000505'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: "000505.1.0"
+      changes:
+        comment: Delete system role (in rm_role) for Mining Process Administrator
+        delete:
+          tableName: rm_role
+          where: name='mining_process_administrator'

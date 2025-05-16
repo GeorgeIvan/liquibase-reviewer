@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000029.xml">
+
+  <changeSet author="appian" id="tag-000028">
+    <tagDatabase tag="000028"/>
+  </changeSet>
+
+  <!-- TABLE SecuredAttribute -->
+  <changeSet author="appian" id="000029.1.0">
+    <comment>Add SecuredAttribute table</comment>
+
+    <createTable tableName="external_sys_attr">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="external_sys_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="unique_key" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_show_value_on_ui" type="${booleanType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="order_idx" type="${integerType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for SecuredAttribute id -->
+  <changeSet author="appian" id="000029.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="external_sys_attr_sq"/>
+  </changeSet>
+
+  <!-- TUPLE for external_sys_id, unique_key -->
+  <changeSet author="appian" id="000029.1.2">
+    <addUniqueConstraint columnNames="external_sys_id, unique_key" tableName="external_sys_attr"/>
+  </changeSet>
+
+  <!-- FK for external_sys_id -->
+  <changeSet author="appian" id="000029.1.3">
+    <comment>Foreign Key FROM external_sys_attr.external_sys_id TO external_sys.id</comment>
+    <addForeignKeyConstraint constraintName="external_sys_id_fk" baseTableName="external_sys_attr"
+      baseColumnNames="external_sys_id" referencedTableName="external_sys" referencedColumnNames="id"/>
+  </changeSet>
+
+  <!-- TABLE SystemSecuredValue -->
+  <changeSet author="appian" id="000029.2.0">
+    <comment>Add SystemSecuredValue table</comment>
+    <createTable tableName="external_sys_attr_sys_val">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="external_sys_attr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="val" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for SystemSecuredValue id -->
+  <changeSet author="appian" id="000029.2.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="external_sys_attr_sys_val_sq"/>
+  </changeSet>
+
+  <!-- FK For external_sys_attr_id -->
+  <changeSet author="appian" id="000029.2.2">
+    <comment>Foreign Key FROM external_sys_attr_sys_val.external_sys_attr_id TO external_sys_attr.id</comment>
+    <addForeignKeyConstraint constraintName="extsys_attr_sysval_esysaid_fk"
+      baseTableName="external_sys_attr_sys_val" baseColumnNames="external_sys_attr_id" referencedTableName="external_sys_attr"
+      referencedColumnNames="id"/>
+  </changeSet>
+  <!-- Index for previous FK -->
+  <changeSet author="appian" id="000029.2.3">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Create an index for the FK external_sys_attr_sys_val.external_sys_attr_id</comment>
+    <createIndex indexName="extsys_attr_sysval_aid_fk_idx" tableName="external_sys_attr_sys_val"
+      unique="true">
+      <column name="external_sys_attr_id"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- TABLE UserSecuredValue -->
+  <changeSet author="appian" id="000029.3.0">
+    <comment>Add UserSecuredValue table</comment>
+    <createTable tableName="external_sys_attr_usr_val">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="usr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="external_sys_attr_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="val" type="${mediumStringType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- SEQUENCE for UserSecuredValue id -->
+  <changeSet author="appian" id="000029.3.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="external_sys_attr_usr_val_sq"/>
+  </changeSet>
+
+  <!-- TUPLE for external_sys_id, unique_key -->
+  <changeSet author="appian" id="000029.3.2">
+    <addUniqueConstraint columnNames="usr_id, external_sys_attr_id" tableName="external_sys_attr_usr_val"/>
+  </changeSet>
+
+  <!-- FK for external_sys_attr_id -->
+  <changeSet author="appian" id="000029.3.3">
+    <comment>Foreign Key FROM external_sys_attr_usr_val.external_sys_attr_id TO external_sys_attr.id</comment>
+    <addForeignKeyConstraint constraintName="extsys_attr_usrval_aid_fk" baseTableName="external_sys_attr_usr_val"
+      baseColumnNames="external_sys_attr_id" referencedTableName="external_sys_attr" referencedColumnNames="id"/>
+  </changeSet>
+
+  <!-- FK for usr_id -->
+  <changeSet author="appian" id="000029.3.4">
+    <comment>Foreign Key FROM external_sys_attr_usr_val.usr_id TO usr.id</comment>
+    <addForeignKeyConstraint constraintName="extsys_attr_usrval_usrid_fk"
+      baseTableName="external_sys_attr_usr_val" baseColumnNames="usr_id" referencedTableName="usr"
+      referencedColumnNames="id"/>
+  </changeSet>
+  
+  <!-- Index for external_sys_attr_id FK -->
+  <changeSet author="appian" id="000029.3.5">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <or><dbms type="mysql"/><dbms type="mariadb"/></or>
+      </not>
+    </preConditions>
+    <comment>Create an index for the FK external_sys_attr_usr_val.external_sys_attr_id</comment>
+    <createIndex indexName="extsys_attr_usrval_aid_fk_idx" tableName="external_sys_attr_usr_val"
+      unique="true">
+      <column name="external_sys_attr_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

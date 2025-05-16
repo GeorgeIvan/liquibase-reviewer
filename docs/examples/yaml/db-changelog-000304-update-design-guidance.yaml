@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000304-update-design-guidance.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000304'
+      tagDatabase:
+        tag: 'pre-000304'
+  - changeSet:
+      author: appian
+      id: '000304.1.0'
+      comment: Drop metadata column
+      dropColumn:
+        tableName: dg_object
+        columnName: meta_data
+  - changeSet:
+      author: appian
+      id: '000304.2.0'
+      comment: Drop the default value since some DB require dropping default value before droppign the column
+      dropDefaultValue:
+        tableName: dg_object
+        columnName: hidden
+  - changeSet:
+      author: appian
+      id: '000304.3.0'
+      comment: Drop hidden column
+      dropColumn:
+        tableName: dg_object
+        columnName: hidden
+  - changeSet:
+      author: appian
+      id: '000304.4.0'
+      comment: Add index on guidance_type
+      createIndex:
+        columns:
+          - column:
+              name: guidance_type
+        indexName: guidance_type_idx
+        tableName: dg_object
+        unique: false

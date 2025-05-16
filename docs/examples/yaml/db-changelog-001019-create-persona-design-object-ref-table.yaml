@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001019-create-persona-design-object-ref-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001019
+      tagDatabase:
+        tag: 'pre-001019'
+  - changeSet:
+      author: appian
+      id: '001019.0.0'
+      comment: Create persona_design_object_ref table
+      changes:
+        - createTable:
+            tableName: persona_design_object_ref
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: design_object_uuid
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: design_object_qname
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: req_capture_persona_id
+                  type: ${longtype}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '001019.0.1'
+      author: appian
+      comment: Create a sequence to provide primary key values for the persona_design_object_ref table
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: createSequence
+          value: true
+      changes:
+        createSequence:
+          sequenceName: persona_design_object_ref_sq
+
+  - changeSet:
+      id: '001019.0.2'
+      author: appian
+      comment: Add foreign key constraint to req_capture_persona_id field in persona_design_object_ref table
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: design_object_ref_persona_fk
+            baseTableName: persona_design_object_ref
+            baseColumnNames: req_capture_persona_id
+            referencedTableName: req_capture_persona
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: '001019.0.3'
+      author: appian
+      comment: Adds a composite uniqueness constraint to the req_capture_persona_id and design_object_uuid fields
+      changes:
+        - addUniqueConstraint:
+            constraintName: design_object_ref_uc
+            tableName: persona_design_object_ref
+            columnNames: design_object_uuid, req_capture_persona_id

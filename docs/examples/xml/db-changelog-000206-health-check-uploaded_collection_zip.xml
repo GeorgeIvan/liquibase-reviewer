@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000206-health-check-uploaded_collection_zip.xml">
+
+  <changeSet author="appian" id="tag-000206">
+    <tagDatabase tag="000206"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000206.1.0">
+    <comment>Create new column for uploaded data collection zip of health check</comment>
+    <addColumn tableName="healthcheck">
+      <column name="uploaded_collection_zip" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000206.2.0">
+    <comment>Create new column for request id of health check</comment>
+    <addColumn tableName="healthcheck">
+      <column name="request_id" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

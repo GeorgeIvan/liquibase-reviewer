@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000342-add-index-on-src-rt-id-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000342
+      tagDatabase:
+        tag: 'pre-000342'
+
+  - changeSet:
+      author: appian
+      id: '000342.1.0'
+      comment: Add index on source record type
+      createIndex:
+        tableName: record_type_relationships
+        columns:
+          - column:
+              name: src_rt_id
+        indexName: rt_relationships_src_rt_id_idx
+        unique: false

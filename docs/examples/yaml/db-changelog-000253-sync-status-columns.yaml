@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000253-sync-status-columns.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000253'
+      tagDatabase:
+        tag: 'pre-000253'
+  - changeSet:
+      author: appian
+      id: '000253.1.0'
+      comment: Add status and trigger_name columns to replica_load_event table
+      addColumn:
+        tableName: replica_load_event
+        columns:
+          - column:
+              name: status
+              type: ${byteType}
+              constraints:
+                nullable: 'true'
+          - column:
+              name: trigger_name
+              type: ${shortStringType}
+              constraints:
+                nullable: 'true'

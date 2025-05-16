@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000461-record-type-is-visible-in-data-fabric.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000461'
+      tagDatabase:
+        tag: 'pre-000461'
+  - changeSet:
+      author: appian
+      id: '000461.1.0'
+      comment: Create new column is_visible_in_data_fabric
+      addColumn:
+        tableName: record_type
+        column:
+          name: is_visible_in_data_fabric
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          valueBoolean: 'false'
+          constraints:
+            nullable: 'false'
+  - changeSet:
+      author: appian
+      id: '000461.2.0'
+      comment: Migrate is_visible_in_record_type_list values into is_visible_in_data_fabric
+      sql: UPDATE record_type SET is_visible_in_data_fabric = is_visible_in_record_type_list;

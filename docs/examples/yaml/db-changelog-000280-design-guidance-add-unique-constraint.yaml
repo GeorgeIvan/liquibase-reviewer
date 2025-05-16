@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000280-design-guidance-add-unique-constraint.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000280'
+      tagDatabase:
+        tag: 'pre-000280'
+  - changeSet:
+      id: '000280.1.0'
+      author: appian
+      comment: add unique constraint for object_uuid, object_type_id, design_guidance_key
+      changes:
+        - addUniqueConstraint:
+            tableName: dg_object
+            constraintName: dg_object_key_uuid_type_id_uc
+            columnNames: design_guidance_key, object_uuid, object_type_id

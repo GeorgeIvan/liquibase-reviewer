@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000451-add-original-mining-process-field-name.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000451'
+      tagDatabase:
+        tag: 'pre-000451'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000451.1.0'
+      comment: Add name_in_mining to hold mining process field name at compute time
+      addColumn:
+        tableName: mining_process_field
+        columns:
+          - column:
+              name: name_in_mining
+              type: ${shortStringType}
+              defaultValue: ""
+

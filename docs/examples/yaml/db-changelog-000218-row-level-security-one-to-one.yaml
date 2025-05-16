@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000218-row-level-security-one-to-one.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000218
+      tagDatabase:
+        tag: 'pre-000218'
+  - changeSet:
+      id: '000218.1.0'
+      author: appian
+      changes:
+        dropForeignKeyConstraint:
+          constraintName: rt_row_security_rt_id_fk
+          baseTableName: record_type_row_security
+  - changeSet:
+      author: appian
+      id: '000218.2.0'
+      comment: Drop column rt_id in record_type_row_security table
+      dropColumn:
+        tableName: record_type_row_security
+        column:
+          name: rt_id
+  - changeSet:
+      author: appian
+      id: '000218.3.0'
+      comment: Create new column row_level_security_id in record_type table
+      addColumn:
+        tableName: record_type
+        column:
+          name: row_level_security_id
+          type: ${longType}
+  - changeSet:
+      id: '000218.4.0'
+      author: appian
+      changes:
+        comment: Add relevant foreign keys
+        addForeignKeyConstraint:
+          constraintName: rt_row_security_fk
+          baseTableName: record_type
+          baseColumnNames: row_level_security_id
+          referencedTableName: record_type_row_security
+          referencedColumnNames: id

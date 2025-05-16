@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000406-add-site-page-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000406
+      tagDatabase:
+        tag: 'pre-000406'
+
+  - changeSet:
+      author: appian
+      id: '000406.1.0'
+      comment: Add uuid column to site_page table
+      addColumn:
+        tableName: site_page
+        columns:
+          - column:
+              name: uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000406.1.1'
+      comment: Populate existing site_page rows with uuid
+      changes:
+        - customChange:
+            class: com.appiancorp.sites.backend.migration.SitePageUuidAdditionMigration
+
+  - changeSet:
+      author: appian
+      id: '000406.1.2'
+      comment: Add not null constraint to uuid column
+      changes:
+        - addNotNullConstraint:
+            tableName: site_page
+            columnName: uuid
+            columnDataType: ${uuidType}
+
+  - changeSet:
+      author: appian
+      id: '000406.1.3'
+      comment: Add unique constraint to uuid column
+      ignore: true
+      changes:
+        - addUniqueConstraint:
+            tableName: site_page
+            columnNames: uuid
+            constraintName: site_page_uuid_uc
+
+  - changeSet:
+      author: appian
+      id: '000406.1.4'
+      comment: Drop unique constraint to uuid column
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          indexExists:
+            tableName: site_page
+            indexName: site_page_uuid_uc
+        dropUniqueConstraint:
+            tableName: site_page
+            constraintName: site_page_uuid_uc

@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000533-add-index-record-query-summary.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000533'
+      tagDatabase:
+        tag: 'pre-000533'
+
+  - changeSet:
+      author: appian
+      id: '000533.1.0'
+      comment: Create composite index for record_query_summary
+      changes:
+        - createIndex:
+            indexName: query_summary_composite_idx
+            tableName: record_query_summary
+            unique: false
+            columns:
+              - column:
+                  name: start_time
+              - column:
+                  name: record_type_uuid
+              - column:
+                  name: execution_time
+
+  - changeSet:
+      author: appian
+      id: '000533.1.1'
+      comment: Create trace_id index for record_query_summary
+      changes:
+        - createIndex:
+            indexName: query_summary_trace_id_idx
+            tableName: record_query_summary
+            unique: false
+            columns:
+              - column:
+                  name: trace_id

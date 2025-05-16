@@ -1,0 +1,149 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000448-add-process-metadata-tables.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000448
+      tagDatabase:
+        tag: 'pre-000448'
+  - changeSet:
+      author: appian
+      id: '000448.1.0'
+      comment: Create process_error table
+      changes:
+        - createTable:
+            tableName: process_error
+            columns:
+              - column:
+                  name: error_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: process_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: outer_definition_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inner_runtime_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inner_definition_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stack_trace
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: error
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: resolved
+                  type: ${booleanType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: occurred_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: resolved_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: actor_name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000448.1.1'
+      author: appian
+      comment: Add sequence to provide primary key values for the process_error table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: process_error_sq
+  - changeSet:
+      author: appian
+      id: '000448.1.2'
+      comment: Create process_properties table
+      changes:
+        - createTable:
+            tableName: process_properties
+            columns:
+              - column:
+                  name: process_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: initiator_uuid
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: start_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: end_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: ${integerType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: '000448.1.3'
+      author: appian
+      comment: Add sequence to provide primary key values for the process_properties table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: process_properties_sq
+  - changeSet:
+      id: '000448.1.4'
+      author: appian
+      comment: Add FK for process_error.process_uuid to process_properties.process_uuid
+      addForeignKeyConstraint:
+        constraintName: process_properties_fk
+        baseTableName: process_error
+        baseColumnNames: process_uuid
+        referencedTableName: process_properties
+        referencedColumnNames: process_uuid

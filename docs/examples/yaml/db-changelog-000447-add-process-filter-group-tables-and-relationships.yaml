@@ -1,0 +1,393 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000447-add-process-filter-group-tables-and-relationships.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000447'
+      tagDatabase:
+        tag: 'pre-000447'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000447.1.0'
+      comment: Drop insight and investigation to rename and modify easier (db2)
+      changes:
+        - dropTable:
+            tableName: insight
+            cascadeConstraints: true
+        - dropTable:
+            tableName: investigation
+            cascadeConstraints: true
+  - changeSet:
+      author: appian
+      id: '000447.2.0'
+      comment: Create mining_insight, mining_investigation, and process filter group tables
+      changes:
+        - createTable:
+            tableName: mining_scope
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_process_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mining_filter_group_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trace_min_duration
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: trace_max_duration
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: trace_duration_unit
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: creator_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modify_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: mining_investigation
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_scope_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: goal
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: num_cases
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: analysis_time_period
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: analysis_start_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: analysis_end_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: compare_to_function
+                  type: ${byteType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: creator_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modify_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_investigation_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mining_filter_group_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: creator_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modify_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: mining_filter_group
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+        - createTable:
+            tableName: mining_categ_attr_fltr
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_filter_group_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mining_process_field_id
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: attribute_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filter_values
+                  type: ${blobType}
+              - column:
+                  name: inverted
+                  type: ${booleanType}
+        - createTable:
+            tableName: mining_activity_filter
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_filter_group_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inverted
+                  type: ${booleanType}
+              - column:
+                  name: isEndpointFilter
+                  type: ${booleanType}
+  - changeSet:
+      author: appian
+      id: '000447.3.0'
+      comment: Create sequences for newly created tables
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_scope_sq
+        - createSequence:
+            sequenceName: mining_insight_sq
+        - createSequence:
+            sequenceName: mining_investigation_sq
+        - createSequence:
+            sequenceName: mining_filter_group_sq
+        - createSequence:
+            sequenceName: mining_categ_attr_fltr_sq
+        - createSequence:
+            sequenceName: mining_activity_filter_sq
+  - changeSet:
+      author: appian
+      id: '000447.4.0'
+      comment: Add FKs for insight, investigation, filter group, and scope tables
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: investigation_scope_fk
+            baseTableName: mining_investigation
+            baseColumnNames: mining_scope_id
+            referencedTableName: mining_scope
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: insight_investigation_fk
+            baseTableName: mining_insight
+            baseColumnNames: mining_investigation_id
+            referencedTableName: mining_investigation
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: insight_filter_group_fk
+            baseTableName: mining_insight
+            baseColumnNames: mining_filter_group_id
+            referencedTableName: mining_filter_group
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: scope_fltr_grp_fk
+            baseTableName: mining_scope
+            baseColumnNames: mining_filter_group_id
+            referencedTableName: mining_filter_group
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: scope_process_fk
+            baseTableName: mining_scope
+            baseColumnNames: mining_process_id
+            referencedTableName: mining_process
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: cat_attr_fltr_grp_fk
+            baseTableName: mining_categ_attr_fltr
+            baseColumnNames: mining_filter_group_id
+            referencedTableName: mining_filter_group
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: activity_filter_group_fk
+            baseTableName: mining_activity_filter
+            baseColumnNames: mining_filter_group_id
+            referencedTableName: mining_filter_group
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: cat_attr_fltr_proc_field_fk
+            baseTableName: mining_categ_attr_fltr
+            baseColumnNames: mining_process_field_id
+            referencedTableName: mining_process_field
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000447.5.0'
+      comment: Add indexes for FKs
+      changes:
+        - createIndex:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: mining_filter_group_id
+            indexName: insight_fltr_grp_id_idx
+        - createIndex:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: mining_investigation_id
+            indexName: insight_invest_id_idx
+        - createIndex:
+            tableName: mining_insight
+            columns:
+              - column:
+                  name: name
+            indexName: insight_name_idx
+        - createIndex:
+            tableName: mining_scope
+            columns:
+              - column:
+                  name: mining_process_id
+            indexName: mining_process_id_idx
+        - createIndex:
+            tableName: mining_scope
+            columns:
+              - column:
+                  name: mining_filter_group_id
+            indexName: mining_fltr_grp_id_idx
+        - createIndex:
+            tableName: mining_scope
+            columns:
+              - column:
+                  name: name
+            indexName: scope_name_idx
+        - createIndex:
+            tableName: mining_investigation
+            columns:
+              - column:
+                  name: mining_scope_id
+            indexName: mining_scope_id_idx
+        - createIndex:
+            tableName: mining_investigation
+            columns:
+              - column:
+                  name: name
+            indexName: investigation_name_idx
+        - createIndex:
+            tableName: mining_categ_attr_fltr
+            columns:
+              - column:
+                  name: mining_filter_group_id
+            indexName: categ_attr_fltr_grp_id_idx
+        - createIndex:
+            tableName: mining_categ_attr_fltr
+            columns:
+              - column:
+                  name: mining_process_field_id
+            indexName: cat_attr_fltr_proc_fld_id_idx
+        - createIndex:
+            tableName: mining_activity_filter
+            columns:
+              - column:
+                  name: mining_filter_group_id
+            indexName: activity_fltr_grp_id_idx

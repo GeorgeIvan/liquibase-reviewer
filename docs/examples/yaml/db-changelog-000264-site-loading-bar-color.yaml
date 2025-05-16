@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000264-site-loading-bar-color.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000264
+      tagDatabase:
+        tag: 'pre-000264'
+  - changeSet:
+      author: appian
+      id: '000264.0.0'
+      comment: Create String column for loading Bar Color
+      addColumn:
+        tableName: site
+        columns:
+          - column:
+              name: loading_bar_color
+              type: ${shortStringType}
+          - column:
+              name: loading_bar_color_expr
+              type: ${expressionStringType}

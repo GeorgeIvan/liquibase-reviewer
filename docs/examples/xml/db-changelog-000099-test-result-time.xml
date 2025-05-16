@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000099-test-result-time.xml">
+
+    <changeSet author="appian" id="tag-000098">
+        <tagDatabase tag="000098"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000099.1.0">
+        <comment>
+            Make started_ts nullable in test_result table since test cases that
+            have not started will have a null entry
+        </comment>
+        <dropNotNullConstraint tableName="test_result" columnName="started_ts" columnDataType="${longType}"/>
+    </changeSet>
+
+    <changeSet author="appian" id="000099.2.0">
+        <comment>
+            Add execution_ms, elapsed_ms, and ended_ts to test_result table
+        </comment>
+        <addColumn tableName="test_result">
+            <column name="execution_ms" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="test_result">
+            <column name="elapsed_ms" type="${longType}"/>
+        </addColumn>
+        <addColumn tableName="test_result">
+            <column name="ended_ts" type="${longType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="appian" id="000099.3.0">
+        <comment>
+            Copy over original duration_ms column into execution_ms in
+            test_result table
+        </comment>
+        <sql>update test_result set execution_ms = duration_ms</sql>
+    </changeSet>
+
+    <changeSet author="appian" id="000099.4.0">
+        <comment>
+            Drop original duration_ms column in test_result table
+        </comment>
+        <dropColumn tableName="test_result" columnName="duration_ms"/>
+    </changeSet>
+</databaseChangeLog>

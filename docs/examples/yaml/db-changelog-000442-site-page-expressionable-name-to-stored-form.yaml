@@ -1,0 +1,15 @@
+databaseChangeLog:
+    - logicalFilePath: db-changelog-000442-site-page-expressionable-name-to-stored-form.yaml
+    - changeSet:
+          author: appian
+          id: tag-pre-000442
+          tagDatabase:
+              tag: 'pre-000442'
+
+    - changeSet:
+          author: appian
+          id: '000442.1.0'
+          comment: Convert display form expressionable site page names to stored form
+          changes:
+              - customChange:
+                    class: com.appiancorp.sites.backend.migration.SitesExpressionableNameStoredFormMigration

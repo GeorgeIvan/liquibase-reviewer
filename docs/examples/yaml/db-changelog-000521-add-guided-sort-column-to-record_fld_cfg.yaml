@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000521-add-guided-sort-column-to-record_fld_cfg.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000521'
+      tagDatabase:
+        tag: 'pre-000521'
+  - changeSet:
+      author: appian
+      id: '000521.1.0'
+      comment: Add related_record_guided_sort column to record_fld_cfg table
+      addColumn:
+        tableName: record_fld_cfg
+        columns:
+          - column:
+              name: related_record_guided_sort
+              type: ${byteType}
+              defaultValue: 2
+              value: 2
+              constraints:
+                nullable: false

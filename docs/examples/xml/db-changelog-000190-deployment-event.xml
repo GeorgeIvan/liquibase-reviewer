@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000190-deployment-event.xml">
+
+  <changeSet author="appian" id="tag-000189">
+    <tagDatabase tag="000189"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000190.1.0">
+    <comment>Create DeploymentEvent table</comment>
+    <createTable tableName="deployment_event">
+      <column name="id" type="${longType}" autoIncrement="${autoIncrement}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="deployment_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="time_stamp" type="${longType}" value="java:System.currentTimeMillis()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="event_performer" type="${shortStringType}" />
+      <column name="status" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="error_code" type="${shortStringType}"/>
+      <column name="import_details" type="${blobType}" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="appian" id="000190.1.1">
+    <preConditions onFail="MARK_RAN">
+      <changeLogPropertyDefined property="createSequence" value="true"/>
+    </preConditions>
+    <createSequence sequenceName="deployment_event_sq"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000190.1.2">
+    <comment>FK from deployment_event.deployment_id to deployment.id</comment>
+    <addForeignKeyConstraint constraintName="dplet_depid_fk" baseTableName="deployment_event"
+                             baseColumnNames="deployment_id" referencedTableName="deployment" referencedColumnNames="id" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000190.1.3">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <dbms type="mysql"/>
+      </not>
+    </preConditions>
+    <createIndex indexName="dplet_depid_fk_idx" tableName="deployment_event" unique="false">
+      <column name="deployment_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="appian" id="000190.1.4">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="deployment_action"/>
+    </preConditions>
+    <comment>Drop old deployment action table </comment>
+    <dropTable tableName="deployment_action"/>
+  </changeSet>
+
+</databaseChangeLog>

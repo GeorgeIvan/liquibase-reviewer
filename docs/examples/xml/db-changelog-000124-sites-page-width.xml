@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000124-sites-page-width.xml">
+
+  <changeSet author="appian" id="tag-000123">
+    <tagDatabase tag="000123"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000124.1.0">
+    <comment>Create new column page_width</comment>
+    <addColumn tableName="site_page">
+      <column name="page_width" type="${byteType}" defaultValueNumeric="2"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

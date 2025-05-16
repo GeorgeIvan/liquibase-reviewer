@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000069-site-uuid.xml">
+
+  <changeSet author="appian" id="tag-000068">
+    <tagDatabase tag="000068"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000069.1.0">
+    <comment>Renamed rule_uuid column to appian_object_uuid in site_page</comment>
+    <!-- See https://liquibase.jira.com/browse/CORE-942 for more info on "columnDataType". -->
+    <renameColumn tableName="site_page" oldColumnName="rule_uuid" newColumnName="appian_object_uuid"
+      columnDataType="VARCHAR(255)"/>
+  </changeSet>
+</databaseChangeLog>

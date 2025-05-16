@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000490-remove-automation-and-user-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000490'
+      tagDatabase:
+        tag: 'pre-000490'
+
+  - changeSet:
+      id: '000490.1.0'
+      author: appian
+      comment: drop the automation_field_id foreign key constraint from the mining_process_table
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process
+            constraintName: mining_process_atm_fld_id_fk
+  - changeSet:
+      id: '000490.1.1'
+      author: appian
+      comment: drop the user_field_id foreign key constraint from the mining_process_table
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mining_process
+            constraintName: mnng_prcss_usr_fld_id_fk
+
+  - changeSet:
+      id: '000490.2.0'
+      author: appian
+      comment: drop the automation_field_id index from the mining_process_table
+      changes:
+        - dropIndex:
+            tableName: mining_process
+            indexName: mining_process_atm_fld_id_idx
+  - changeSet:
+      id: '000490.2.1'
+      author: appian
+      comment: drop the user_field_id index from the mining_process_table
+      changes:
+        - dropIndex:
+            tableName: mining_process
+            indexName: mnng_prcss_usr_fld_id_idx
+
+  - changeSet:
+      id: '000490.3.0'
+      author: appian
+      comment: drop the automation_field_id column from the mining_process_table
+      changes:
+        - dropColumn:
+            tableName: mining_process
+            columnName: automation_field_id
+  - changeSet:
+      id: '000490.3.1'
+      author: appian
+      comment: drop the user_field_id column from the mining_process_table
+      changes:
+        - dropColumn:
+            tableName: mining_process
+            columnName: user_field_id

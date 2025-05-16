@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000424-process-mining-log-field-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000424
+      tagDatabase:
+        tag: 'pre-000424'
+  - changeSet:
+      author: appian
+      id: '000424.1.0'
+      comment: Create mining_log_field table
+      changes:
+        - createTable:
+            tableName: mining_log_field
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_log_provider_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: field_path
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: field_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: field_type
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: semantic
+                  type: ${byteType}
+
+        - createIndex:
+            indexName: mining_log_field_provi_id_idx
+            tableName: mining_log_field
+            columns:
+              - column:
+                  name: mining_log_provider_id
+
+  - changeSet:
+      id: '000424.2.0'
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: mining_log_field_sq
+
+  - changeSet:
+      id: '000424.3.0'
+      author: appian
+      changes:
+        comment: Add FK from mining_log_field.mining_log_provider_id to mining_log_provider.id
+        addForeignKeyConstraint:
+          constraintName: mining_log_field_provi_id_fk
+          baseTableName: mining_log_field
+          baseColumnNames: mining_log_provider_id
+          referencedTableName: mining_log_provider
+          referencedColumnNames: id
+          onDelete: CASCADE

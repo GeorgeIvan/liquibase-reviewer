@@ -1,0 +1,122 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001024-add-new-record-action-dialog-sizes.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001024'
+      tagDatabase:
+        tag: 'pre-001024'
+  - changeSet:
+      id: '001024.1.0'
+      author: appian
+      comment: Add dialog_width to record_related_action_cfg
+      addColumn:
+        tableName: record_related_action_cfg
+        column:
+          name: dialog_width
+          type: ${byteType}
+          valueNumeric: 5
+          defaultValueNumeric: 5
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '001024.1.1'
+      author: appian
+      comment: Set dialog_width based on value of dialog_size column (SMALL->MEDIUM, MEDIUM->WIDE, FIT)
+      sql: UPDATE record_related_action_cfg SET dialog_width = (
+             CASE
+               WHEN dialog_size = 0 THEN 1
+               WHEN dialog_size = 1 THEN 3
+               ELSE 5
+             END
+           )
+
+  - changeSet:
+      id: '001024.2.0'
+      author: appian
+      comment: Add dialog_height to record_related_action_cfg
+      addColumn:
+        tableName: record_related_action_cfg
+        column:
+          name: dialog_height
+          type: ${byteType}
+          valueNumeric: 1
+          defaultValueNumeric: 1
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '001024.2.1'
+      author: appian
+      comment: Set dialog_height based on value of dialog_size column (SMALL->SHORT, MEDIUM->TALL, FIT)
+      sql: UPDATE record_related_action_cfg SET dialog_height = (
+             CASE
+               WHEN dialog_size = 0 THEN 2
+               WHEN dialog_size = 1 THEN 4
+               ELSE 1
+             END
+           )
+
+  - changeSet:
+      id: '001024.3.0'
+      author: appian
+      comment: Add dialog_width to record_list_action_cfg
+      addColumn:
+        tableName: record_list_action_cfg
+        column:
+          name: dialog_width
+          type: ${byteType}
+          valueNumeric: 5
+          defaultValueNumeric: 5
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '001024.3.1'
+      author: appian
+      comment: Set dialog_width based on value of dialog_size column (SMALL->MEDIUM, MEDIUM->WIDE, FIT)
+      sql: UPDATE record_list_action_cfg SET dialog_width = (
+             CASE
+               WHEN dialog_size = 0 THEN 1
+               WHEN dialog_size = 1 THEN 3
+               ELSE 5
+             END
+           )
+
+  - changeSet:
+      id: '001024.4.0'
+      author: appian
+      comment: Add dialog_height to record_list_action_cfg
+      addColumn:
+        tableName: record_list_action_cfg
+        column:
+          name: dialog_height
+          type: ${byteType}
+          valueNumeric: 1
+          defaultValueNumeric: 1
+          constraints:
+            nullable: false
+  - changeSet:
+      id: '001024.4.1'
+      author: appian
+      comment: Set dialog_height based on value of dialog_size column (SMALL->SHORT, MEDIUM->TALL, FIT)
+      sql: UPDATE record_list_action_cfg SET dialog_height = (
+             CASE
+               WHEN dialog_size = 0 THEN 2
+               WHEN dialog_size = 1 THEN 4
+               ELSE 1
+             END
+           )
+
+  - changeSet:
+      id: '001024.5.0'
+      author: appian
+      comment: Remove dialog_size from record_list_action_cfg
+      dropColumn:
+        tableName: record_list_action_cfg
+        columnName: dialog_size
+
+  - changeSet:
+      id: '001024.6.0'
+      author: appian
+      comment: Remove dialog_size from record_related_action_cfg
+      dropColumn:
+        tableName: record_related_action_cfg
+        columnName: dialog_size

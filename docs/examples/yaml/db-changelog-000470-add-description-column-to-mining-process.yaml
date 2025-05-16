@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000470-add-description-column-to-mining-process.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000470
+      tagDatabase:
+        tag: 'pre-000470'
+
+  - changeSet:
+      author: appian
+      id: '000470.1.0'
+      comment: Create new column description in mining_process
+      addColumn:
+        tableName: mining_process
+        column:
+          name: description
+          type: ${mediumStringType}
+          constraints:
+            nullable: true

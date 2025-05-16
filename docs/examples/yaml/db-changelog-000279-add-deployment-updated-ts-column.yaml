@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000279-add-deployment-updated-ts-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000279
+      tagDatabase:
+        tag: 'pre-000279'
+
+  - changeSet:
+      author: appian
+      id: '000279.1.0'
+      comment: Add deployment updated_ts column
+      addColumn:
+        tableName: deployment
+        column:
+          name: updated_ts
+          type: ${longType}
+          defaultValueNumeric: 0
+          constraints:
+            nullable: true
+  - changeSet:
+      author: appian
+      id: '000279.1.1'
+      comment: Copy latest timestamp from deployment_events table
+      dbms: mariadb,mysql
+      sql: UPDATE deployment d, (SELECT deployment_id, time_stamp
+        FROM deployment_event de1 WHERE time_stamp = (SELECT MAX(time_stamp) FROM deployment_event de2 WHERE de1.deployment_id = de2.deployment_id)) e
+        SET d.updated_ts = e.time_stamp
+        WHERE d.id = e.deployment_id;
+  - changeSet:
+      author: appian
+      id: '000279.1.2'
+      comment: Copy latest timestamp from deployment_events table
+      dbms: oracle,db2,postgresql,mssql
+      sql: UPDATE deployment
+        SET updated_ts = (SELECT MAX(time_stamp) FROM deployment_event
+        WHERE deployment_event.deployment_id = deployment.id);
+  - changeSet:
+      author: appian
+      id: '000279.1.3'
+      comment: Fix any null timestamps created by the conversion above
+      sql: UPDATE deployment SET updated_ts = created_ts WHERE updated_ts IS NULL OR updated_ts = 0;
+  - changeSet:
+      author: appian
+      id: '000279.1.4'
+      comment: Make the updated timestamp column non-nullable, now that migration to it is finished
+      addNotNullConstraint:
+        tableName: deployment
+        columnName: updated_ts
+        columnDataType: ${longtype}
+  - changeSet:
+      author: appian
+      id: '000279.2.0'
+      comment: Add index on deployment audit_uuid column
+      createIndex:
+        columns:
+          - column:
+              name: audit_uuid
+        indexName: dpl_audit_uuid_idx
+        tableName: deployment

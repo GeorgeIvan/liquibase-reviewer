@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000315-tp_feed_entry_linked_obj-index.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000315
+      tagDatabase:
+        tag: 'pre-000315'
+  - changeSet:
+      author: appian
+      id: '000315.1.0'
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          not:
+            indexExists:
+              indexName: tp_feed_entry_linked_obj_idx
+        comment: Add composite index on object_set_key, object_type, object_id, and tp_feed_entry_id
+        createIndex:
+          tableName: tp_feed_entry_linked_obj
+          columns:
+            - column:
+                name: object_set_key
+            - column:
+                name: object_type
+            - column:
+                name: object_id
+            - column:
+                name: tp_feed_entry_id
+          indexName: tp_feed_entry_linked_obj_idx

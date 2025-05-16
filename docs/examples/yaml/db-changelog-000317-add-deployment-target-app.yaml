@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000317-add-deployment-target-app.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000317'
+      tagDatabase:
+        tag: 'pre-000317'
+  - changeSet:
+      author: appian
+      id: '000317.1.0'
+      comment: Add a new boolean flag indicating a selected target Application
+      addColumn:
+        tableName: deployment_app
+        column:
+          name: is_target_app
+          type: ${booleanType}
+          defaultValueBoolean: false
+          valueBoolean: false
+          constraints:
+            nullable: false

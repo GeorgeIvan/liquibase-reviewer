@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000042.xml">
+
+  <changeSet author="appian" id="tag-000041">
+    <tagDatabase tag="000041"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000042.1.0">
+    <comment>Create usr_remember_me_token table</comment>
+    <createTable tableName="usr_remember_me_token">
+      <column name="usr_id" type="${longType}"> 
+        <constraints nullable="false"/>
+      </column>
+      <column name="series" type="${shortStringType}">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="token" type="${shortStringType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_ts" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  
+  <changeSet author="appian" id="000042.1.1">
+    <comment>Foreign Key from usr_remember_me_token.usr_id to usr.id</comment>
+    <addForeignKeyConstraint constraintName="usr_rmt_usr_id_fk" baseTableName="usr_remember_me_token"
+      baseColumnNames="usr_id" referencedTableName="usr" referencedColumnNames="id"/>
+  </changeSet>
+  
+  <!-- MySQL automatically creates indexes for FK columns, but other DBs don't, so we have to do it ourselves. -->
+  <changeSet author="appian" id="000042.1.2">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <createIndex indexName="usr_rmt_usr_id_fk" tableName="usr_remember_me_token" unique="false">
+      <column name="usr_id"/>
+    </createIndex>
+  </changeSet>
+  
+</databaseChangeLog>

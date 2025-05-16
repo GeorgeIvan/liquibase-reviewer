@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000303-increase-dpkg-object-uuid-length.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000303
+      tagDatabase:
+        tag: 'pre-000303'
+  - changeSet:
+      author: appian
+      id: '000303.1.0'
+      comment: Remove object_uuid index
+      # Indexes in some databases (ex. MySQL w/ InnoDb) can only support up to 767 bytes, too small for our new character length
+      dropIndex:
+        tableName: dpkg_object
+        indexName: dpkg_object_object_uuid_idx
+  - changeSet:
+      id: '000303.2.0'
+      author: appian
+      comment: Increase object uuid length
+      # datatypes can have absurdly long QNames
+      changes:
+        - modifyDataType:
+            tableName: dpkg_object
+            columnName: object_uuid
+            newDataType: ${mediumStringType}
+        - modifyDataType:
+            tableName: dpkg_activity_object
+            columnName: object_uuid
+            newDataType: ${mediumStringType}

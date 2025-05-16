@@ -1,0 +1,447 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000397-add-ts-history-and-rm.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000397'
+      tagDatabase:
+        tag: 'pre-000397'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000397.1.0'
+      comment: Drop ts_string_to_ts_text table
+      changes:
+        - dropTable:
+            tableName: ts_string_to_ts_text
+            cascadeConstraints: true
+  - changeSet:
+      author: appian
+      id: '000397.2.0'
+      comment: Create ts_string_to_ts_text table with composite primary key
+      changes:
+        - createTable:
+            tableName: ts_string_to_ts_text
+            columns:
+              - column:
+                  name: ts_string_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_translated_text_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000397.2.1'
+      author: appian
+      changes:
+        comment: Add composite PK for ts_string_to_ts_text
+        addPrimaryKey:
+          columnNames: ts_string_id, ts_translated_text_id
+          tableName: ts_string_to_ts_text
+  - changeSet:
+      id: '000397.2.2'
+      author: appian
+      comment: Add FK for ts_string_to_ts_text.ts_string_id to ts_string.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_to_text_key_id_fk
+        baseTableName: ts_string_to_ts_text
+        baseColumnNames: ts_string_id
+        referencedTableName: ts_string
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.2.3'
+      author: appian
+      comment: Add FK for ts_string_to_ts_text.ts_translated_text_id to ts_translated_text.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_to_text_id_fk
+        baseTableName: ts_string_to_ts_text
+        baseColumnNames: ts_translated_text_id
+        referencedTableName: ts_translated_text
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.2.4'
+      author: appian
+      comment: Add index on ts_string_to_ts_text.ts_string_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_id
+          indexName: ts_string_id_idx
+          tableName: ts_string_to_ts_text
+          unique: false
+  - changeSet:
+      id: '000397.2.5'
+      author: appian
+      comment: Add index on ts_string_to_ts_text.ts_translated_text_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_translated_text_id
+          indexName: ts_translated_text_id_idx
+          tableName: ts_string_to_ts_text
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000397.3.0'
+      comment: Create ts_string_history table
+      changes:
+        - createTable:
+            tableName: ts_string_history
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_set_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: context
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: version_uuid
+                  type: ${uuidType}
+                  constraints:
+                    nullable: true
+                    uniqueConstraintName: ts_history_version_uuid_uc
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_by
+                  type: ${longType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ts_string_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000397.3.1'
+      comment: A sequence to provide primary key values for the translation string history table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_history_sq
+  - changeSet:
+      id: '000397.3.2'
+      author: appian
+      comment: Add FK for ts_string_history.ts_set_id to ts_set.id
+      addForeignKeyConstraint:
+        constraintName: ts_string_history_set_id_fk
+        baseTableName: ts_string_history
+        baseColumnNames: ts_set_id
+        referencedTableName: ts_set
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.3.3'
+      author: appian
+      comment: Add FK for ts_string_history.created_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_history_created_by_fk
+        baseTableName: ts_string_history
+        baseColumnNames: created_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.3.4'
+      author: appian
+      comment: Add FK for ts_string_history.updated_by to usr.id
+      addForeignKeyConstraint:
+        constraintName: ts_history_updated_by_fk
+        baseTableName: ts_string_history
+        baseColumnNames: updated_by
+        referencedTableName: usr
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.3.5'
+      author: appian
+      comment: Add FK for ts_string_history.ts_string_id to ts_string.id
+      addForeignKeyConstraint:
+        constraintName: ts_history_string_id_fk
+        baseTableName: ts_string_history
+        baseColumnNames: ts_string_id
+        referencedTableName: ts_string
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.3.6'
+      author: appian
+      changes:
+        comment: Add index on ts_string_history.ts_set_id
+        createIndex:
+          columns:
+            - column:
+                name: ts_set_id
+          indexName: ts_history_set_id_idx
+          tableName: ts_string_history
+          unique: false
+  - changeSet:
+      id: '000397.3.7'
+      author: appian
+      comment: Add index on ts_string_history.created_by
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: created_by
+          indexName: ts_history_created_by_idx
+          tableName: ts_string_history
+          unique: false
+  - changeSet:
+      id: '000397.3.8'
+      author: appian
+      changes:
+        comment: Add index on ts_string_history.updated_by
+        createIndex:
+          columns:
+            - column:
+                name: updated_by
+          indexName: ts_history_updated_by_idx
+          tableName: ts_string_history
+          unique: false
+  - changeSet:
+      id: '000397.3.9'
+      author: appian
+      changes:
+        comment: Add index on ts_string_history.ts_string_id
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_id
+          indexName: ts_history_string_id_idx
+          tableName: ts_string_history
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000397.4.0'
+      comment: Create ts_string_to_text_history table
+      changes:
+        - createTable:
+            tableName: ts_string_to_text_history
+            columns:
+              - column:
+                  name: ts_string_history_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ts_translated_text_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000397.4.1'
+      author: appian
+      changes:
+        comment: Add composite PK for ts_string_to_text_history
+        addPrimaryKey:
+          columnNames: ts_string_history_id, ts_translated_text_id
+          tableName: ts_string_to_text_history
+  - changeSet:
+      id: '000397.4.2'
+      comment: A sequence to provide primary key values for the translation string to text history table
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ts_string_to_text_history_sq
+  - changeSet:
+      id: '000397.4.3'
+      author: appian
+      comment: Add FK for ts_string_to_text_history.ts_string_history_id to ts_string_history.id
+      addForeignKeyConstraint:
+        constraintName: ts_text_hist_string_hist_id_fk
+        baseTableName: ts_string_to_text_history
+        baseColumnNames: ts_string_history_id
+        referencedTableName: ts_string_history
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.4.4'
+      author: appian
+      comment: Add FK for ts_string_to_text_history.ts_translated_text_id to ts_translated_text.id
+      addForeignKeyConstraint:
+        constraintName: ts_text_hist_trans_text_id_fk
+        baseTableName: ts_string_to_text_history
+        baseColumnNames: ts_translated_text_id
+        referencedTableName: ts_translated_text
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.4.5'
+      author: appian
+      comment: Add index on ts_string_to_text_history.ts_string_history_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_string_history_id
+          indexName: ts_string_history_id_idx
+          tableName: ts_string_to_text_history
+          unique: false
+  - changeSet:
+      id: '000397.4.6'
+      author: appian
+      comment: Add index on ts_string_to_text_history.ts_translated_text_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_translated_text_id
+          indexName: ts_text_hist_trans_text_id_idx
+          tableName: ts_string_to_text_history
+          unique: false
+  - changeSet:
+      author: appian
+      id: '000397.5.0'
+      comment: Create ts_rm table
+      changes:
+        - createTable:
+            tableName: ts_rm
+            columns:
+              - column:
+                  name: ts_set_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rm_entry_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '000397.5.1'
+      author: appian
+      changes:
+        comment: Add composite PK for ts_rm
+        addPrimaryKey:
+          columnNames: ts_set_id, rm_entry_id
+          tableName: ts_rm
+  - changeSet:
+      id: '000397.5.2'
+      author: appian
+      comment: Add FK for ts_rm.ts_set_id to ts_set.id
+      addForeignKeyConstraint:
+        constraintName: ts_rm_set_id_fk
+        baseTableName: ts_rm
+        baseColumnNames: ts_set_id
+        referencedTableName: ts_set
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.5.3'
+      author: appian
+      comment: Add FK for ts_rm.rm_entry_id to rm_entry.id
+      addForeignKeyConstraint:
+        constraintName: ts_rm_entry_id_fk
+        baseTableName: ts_rm
+        baseColumnNames: rm_entry_id
+        referencedTableName: rm_entry
+        referencedColumnNames: id
+  - changeSet:
+      id: '000397.5.4'
+      author: appian
+      comment: Add index on ts_rm.ts_set_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: ts_set_id
+          indexName: ts_rm_set_id_idx
+          tableName: ts_rm
+          unique: false
+  - changeSet:
+      id: '000397.5.5'
+      author: appian
+      comment: Add index on ts_rm.rm_entry_id
+      changes:
+        createIndex:
+          columns:
+            - column:
+                name: rm_entry_id
+          indexName: ts_rm_entry_id_idx
+          tableName: ts_rm
+          unique: false
+  - changeSet:
+      id: '000397.6.0'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Translation Set Administrator
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 32
+            - column:
+                name: name
+                value: translation_set_administrator
+  - changeSet:
+      id: '000397.6.1'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Translation Set Editor
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 33
+            - column:
+                name: name
+                value: translation_set_editor
+  - changeSet:
+      id: '000397.6.2'
+      author: appian
+      changes:
+        comment: Add a system role (in rm_role) for Translation Set Viewer
+        insert:
+          tableName: rm_role
+          columns:
+            - column:
+                name: id
+                value: 34
+            - column:
+                name: name
+                value: translation_set_viewer
+

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000371-add-is-system-col-for-embedded.yaml
+  - changeSet:
+      id: 'tag-pre-000371'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000371'
+  - changeSet:
+      author: appian
+      id: '000371.1.0'
+      comment: Add is_system column
+      addColumn:
+        tableName: embedded_sail_theme
+        columns:
+          - column:
+              name: is_system
+              type: ${booleanType}
+              defaultValueBoolean: false
+              constraints:
+                nullable: false

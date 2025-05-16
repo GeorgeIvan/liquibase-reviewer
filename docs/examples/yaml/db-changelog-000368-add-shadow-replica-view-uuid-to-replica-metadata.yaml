@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000368-add-shadow-replica-view-uuid-to-replica-metadata.yaml
+  - changeSet:
+      id: 'tag-pre-000368'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000368'
+  - changeSet:
+      author: appian
+      id: '000368.1.0'
+      comment: Add shadow_replica_view_uuid column
+      addColumn:
+        tableName: record_replica_metadata
+        columns:
+          - column:
+              name: shadow_replica_view_uuid
+              type: ${uuidType}
+              constraints:
+                nullable: true

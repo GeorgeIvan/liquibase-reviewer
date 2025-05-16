@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000012.xml">
+  
+  <changeSet author="appian" id="tag-000011">
+    <tagDatabase tag="000011"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.1.0">
+    <comment>Add is_public column to tp_feed_entry.</comment>
+    <addColumn tableName="tp_feed_entry">
+      <column name="is_public" type="${booleanType}" defaultValueBoolean="false" valueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000012.2.0">
+    <comment>Create role map table for tp_feed_entry.</comment>
+    <createTable tableName="tp_feed_entry_rm">
+      <column name="tp_feed_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rm_entry_id" type="${longType}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value="${mysqlEngineSql}"/>
+    </modifySql>
+  </changeSet>
+  <changeSet author="appian" id="000012.2.1">
+    <comment>Add PK for tp_feed_entry_rm.</comment>
+    <addPrimaryKey columnNames="tp_feed_entry_id, rm_entry_id" tableName="tp_feed_entry_rm"/>
+  </changeSet>
+  <changeSet author="appian" id="000012.2.2">
+    <comment>Add FK from tp_feed_entry_rm to rm_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="tp_feed_entry_rm_rmeid_fk"
+      baseTableName="tp_feed_entry_rm" baseColumnNames="rm_entry_id"
+      referencedTableName="rm_entry" referencedColumnNames="id" 
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000012.2.3">
+    <comment>Add FK from tp_feed_entry_rm to tp_feed_entry.id.</comment>
+    <addForeignKeyConstraint constraintName="tp_feed_entry_rm_tfeid_fk"
+      baseTableName="tp_feed_entry_rm" baseColumnNames="tp_feed_entry_id"
+      referencedColumnNames="id" referencedTableName="tp_feed_entry"
+      deferrable="false" initiallyDeferred="false" referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="appian" id="000012.2.4">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create an index for the FK column tp_feed_entry_rm.rm_entry_id</comment>
+    <createIndex indexName="tp_feed_entry_rm_rmei_idx" tableName="tp_feed_entry_rm" unique="false">
+      <column name="rm_entry_id"/>
+    </createIndex>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.3.0">
+    <comment>Add a system role (in rm_role) for Tempo news entry viewers.</comment>
+    <insert tableName="rm_role">
+      <column name="id" value="3"/>
+      <column name="name" value="tp_feed_entry_viewer"/>
+    </insert>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.4.0">
+    <addColumn tableName="rm_entry">
+      <column name="tp_fe_id" type="${integerType}" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000012.4.1">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Create a role map entry for every existing Tempo news entry.</comment>
+    <sql>
+      insert into rm_entry (role_id, tp_fe_id) (select 3, id from tp_feed_entry)
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000012.4.2">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Create a role map entry for every existing Tempo news entry.</comment>
+    <sql>
+      insert into rm_entry (id, role_id, tp_fe_id) (select rm_entry_sq.nextval, 3, id from tp_feed_entry)
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000012.4.3">
+    <comment>Associate each existing Tempo news entry with a role map.</comment>
+    <sql>
+      insert into tp_feed_entry_rm (tp_feed_entry_id, rm_entry_id)
+        select tp_fe_id, id from rm_entry where role_id = 3
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.5.0">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Populate the grp table for existing Tempo news entry security groups.</comment>
+    <sql>
+      insert into grp (uuid) (select distinct fe.group_uuid from tp_feed_entry fe
+        where fe.group_uuid is not null
+        and not exists (select g.uuid from grp g where g.uuid = fe.group_uuid))
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000012.5.1">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Populate the grp table for existing Tempo news entry security groups.</comment>
+    <sql>
+      insert into grp (id, uuid) select grp_sq.nextval, tmp.group_uuid from (
+        select distinct fe.group_uuid from tp_feed_entry fe
+        where fe.group_uuid is not null
+        and not exists (select g.uuid from grp g where g.uuid = fe.group_uuid)) tmp
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.6.0">
+    <preConditions onFail="MARK_RAN"><not><dbms type="oracle"/></not></preConditions>
+    <comment>Populate the usr table for existing Tempo news entry authors.</comment>
+    <sql>
+      insert into usr (username) (select distinct fe.author from tp_feed_entry fe
+        where not exists (select u.username from usr u where u.username = fe.author))
+    </sql>
+  </changeSet>
+  <changeSet author="appian" id="000012.6.1">
+    <preConditions onFail="MARK_RAN"><dbms type="oracle"/></preConditions>
+    <comment>Populate the usr table for existing Tempo news entry authors.</comment>
+    <sql>
+      insert into usr (id, username) select usr_sq.nextval, tmp.author from (
+        select distinct fe.author from tp_feed_entry fe
+        where not exists (select u.username from usr u where u.username = fe.author)) tmp
+    </sql>
+  </changeSet>
+
+  <changeSet author="appian" id="000012.7.0">
+    <comment>Set the security group of each existing Tempo news entry into its role map.</comment>
+    <sql>
+      insert into rm_entry_groups (rm_entry_id, group_id)
+        select rme.id, g.id
+        from rm_entry rme
+        join tp_feed_entry fe on fe.id = rme.tp_fe_id
+        join grp g on g.uuid = fe.group_uuid
+        where rme.tp_fe_id is not null
+        and fe.group_uuid is not null
+    </sql>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.8.0">
+    <comment>Set the author user of each existing Tempo news entry into its role map.</comment>
+    <sql>
+      insert into rm_entry_users (rm_entry_id, usr_id)
+        select rme.id, u.id
+        from rm_entry rme
+        join tp_feed_entry fe on fe.id = rme.tp_fe_id
+        join usr u on u.username = fe.author
+        where rme.tp_fe_id is not null
+        and fe.type != 6
+    </sql>
+  </changeSet>
+    
+  <changeSet author="appian" id="000012.9.0">
+    <dropColumn tableName="rm_entry" columnName="tp_fe_id"/>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.10.0">
+    <comment>For previously unsecured Tempo news entries, set the is_public column.</comment>
+    <update tableName="tp_feed_entry">
+      <column name="is_public" valueBoolean="true"/>
+      <where>group_uuid is null</where>
+    </update>
+  </changeSet>
+  
+  <changeSet author="appian" id="000012.11.0">
+    <comment>Remove the group_uuid column from tp_feed_entry (now replaced by role map).</comment>
+    <dropColumn tableName="tp_feed_entry" columnName="group_uuid"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000012.12.0">
+    <validCheckSum></validCheckSum>
+    <preConditions onFail="MARK_RAN"><not><or><dbms type="mysql"/><dbms type="mariadb"/></or></not></preConditions>
+    <comment>Create an index for the FK column rm_entry_groups.group_id</comment>
+    <createIndex indexName="rm_entry_groups_gid_fk" tableName="rm_entry_groups" unique="false">
+      <column name="group_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

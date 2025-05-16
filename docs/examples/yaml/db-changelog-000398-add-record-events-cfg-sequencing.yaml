@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000398-add-record-events-cfg-sequencing.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000398
+      tagDatabase:
+        tag: 'pre-000398'
+  - changeSet:
+      author: appian
+      id: '000398.1.0'
+      comment: A sequence to provide primary key values for the record-events-cfg table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_events_cfg_sq

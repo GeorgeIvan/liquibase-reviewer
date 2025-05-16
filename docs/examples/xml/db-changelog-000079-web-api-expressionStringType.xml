@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000079-web-api-expressionStringType.xml">
+
+  <changeSet author="appian" id="tag-000078">
+    <tagDatabase tag="000078"/>
+  </changeSet>
+
+  <!-- For all expression fields, we have to create a new column because conversion of a column from
+       text to largeStringType is not supported for all of our databases. -->
+
+  <changeSet author="appian" id="000079.1.0">
+    <comment>Add new web_api expression column called expression_copy of type expressionStringType</comment>
+    <addColumn tableName="web_api">
+      <column name="expression_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000079.1.1">
+    <comment>Copy over original web_api expression column into expression_copy</comment>
+    <sql>update web_api set expression_copy = expression</sql>
+  </changeSet>
+  <changeSet author="appian" id="000079.1.2">
+    <comment>Drop original web_api expression column</comment>
+    <dropColumn tableName="web_api" columnName="expression"/>
+  </changeSet>
+  <changeSet author="appian" id="000079.1.3">
+    <comment>Rename web_api expression_copy column to expression</comment>
+    <renameColumn tableName="web_api" oldColumnName="expression_copy" newColumnName="expression" columnDataType="${expressionStringType}"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000079.2.0">
+    <comment>Add new web_api_history expression column called expression_copy of type expressionStringType</comment>
+    <addColumn tableName="web_api_history">
+      <column name="expression_copy" type="${expressionStringType}"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="appian" id="000079.2.1">
+    <comment>Copy over original web_api_history expression column into expression_copy</comment>
+    <sql>update web_api_history set expression_copy = expression</sql>
+  </changeSet>
+  <changeSet author="appian" id="000079.2.2">
+    <comment>Drop original web_api_history expression column</comment>
+    <dropColumn tableName="web_api_history" columnName="expression"/>
+  </changeSet>
+  <changeSet author="appian" id="000079.2.3">
+    <comment>Rename web_api_history expression_copy column to expression</comment>
+    <renameColumn tableName="web_api_history" oldColumnName="expression_copy" newColumnName="expression" columnDataType="${expressionStringType}"/>
+  </changeSet>
+</databaseChangeLog>

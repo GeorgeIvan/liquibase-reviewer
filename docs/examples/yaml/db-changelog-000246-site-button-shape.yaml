@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000246-site-button-shape.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000246
+      tagDatabase:
+        tag: 'pre-000246'
+  - changeSet:
+      author: appian
+      id: '000246.0.0'
+      comment: Create Byte column for button shape
+      addColumn:
+        tableName: site
+        columns:
+          - column:
+              name: button_shape
+              type: ${byteType}
+              defaultValueNumeric: 1
+              constraints:
+                nullable: 'false'

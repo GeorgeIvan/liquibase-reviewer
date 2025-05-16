@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001031-add-mining-seq-filter-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001031
+      tagDatabase:
+        tag: 'pre-001031'
+  - changeSet:
+      id: '001031.1.0'
+      author: appian
+      comment: Create mining_seq_filter table
+      changes:
+        - createTable:
+            tableName: mining_seq_filter
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: pre_activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: succ_activity_name
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mining_filter_group_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inverted
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_direct
+                  type: ${booleanType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_ts
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+  - changeSet:
+      author: appian
+      id: '001031.2.0'
+      comment: Create sequence for mining_seq_filter
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: mining_seq_filter_sq
+  - changeSet:
+      author: appian
+      id: '001031.3.0'
+      comment: Create index for mining_seq_filter.mining_filter_group_id
+      changes:
+        - createIndex:
+            tableName: mining_seq_filter
+            columns:
+              - column:
+                  name: mining_filter_group_id
+            indexName: mining_seq_filter_grp_id_idx
+  - changeSet:
+      author: appian
+      id: '001031.4.0'
+      comment: Add fk for base table mining_seq_filter
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: mining_seq_filter_fltrgrp_fk
+            baseTableName: mining_seq_filter
+            baseColumnNames: mining_filter_group_id
+            referencedTableName: mining_filter_group
+            referencedColumnNames: id
+            onDelete: CASCADE

@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000480-add-custom-kpis-count-tables.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000480'
+      tagDatabase:
+        tag: 'pre-000480'
+  - changeSet:
+      author: appian
+      id: '000480.1.0'
+      comment: Create table for kpi_count_activity
+      changes:
+        - createTable:
+            tableName: kpi_count_activity
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_count_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000480.1.1'
+      comment: Create index for kpi_count_activity
+      changes:
+        - createIndex:
+            indexName: kpi_count_activity_cfg_id_idx
+            tableName: kpi_count_activity
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_count_cfg_id
+  - changeSet:
+      author: appian
+      id: '000480.1.2'
+      comment: Add fk for base table kpi_count_activity
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_count_activity_cfg_id_fk
+            baseTableName: kpi_count_activity
+            baseColumnNames: mining_kpi_count_cfg_id
+            referencedTableName: mining_kpi_count_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE
+  - changeSet:
+      author: appian
+      id: '000480.2.0'
+      comment: Create table for kpi_count_sequence
+      changes:
+        - createTable:
+            tableName: kpi_count_sequence
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: mining_kpi_count_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fromActivity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: toActivity
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: true
+              - column:
+                  name: isDirectFollower
+                  type: ${booleanType}
+                  constraints:
+                    nullable: true
+  - changeSet:
+      author: appian
+      id: '000480.2.1'
+      comment: Create index for kpi_count_sequence
+      changes:
+        - createIndex:
+            indexName: kpi_count_sequence_cfg_id_idx
+            tableName: kpi_count_sequence
+            unique: false
+            columns:
+              - column:
+                  name: mining_kpi_count_cfg_id
+  - changeSet:
+      author: appian
+      id: '000480.2.2'
+      comment: Add fk for base table kpi_count_sequence
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: kpi_count_sequence_cfg_id_fk
+            baseTableName: kpi_count_sequence
+            baseColumnNames: mining_kpi_count_cfg_id
+            referencedTableName: mining_kpi_count_cfg
+            referencedColumnNames: id
+            onDelete: CASCADE

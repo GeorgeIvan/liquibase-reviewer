@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000075-embedded-sail-style-value-type.xml">
+
+  <changeSet author="appian" id="tag-000074">
+    <tagDatabase tag="000074"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000075.1.0">
+    <comment>Change type of the value column in embedded_sail_style</comment>
+    <modifyDataType tableName="embedded_sail_style" columnName="value" newDataType="${mediumStringType}"/>    
+  </changeSet>
+</databaseChangeLog>

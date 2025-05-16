@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000325-recordType-showSearchBox.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000325'
+      tagDatabase:
+        tag: 'pre-000325'
+  - changeSet:
+      author: appian
+      id: '000325.1.0'
+      comment: Create new column show_search_box
+      addColumn:
+        tableName: record_type
+        column:
+          name: show_search_box
+          type: ${booleanType}
+          defaultValueBoolean: 'true'
+          valueBoolean: 'true'
+          constraints:
+            nullable: 'false'

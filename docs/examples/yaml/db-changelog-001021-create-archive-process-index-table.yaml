@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001021-create-archive-process-index-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001021'
+      tagDatabase:
+        tag: 'pre-001021'
+  - changeSet:
+      id: '001021.1.0'
+      author: appian
+      changes:
+        comment: Create arc_proc_ind table to create a search index for archived process files
+        createTable:
+          tableName: arc_proc_ind
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: pid
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: model_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: file_path
+                type: ${mediumStringType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      author: appian
+      id: '001021.2.0'
+      comment: Create sequence for primary key
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            changeLogPropertyDefined:
+              property: createSequence
+              value: true
+        - createSequence:
+            sequenceName: arc_proc_ind_sq
+  - changeSet:
+      author: appian
+      id: '001021.3.0'
+      comment: Create index for process id
+      changes:
+        - createIndex:
+            indexName: arc_proc_ind_pid_idx
+            tableName: arc_proc_ind
+            unique: false
+            columns:
+              - column:
+                  name: pid
+  - changeSet:
+      author: appian
+      id: '001021.4.0'
+      comment: Create index for process model uuid
+      changes:
+        - createIndex:
+            indexName: arc_proc_ind_model_uuid_idx
+            tableName: arc_proc_ind
+            unique: false
+            columns:
+              - column:
+                  name: model_uuid
+  - changeSet:
+      author: appian
+      id: '001021.5.0'
+      comment: Create index for created timestamp
+      changes:
+        - createIndex:
+            indexName: arc_proc_ind_created_ts_idx
+            tableName: arc_proc_ind
+            unique: false
+            columns:
+              - column:
+                  name: created_ts

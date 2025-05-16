@@ -1,0 +1,127 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000441-create-record-saved-user-filter-tables.yaml
+  - changeSet:
+      id: 'tag-pre-000441'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000441'
+  - changeSet:
+      id: '000441.1.0'
+      author: appian
+      comment: Create saved_user_filter_set table
+      changes:
+        createTable:
+          tableName: saved_user_filter_set
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: record_type_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: record_view_uuid
+                type: ${uuidType}
+            - column:
+                name: user_uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+            - column:
+                name: is_favorite
+                type: ${booleanType}
+            - column:
+                name: search_text
+                type: ${mediumStringType}
+  - changeSet:
+      id: '000441.2.0'
+      author: appian
+      comment: Create saved_user_filter table
+      changes:
+        - createTable:
+            tableName: saved_user_filter
+            columns:
+              - column:
+                  name: id
+                  type: ${longtype}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: parent_set_id
+                  type: ${longType}
+              - column:
+                  name: name
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: applied_query_filters
+                  type: ${largeStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: applied_option_labels
+                  type: ${largeStringType}
+              - column:
+                  name: user_filter_uuid
+                  type: ${uuidType}
+              - column:
+                  name: user_filter_type_id
+                  type: ${integerType}
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: parent_set_id_idx
+            tableName: saved_user_filter
+            columns:
+              - column:
+                  name: parent_set_id
+            unique: false
+  - changeSet:
+      id: '000441.3.0'
+      author: appian
+      comment: Add foreign key, creating M:1 relationship from saved_user_filter to saved_user_filter_set
+      changes:
+        addForeignKeyConstraint:
+          constraintName: saved_user_filter_to_set_id_fk
+          baseTableName: saved_user_filter
+          baseColumnNames: parent_set_id
+          referencedTableName: saved_user_filter_set
+          referencedColumnNames: id
+  - changeSet:
+      id: '000441.4.0'
+      author: appian
+      comment: Create a sequence to provide primary key values for the saved_user_filter_set table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: saved_user_filter_set_sq
+  - changeSet:
+      id: '000441.5.0'
+      author: appian
+      comment: Create a sequence to provide primary key values for the saved_user_filter table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: saved_user_filter_sq

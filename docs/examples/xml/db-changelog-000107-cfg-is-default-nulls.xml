@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000107-cfg-is-default-nulls.xml">
+
+  <changeSet author="appian" id="tag-000106">
+    <tagDatabase tag="000106"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000107.0.0" dbms="mssql">
+    <comment>Update is_default value if null to 0 in cfg for SQL Server</comment>
+    <update tableName="cfg">
+      <column name="is_default" value="0"/>
+      <where>is_default IS NULL</where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

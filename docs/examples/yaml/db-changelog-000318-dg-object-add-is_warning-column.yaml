@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000318-dg-object-add-is_warning-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000318
+      tagDatabase:
+        tag: 'pre-000318'
+
+  - changeSet:
+      author: appian
+      id: '000318.1.0'
+      comment: Add an priority column
+      changes:
+        addColumn:
+          tableName: dg_object
+          column:
+            name: priority
+            type: ${integerType}
+            defaultValueNumeric: 0
+            valueNumeric: 0
+            constraints:
+              nullable: 'false'
+
+  - changeSet:
+      author: appian
+      id: '000318.1.1'
+      comment: Update priority to 1 for warning design guidance
+      changes:
+        update:
+          tableName: dg_object
+          column:
+            name: priority
+            value: 1
+          where: design_guidance_key IN ('sysrule.designGuidance.datatype.deactivated', 'sysrule.designGuidance.expressions.unrecognizedKeyword', 'sysrule.designGuidance.expressions.missingDomain')

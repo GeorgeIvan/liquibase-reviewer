@@ -1,0 +1,122 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000330-add-record_type_search_cfg-record_type_search_field_cfg.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000330
+      tagDatabase:
+        tag: 'pre-000330'
+
+  - changeSet:
+      author: appian
+      id: '000330.1.0'
+      comment: Create record_type_search_cfg table
+      changes:
+        - createTable:
+            tableName: record_type_search_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: rt_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: search_fields_src
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: placeholder_src
+                  type: ${byteType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: placeholder
+                  type: ${expressionStringType}
+
+  - changeSet:
+      author: appian
+      id: '000330.2.0'
+      comment: Create rt_search_field_cfg table
+      changes:
+        - createTable:
+            tableName: rt_search_field_cfg
+            columns:
+              - column:
+                  name: id
+                  type: ${longType}
+                  autoIncrement: ${autoIncrement}
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: search_cfg_id
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: query_info
+                  type: ${mediumStringType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_idx
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: '000330.3.0'
+      author: appian
+      changes:
+        comment: Add foreign key between search cfg and record type
+        addForeignKeyConstraint:
+          constraintName: rt_record_type_search_cfg_fk
+          baseTableName: record_type_search_cfg
+          baseColumnNames: rt_id
+          referencedTableName: record_type
+          referencedColumnNames: id
+
+  - changeSet:
+      id: '000330.4.0'
+      author: appian
+      changes:
+        comment: Add foreign key between search cfg and search field cfg
+        addForeignKeyConstraint:
+          constraintName: rt_search_rt_search_field_fk
+          baseTableName: rt_search_field_cfg
+          baseColumnNames: search_cfg_id
+          referencedTableName: record_type_search_cfg
+          referencedColumnNames: id
+
+  - changeSet:
+      id: '000330.5.0'
+      comment: Create a sequence for the record type search cfg table for oracle
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: record_type_search_cfg_sq
+
+  - changeSet:
+      id: '000330.5.1'
+      comment: Create a sequence for the record type search field cfg table for oracle
+      author: appian
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: rt_search_field_cfg_sq

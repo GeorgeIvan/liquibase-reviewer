@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000557-add-record-name-override-column-to-phq-record-type-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000557'
+      tagDatabase:
+        tag: 'pre-000557'
+
+  - changeSet:
+      author: appian
+      id: '000557.1.0'
+      comment: Add record_name_override column to phq_record_type table
+      changes:
+        - addColumn:
+            tableName: phq_record_type
+            columns:
+              - column:
+                  name: record_name_override
+                  type: ${shortStringType}
+                  constraints:
+                    nullable: true

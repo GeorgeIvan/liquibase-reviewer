@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000216-relationship-uuid-unique-constraint.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000216
+      tagDatabase:
+        tag: 'pre-000216'
+
+  - changeSet:
+      id: '000216.0.0'
+      author: appian
+      changes:
+        - addUniqueConstraint:
+            columnNames: uuid
+            tableName: record_type_relationships

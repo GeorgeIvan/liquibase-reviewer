@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000336-add-display-name-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000336
+      tagDatabase:
+        tag: 'pre-000336'
+
+  - changeSet:
+      author: appian
+      id: '000336.1.0'
+      comment: Create a column for site display name
+      addColumn:
+        tableName: site
+        column:
+            name: display_name
+            type: ${shortStringType}
+            defaultValue: DISPLAY
+            value: DISPLAY
+            constraints:
+              nullable: true
+      sql: update site set display_name = name

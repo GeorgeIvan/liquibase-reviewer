@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000175-user-response-times-table-record-properties-and-metrics-size.xml">
+
+  <changeSet author="appian" id="tag-000174">
+    <tagDatabase tag="000174"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000175.0.0">
+    <comment>Add columns for record view name, record instance id, record instance title, and metrics size</comment>
+    <addColumn tableName="user_response_time">
+      <column name="view_name" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="user_response_time">
+      <column name="record_instance_id" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="user_response_time">
+      <column name="record_instance_name" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="user_response_time">
+      <column name="metrics_size" type="${longType}" valueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000175.0.1">
+    <addNotNullConstraint tableName="user_response_time" columnName="metrics_size" columnDataType="${longType}" />
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000252-dg-replication-state.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000252
+      tagDatabase:
+        tag: 'pre-000252'
+  - changeSet:
+      author: appian
+      id: '000252.1.0'
+      comment: Create dg_replication_state table
+      createTable:
+        tableName: dg_replication_state
+        columns:
+          - column:
+              name: source_key
+              type: ${shortStringType}
+              constraints:
+                nullable: false
+                primaryKey: true
+          - column:
+              name: version
+              type: ${longType}
+              constraints:
+                nullable: false
+          - column:
+              name: up_to_date_as_of
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: latest_txn_id
+              type: ${longType}
+              constraints:
+                nullable: true
+          - column:
+              name: replicating_server
+              type: ${uuidType}
+              constraints:
+                nullable: true
+          - column:
+              name: replicating_server_heartbeat
+              type: ${longType}
+              constraints:
+                nullable: true

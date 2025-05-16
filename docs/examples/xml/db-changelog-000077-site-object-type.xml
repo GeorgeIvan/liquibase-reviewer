@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000077-site-object-type.xml">
+
+  <changeSet author="appian" id="tag-000076">
+    <tagDatabase tag="000076"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000077.1.0">
+    <comment>
+      Create an "appian_object_type" column in the site_page table to indicate the type of object which
+      backs the UI. Default is "{http://www.appian.com/ae/types/2009}TaskReport" since task reports are
+      the only object type current supported in Sites.
+    </comment>
+    <addColumn tableName="site_page">
+      <column name="appian_object_type" type="${shortStringType}"
+          defaultValue="{http://www.appian.com/ae/types/2009}TaskReport">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

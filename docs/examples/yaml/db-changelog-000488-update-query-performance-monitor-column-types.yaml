@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000488-update-query-performance-monitor-column-types.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000488
+      tagDatabase:
+        tag: 'pre-000488'
+
+  - changeSet:
+      author: appian
+      id: '000488.1.0'
+      comment: Decrease column sizes of record_query_summary to reduce disk usage
+      changes:
+        - modifyDataType:
+            tableName: record_query_summary
+            columnName: execution_time
+            newDataType: ${integerType}
+
+        - modifyDataType:
+            tableName: record_query_summary
+            columnName: wait_time
+            newDataType: ${integerType}
+
+        - modifyDataType:
+            tableName: record_query_summary
+            columnName: query_details_id
+            newDataType: ${integerType}
+
+        - modifyDataType:
+            tableName: record_query_summary
+            columnName: query_source
+            newDataType: ${byteType}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000156-split-record-source-expression.xml">
+
+  <changeSet author="appian" id="tag-000155">
+    <tagDatabase tag="000155"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000156.0.0">
+    <comment>Add column to define expression to retrieve data for the list view</comment>
+    <addColumn tableName="record_type">
+      <column name="list_view_src_expr" type="${expressionStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000156.0.1">
+    <comment>Add column to define expression to retrieve data for a record view</comment>
+    <addColumn tableName="record_type">
+      <column name="record_view_src_expr" type="${expressionStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

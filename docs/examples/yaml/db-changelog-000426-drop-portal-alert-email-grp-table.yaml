@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000426-drop-portal-alert-email-grp-table.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000426
+      tagDatabase:
+        tag: 'pre-000426'
+  - changeSet:
+      author: appian
+      id: '000426.1.0'
+      comment: Drop portal_alert_email_grp table
+      changes:
+        - dropTable:
+            tableName: portal_alert_email_grp
+            cascadeConstraints: true
+  - changeSet:
+      id: '000426.1.1'
+      author: appian
+      comment: Drop portal_alert_email_grp_sq sequence
+      preConditions:
+        onFail: MARK_RAN
+        changeLogPropertyDefined:
+          property: dropSequence
+          value: true
+      dropSequence:
+        sequenceName: portal_alert_email_grp_sq

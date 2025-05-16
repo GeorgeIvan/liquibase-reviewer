@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001003-add-operator-to-attribute-filters.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001003'
+      tagDatabase:
+        tag: 'pre-001003'
+
+  - changeSet:
+      author: appian
+      id: '001003.1.0'
+      comment: Add new column 'operator' to mining_categ_attr_fltr with default set to 1 (maps to 'IN')
+      changes:
+        - addColumn:
+            tableName: mining_categ_attr_fltr
+            columns:
+              - column:
+                  name: operator
+                  type: ${byteType}
+                  defaultValue: 1
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: '001003.2.0'
+      author: appian
+      comment: Remove default value
+      dropDefaultValue:
+        tableName: mining_categ_attr_fltr
+        columnName: operator
+        columnDataType: ${byteType}

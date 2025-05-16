@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000219-add-record-replica-view-uuid.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000219
+      tagDatabase:
+        tag: 'pre-000219'
+
+  - changeSet:
+      author: appian
+      id: '000219.0.0'
+      comment: Create a new column for replica_view_uuid
+      addColumn:
+        tableName: record_type_cache_info
+        column:
+          name: replica_view_uuid
+          type: ${uuidType}

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000473-add-currency-column-to-mining-process.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000473
+      tagDatabase:
+        tag: 'pre-000473'
+
+  - changeSet:
+      author: appian
+      id: '000473.1.0'
+      comment: Create new column currency in mining_process
+      addColumn:
+        tableName: mining_process
+        column:
+          name: currency
+          type: ${stringType}(3)
+          constraints:
+            nullable: true

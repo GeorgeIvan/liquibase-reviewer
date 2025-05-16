@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001008-convert-new-to-editing.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001008'
+      tagDatabase:
+        tag: 'pre-001008'
+
+  - changeSet:
+      id: '001008.1.0'
+      author: appian
+      comment: Convert status of NEW to EDITING
+      update:
+        tableName: requirements_capture
+        column:
+          name: status
+          value: "EDITING"
+        where: status = 'NEW'

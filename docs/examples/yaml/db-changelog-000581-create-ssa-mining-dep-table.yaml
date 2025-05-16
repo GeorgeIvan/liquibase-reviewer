@@ -1,0 +1,156 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000581-create-ssa-mining-dep-table.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000581'
+      tagDatabase:
+        tag: 'pre-000581'
+  - changeSet:
+      id: '000581.1.0'
+      author: appian
+      changes:
+        comment: Create ssa_mining_dep table for adding mining process objects to the dashboard
+        createTable:
+          tableName: ssa_mining_dep
+          columns:
+            - column:
+                name: id
+                type: ${longType}
+                autoIncrement: ${autoIncrement}
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: uuid
+                type: ${uuidType}
+                constraints:
+                  nullable: false
+                  unique: true
+                  uniqueConstraintName: ssa_mining_dep_uuid_uc
+            - column:
+                name: name
+                type: ${shortStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: description
+                type: ${mediumStringType}
+                constraints:
+                  nullable: true
+            - column:
+                name: dashboard_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: ssa_object_type
+                type: ${byteType}
+                defaultValue: 1
+                constraints:
+                  nullable: false
+            - column:
+                name: mining_dep_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: mining_process_id
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: config_json
+                type: ${largeStringType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: created_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_by
+                type: ${longType}
+                constraints:
+                  nullable: false
+            - column:
+                name: updated_ts
+                type: ${longType}
+                constraints:
+                  nullable: false
+  - changeSet:
+      id: '000581.1.1'
+      author: appian
+      comment: Add sequence to provide primary key values for the ssa_mining_dep table
+      changes:
+        preConditions:
+          onFail: MARK_RAN
+          changeLogPropertyDefined:
+            property: createSequence
+            value: true
+        createSequence:
+          sequenceName: ssa_mining_dep_sq
+  - changeSet:
+      id: '000581.1.2'
+      author: appian
+      comment: Add foreign keys to related tables
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: ssa_mining_dep_dashboard_id_fk
+            baseTableName: ssa_mining_dep
+            baseColumnNames: dashboard_id
+            referencedTableName: ssa_library_object
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: ssa_mining_dep_mp_id_fk
+            baseTableName: ssa_mining_dep
+            baseColumnNames: mining_process_id
+            referencedTableName: mining_process
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: ssa_mining_dep_created_by_fk
+            baseTableName: ssa_mining_dep
+            baseColumnNames: created_by
+            referencedTableName: usr
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: ssa_mining_dep_updated_by_fk
+            baseTableName: ssa_mining_dep
+            baseColumnNames: updated_by
+            referencedTableName: usr
+            referencedColumnNames: id
+  - changeSet:
+      id: '000581.1.3'
+      author: appian
+      comment: Add indexes on all columns that are foreign keys (dashboard_id, mining_process_id, created_by, updated_by)
+      changes:
+        - createIndex:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: dashboard_id
+            indexName: ssa_mining_dep_dshbrd_id_idx
+        - createIndex:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: mining_process_id
+            indexName: ssa_mining_dep_mp_id_idx
+        - createIndex:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: created_by
+            indexName: ssa_mining_dep_created_by_idx
+        - createIndex:
+            tableName: ssa_mining_dep
+            columns:
+              - column:
+                  name: updated_by
+            indexName: ssa_mining_dep_updated_by_idx

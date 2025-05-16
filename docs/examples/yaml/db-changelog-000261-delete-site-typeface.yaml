@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000261-delete-site-typeface.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000261'
+      tagDatabase:
+        tag: 'pre-000261'
+  - changeSet:
+      author: appian
+      id: '000261.1.0'
+      comment: Drop typeface column from site table
+      dropColumn:
+        tableName: site
+        columnName: typeface

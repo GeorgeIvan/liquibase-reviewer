@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000421-add-navigation-node-rule-input-url-param-name.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000421
+      tagDatabase:
+        tag: 'pre-000421'
+
+  - changeSet:
+      author: appian
+      id: '000421.1.0'
+      comment: Add url_parameter_name column to navigation_node_rule_input table
+      addColumn:
+        tableName: navigation_node_rule_input
+        columns:
+          - column:
+              name: url_parameter_name
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      author: appian
+      id: '000421.1.1'
+      comment: Populate existing navigation_node_rule_input rows with url_parameter_name
+      sql: UPDATE navigation_node_rule_input SET url_parameter_name = name;
+
+  - changeSet:
+      author: appian
+      id: '000421.1.2'
+      comment: Add not null constraint to url_parameter_name column
+      changes:
+        - addNotNullConstraint:
+            tableName: navigation_node_rule_input
+            columnName: url_parameter_name
+            columnDataType: ${shortStringType}
+
+  - changeSet:
+      author: appian
+      id: '000421.1.3'
+      comment: Rename name column to rule_input_name
+      changes:
+        - renameColumn:
+            tableName: navigation_node_rule_input
+            oldColumnName: name
+            newColumnName: rule_input_name
+            columnDataType: ${shortStringType}

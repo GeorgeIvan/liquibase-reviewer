@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000348-add-versioning-to-records.yaml
+  - changeSet:
+      id: 'tag-pre-000348'
+      author: appian
+      tagDatabase:
+        tag: 'pre-000348'
+
+  - changeSet:
+      id: '000348.1.0'
+      author: appian
+      comment: Create the version-related columns
+      changes:
+        -  addColumn:
+            tableName: record_type
+            column:
+              name: uuid_if_current
+              type: ${uuidType}
+              constraints:
+                nullable: true
+        -  addColumn:
+            tableName: record_type
+            column:
+              name: url_stub_if_current
+              type: ${shortStringType}
+              constraints:
+                nullable: true
+
+  - changeSet:
+      id: '000348.2.0'
+      author: appian
+      comment: Copy the uuid column into uuid_if_current
+      sql: UPDATE record_type SET uuid_if_current = uuid
+
+  - changeSet:
+      id: '000348.3.0'
+      author: appian
+      comment: Copy the url_stub column into url_stub_if_current
+      sql: UPDATE record_type SET url_stub_if_current = url_stub
+
+  - changeSet:
+      id: '000348.4.0'
+      author: appian
+      comment: Add a unique index to the uuid_if_current column
+      changes:
+        - createIndex:
+            indexName: rec_type_uuid_if_current_idx
+            tableName: record_type
+            unique: true
+            columns:
+              - column:
+                  name: uuid_if_current
+        - modifySql:
+            # SQL Server unique indexes disallow multiple NULL rows unless you do this:
+            dbms: mssql
+            append:
+              value: ' WHERE ([uuid_if_current] IS NOT NULL)'
+        - modifySql:
+            # DB2 unique indexes disallow multiple NULL rows unless you do this:
+            dbms: db2
+            append:
+              value: ' EXCLUDE NULL KEYS'
+
+  - changeSet:
+      id: '000348.5.0'
+      author: appian
+      comment: Add a unique index to the url_stub_if_current column
+      changes:
+        - createIndex:
+            indexName: rt_url_stub_if_current_idx
+            tableName: record_type
+            unique: true
+            columns:
+              - column:
+                  name: url_stub_if_current
+        - modifySql:
+            # SQL Server unique indexes disallow multiple NULL rows unless you do this:
+            dbms: mssql
+            append:
+              value: ' WHERE ([url_stub_if_current] IS NOT NULL)'
+        - modifySql:
+            # DB2 unique indexes disallow multiple NULL rows unless you do this:
+            dbms: db2
+            append:
+              value: ' EXCLUDE NULL KEYS'
+
+  - changeSet:
+      id: '000348.6.0'
+      author: appian
+      comment: Remove the unique constraint from the uuid column, to accomodate historical rows
+      changes:
+        - dropUniqueConstraint:
+            tableName: record_type
+            constraintName: record_type_uuid_uc
+
+  - changeSet:
+      id: '000348.7.0'
+      author: appian
+      comment: Add a non-unique index back to the uuid column
+      changes:
+        - createIndex:
+            indexName: rec_type_uuid_idx
+            tableName: record_type
+            unique: false
+            columns:
+              - column:
+                  name: uuid
+
+  - changeSet:
+      id: '000348.8.0'
+      author: appian
+      comment: Remove the unique constraint from the url_stub column, to accomodate historical rows
+      changes:
+        - dropUniqueConstraint:
+            tableName: record_type
+            constraintName: record_type_urlstub_uc
+
+  - changeSet:
+      id: '000348.9.0'
+      author: appian
+      comment: Add a non-unique index back to the url_stub column
+      changes:
+        - createIndex:
+            indexName: rec_type_url_stub_idx
+            tableName: record_type
+            unique: false
+            columns:
+              - column:
+                  name: url_stub

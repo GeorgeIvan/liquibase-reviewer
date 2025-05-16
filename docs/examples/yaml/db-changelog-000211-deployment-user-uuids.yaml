@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000211-deployment-user-uuids.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000211'
+      tagDatabase:
+        tag: 'pre-000211'
+  - changeSet:
+      author: appian
+      id: '000211.1.0'
+      comment: Drop deployment request_user column
+      dropColumn:
+        tableName: deployment
+        columnName: requester_user
+  - changeSet:
+      author: appian
+      id: '000211.1.1'
+      comment: Add deployment requester_uuid column
+      addColumn:
+        tableName: deployment
+        column:
+          name: requester_uuid
+          type: ${uuidType}
+          defaultValue: UNSPECIFIED_REQUESTER
+          value: UNSPECIFIED_REQUESTER
+          constraints:
+            nullable: false
+  - changeSet:
+      author: appian
+      id: '000211.1.2'
+      comment: Drop deployment_event event_performer column
+      dropColumn:
+        tableName: deployment_event
+        columnName: event_performer
+  - changeSet:
+      author: appian
+      id: '000211.1.3'
+      comment: Add deployment_event event_performer_uuid column
+      addColumn:
+        tableName: deployment_event
+        column:
+          name: event_performer_uuid
+          type: ${uuidType}

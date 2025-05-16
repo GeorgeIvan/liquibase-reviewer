@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001029-add-source-context-column-to-record-source.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-001029'
+      tagDatabase:
+        tag: 'pre-001029'
+  - changeSet:
+      author: appian
+      id: '001029.1.0'
+      comment: Create source_context_expr column on record_type_sources
+      changes:
+        - addColumn:
+            tableName: record_type_sources
+            column:
+              name: source_context_expr
+              type: ${expressionStringType}
+              constraints:
+                nullable: true

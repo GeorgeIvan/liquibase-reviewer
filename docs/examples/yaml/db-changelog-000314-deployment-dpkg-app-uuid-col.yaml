@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000314-deployment-dpkg-app-uuid-col.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000314'
+      tagDatabase:
+        tag: 'pre-000314'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000314.1.0'
+      comment: Add app_uuid column to deployment_dpkg table
+      changes:
+        addColumn:
+          tableName: deployment_dpkg
+          column:
+            name: app_uuid
+            type: ${uuidType}
+            defaultValue: MIGRATION_UUID
+            constraints:
+              nullable: false
+  #Remove the default value.  This is necessary because db2 requires new non-nullable columns to have
+  #a default value.  Thus we need to remove afterwards because we do not desire a defaultValue
+  #See DB2 SQLCODE=-193
+  - changeSet:
+      author: appian
+      id: '000314.2.0'
+      comment: Remove the default value
+      dropDefaultValue:
+        tableName: deployment_dpkg
+        columnName: app_uuid
+        columnDataType: ${uuidType}

@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-001023-record-type-add-is-scheduled-indexing-enabled.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-001023
+      tagDatabase:
+        tag: 'pre-001023'
+  - changeSet:
+      author: appian
+      id: '001023.0.0'
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          columnExists:
+            tableName: record_type
+            columnName: is_scheduled_idx_enabled
+      comment: Create column is_scheduled_idx_enabled in record_type table
+      addColumn:
+        tableName: record_type
+        column:
+          name: is_scheduled_idx_enabled
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          constraints:
+            nullable: false

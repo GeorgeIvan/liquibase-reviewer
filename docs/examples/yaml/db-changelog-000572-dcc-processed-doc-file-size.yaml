@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000572-dcc-processed-doc-file-size.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000572'
+      tagDatabase:
+        tag: 'pre-000572'
+  - changeSet:
+      id: '000572.1.1'
+      author: appian
+      comment: Add appian_document_file_size column
+      changes:
+        - addColumn:
+            tableName: dcc_processed_document
+            columns:
+              - column:
+                  name: appian_document_file_size
+                  type: ${longType}
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+  - changeSet:
+      author: appian
+      id: '000572.1.2'
+      comment: Create new index for dcc_processed_document
+      changes:
+        - createIndex:
+            indexName: appian_document_file_size_idx
+            tableName: dcc_processed_document
+            unique: false
+            columns:
+              - column:
+                  name: appian_document_file_size

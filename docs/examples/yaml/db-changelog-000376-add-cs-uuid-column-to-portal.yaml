@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000376-add-cs-uuid-column-to-portal.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000376
+      tagDatabase:
+        tag: 'pre-000376'
+
+  - changeSet:
+      author: appian
+      id: '000376.1.0'
+      comment: Create a column for recaptcha connected system uuid
+      addColumn:
+        tableName: portal
+        column:
+          name: recaptcha_cs_uuid
+          type: ${uuidType}
+          constraints:
+            nullable: true
+
+  - changeSet:
+      id: '000376.2.0'
+      author: appian
+      comment: Remove existing columns related to recaptcha
+      changes:
+        - dropColumn:
+            tableName: portal
+            columns:
+              - column:
+                  name: is_captcha_used
+              - column:
+                  name: captcha_site_key
+              - column:
+                  name: captcha_api_key
+              - column:
+                  name: captcha_project_id

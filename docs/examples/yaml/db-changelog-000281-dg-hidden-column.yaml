@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000281-dg-hidden-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000281'
+      tagDatabase:
+        tag: 'pre-000281'
+  - changeSet:
+      author: appian
+      id: '000281.1.0'
+      comment: Add hidden column to dg_object
+      addColumn:
+        tableName: dg_object
+        column:
+          name: hidden
+          type: ${booleanType}
+          defaultValueBoolean: false
+          valueBoolean: false
+          constraints:
+            nullable: false

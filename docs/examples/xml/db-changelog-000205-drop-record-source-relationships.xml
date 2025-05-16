@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="db-changelog-000205-drop-record-source-relationships.xml">
+
+  <changeSet author="appian" id="tag-000204u">
+    <tagDatabase tag="000204u"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.1.0">
+    <comment>Drop record_source_relationships table and related constraints</comment>
+    <dropTable tableName="record_source_relationships" cascadeConstraints="true"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.2.0">
+    <comment>Create join_type column on record_type_sources</comment>
+    <addColumn tableName="record_type_sources">
+      <column name="join_type" type="${byteType}" >
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.3.0">
+    <comment>Create dependent_source_field column on record_type_sources</comment>
+    <addColumn tableName="record_type_sources">
+      <column name="dependent_source_field_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.4.0">
+    <comment>Create precedent_source_field column on record_type_sources</comment>
+    <addColumn tableName="record_type_sources">
+      <column name="precedent_source_field_id" type="${longType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.5.0">
+    <comment>Create join_operator column on record_type_sources</comment>
+    <addColumn tableName="record_type_sources">
+      <column name="join_operator" type="${shortStringType}">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.6.0">
+    <comment>Create uuid column on record_type_sources</comment>
+    <addColumn tableName="record_type_sources">
+      <column name="uuid" type="${uuidType}" defaultValue="">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="appian" id="000205.7.0">
+    <comment>Add relevant foreign keys</comment>
+    <addForeignKeyConstraint constraintName="rts_dependent_src_field_fk"
+       baseTableName="record_type_sources" baseColumnNames="dependent_source_field_id"
+       referencedTableName="record_source_fields" referencedColumnNames="id"/>
+    <addForeignKeyConstraint constraintName="rts_precedent_src_field_fk"
+       baseTableName="record_type_sources" baseColumnNames="precedent_source_field_id"
+       referencedTableName="record_source_fields" referencedColumnNames="id"/>
+  </changeSet>
+
+</databaseChangeLog>

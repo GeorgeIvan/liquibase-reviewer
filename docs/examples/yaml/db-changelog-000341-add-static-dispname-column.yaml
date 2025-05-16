@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000341-add-static-dispname-column.yaml
+  - changeSet:
+      author: appian
+      id: tag-pre-000341
+      tagDatabase:
+        tag: 'pre-000341'
+
+  - changeSet:
+      author: appian
+      id: '000341.1.0'
+      comment: Create a column for static site display name
+      addColumn:
+        tableName: site
+        column:
+          name: is_static_display_name
+          type: ${booleanType}
+          defaultValueBoolean: true
+          valueBoolean: true
+          constraints:
+            nullable: false

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="db-changelog-000071-site_page-nullable-fields.xml">
+
+  <changeSet author="appian" id="tag-000070">
+    <tagDatabase tag="000070"/>
+  </changeSet>
+
+  <changeSet author="appian" id="000071.1.0">
+    <comment>In site-page table, name, rule_uuid, and url_stub  ui_expr can be null</comment>
+    <dropNotNullConstraint tableName="site_page" columnName="name" columnDataType="${shortStringType}" />
+    <dropNotNullConstraint tableName="site_page" columnName="appian_object_uuid" columnDataType="${uuidType}" />
+    <dropNotNullConstraint tableName="site_page" columnName="url_stub" columnDataType="${shortStringType}" />
+  </changeSet>
+
+</databaseChangeLog>

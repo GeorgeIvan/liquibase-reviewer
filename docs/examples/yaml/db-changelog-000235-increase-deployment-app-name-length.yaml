@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000235-increase-deployment-app-name-length.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000235'
+      tagDatabase:
+        tag: 'pre-000235'
+  - changeSet:
+      author: appian
+      id: '000235.1.0'
+      comment: Update the deployment app name column type to support names up to 4000 chars
+      modifyDataType:
+        tableName: deployment_app
+        columnName: app_name
+        newDataType: ${mediumStringType}

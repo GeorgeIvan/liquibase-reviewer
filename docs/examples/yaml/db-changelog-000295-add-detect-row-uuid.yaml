@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000295-add-detect-row-uuid.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000295'
+      tagDatabase:
+        tag: 'pre-000295'
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000295.1.0'
+      comment: Add detectLoadRunning row uuid column
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: 'record_replica_metadata'
+                columnName: 'detect_load_running_row_uuid'
+      addColumn:
+        tableName: record_replica_metadata
+        columns:
+          - column:
+              name: detect_load_running_row_uuid
+              type: ${uuidType}
+              remarks: The uuid of an ADS entity. Each synced record type will have one once a sync has occurred.
+  #----------------------------------------------------------------------------------------------------
+  - changeSet:
+      author: appian
+      id: '000295.2.0'
+      comment: Rename detectLoadRunning entity id column
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: 'record_replica_metadata'
+                columnName: 'detect_load_running_row_id'
+      changes:
+        - renameColumn:
+            columnDataType: ${longType}
+            newColumnName: detect_load_running_row_id
+            oldColumnName: detect_load_running_entity_id
+            tableName: record_replica_metadata

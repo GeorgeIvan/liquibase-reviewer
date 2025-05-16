@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000588-add-rf-is-indexable-column.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000588'
+      tagDatabase:
+        tag: 'pre-000588'
+  - changeSet:
+      id: '000588.1.0'
+      author: appian
+      comment: Add is_indexable to record_source_fields
+      addColumn:
+        tableName: record_source_fields
+        column:
+          name: is_indexable
+          type: ${booleanType}
+          defaultValueBoolean: 'false'
+          constraints:
+            nullable: false
+

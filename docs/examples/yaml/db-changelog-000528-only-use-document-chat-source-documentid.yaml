@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db-changelog-000528-only-use-document-chat-source-documentid.yaml
+  - changeSet:
+      author: appian
+      id: 'tag-pre-000528'
+      tagDatabase:
+        tag: 'pre-000528'
+  - changeSet:
+      id: '000528.1.0'
+      author: appian
+      comment: Update document_chat_source table to only use document_id
+      changes:
+        - dropColumn:
+            columns:
+              - column:
+                  name: appian_document_uuid
+            tableName: document_chat_source
+  - changeSet:
+      id: '000528.1.1'
+      author: appian
+      comment: Update document_chat_source table to set document_id to never be null
+      changes:
+        - addNotNullConstraint:
+            columnDataType: ${longtype}
+            columnName: document_id
+            tableName: document_chat_source
