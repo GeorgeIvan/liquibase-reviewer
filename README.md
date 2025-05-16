@@ -166,6 +166,8 @@ python setup.py --skip-download  # Skip downloading documentation
 
 #### Vector Store Building Script
 
+❗ You can download Chroma vectore store from [here](https://drive.google.com/drive/folders/1l_54vSTjJqrpV7iQvuXNI9S2dIQNLm70?usp=drive_link)
+
 ```bash
 python build_vector_store.py --category jpa  # Build only the JPA category
 python build_vector_store.py --recreate      # Rebuild all categories
